@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.condomanagement.controller.AccountantDashboardController"
+            styleClass="dashboard-root"
+            prefWidth="1500" prefHeight="800">
+
+  <!-- SIDEBAR -->
+  <left>
+    <VBox fx:id="sidebar"
+          styleClass="dashboard-sidebar"
+          spacing="10">
+      <Label fx:id="lblWelcome"
+             styleClass="dashboard-welcome"
+             text="Xin chào, …"/>
+      <Button fx:id="btnHome"       text="Trang chủ" styleClass="dashboard-nav-button"/>
+      <Button fx:id="btnResident"   text="Nhân khẩu" styleClass="dashboard-nav-button"/>
+      <Button fx:id="btnHousehold"  text="Hộ khẩu"   styleClass="dashboard-nav-button"/>
+      <Button fx:id="btnFee"        text="Khoản thu" styleClass="dashboard-nav-button"/>
+      <Button fx:id="btnCollection" text="Thu phí"   styleClass="dashboard-nav-button"/>
+      <Button fx:id="btnReports"    text="Báo cáo"   styleClass="dashboard-nav-button"/>
+      <Pane VBox.vgrow="ALWAYS"/>
+      <Button fx:id="btnLogout"
+              text="Đăng xuất"
+              styleClass="dashboard-logout-button"
+              translateX="40"
+              onAction="#onLogout"/>
+    </VBox>
+  </left>
+
+  <!-- MAIN CONTENT -->
+  <center>
+    <VBox styleClass="dashboard-content" spacing="20">
+      <!-- App title -->
+      <Label text="Bluemoon – Quản lý thu phí chung cư"
+             styleClass="dashboard-app-title"/>
+      <!-- Header (tiêu đề từng màn + nút thêm) -->
+      <HBox styleClass="dashboard-header" spacing="15">
+        <Label fx:id="lblHeader"
+               text="Trang chủ"
+               styleClass="dashboard-title"/>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnAdd"
+                text="Thêm"
+                styleClass="dashboard-primary-button"
+                visible="false"/>
+      </HBox>
+      <!-- Đây là nơi load các màn con (Home, Resident,… ) -->
+      <StackPane fx:id="contentPane"
+                 styleClass="dashboard-content-pane"/>
+    </VBox>
+  </center>
+</BorderPane>

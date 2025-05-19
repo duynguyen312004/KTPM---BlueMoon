@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!-- Driver & Dialect -->
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+
+    <!-- URL/Username/Password sẽ bị override bởi HibernateUtil (Constants) -->
+    <property name="hibernate.connection.url">${hibernate.connection.url}</property>
+    <property name="hibernate.connection.username">${hibernate.connection.username}</property>
+    <property name="hibernate.connection.password">${hibernate.connection.password}</property>
+
+    <!-- Schema auto-update -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+
+    <!-- Hiện SQL ra console để debug -->
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+
+    <!-- Các entity sẽ được scan tự động trong package này -->
+    <mapping class="org.example.condomanagement.model.User"/>
+    <mapping class="org.example.condomanagement.model.Household"/>
+    <mapping class="org.example.condomanagement.model.Resident"/>
+    <mapping class="org.example.condomanagement.model.Fee"/>
+    <mapping class="org.example.condomanagement.model.CollectionBatch"/>
+    <mapping class="org.example.condomanagement.model.BatchFee"/>
+    <mapping class="org.example.condomanagement.model.BillingItem"/>
+    <mapping class="org.example.condomanagement.model.Transaction"/>
+    <mapping class="org.example.condomanagement.model.Receipt"/>
+    <mapping class="org.example.condomanagement.model.Vehicle"/>
+    <mapping class="org.example.condomanagement.model.VehicleFeeMapping"/>
+
+  </session-factory>
+</hibernate-configuration>

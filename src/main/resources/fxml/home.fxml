@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.condomanagement.controller.HomeController"
+      styleClass="dashboard-card-container"
+      alignment="CENTER"
+      spacing="40"
+      prefWidth="800" prefHeight="400">
+
+    <!-- Card Tổng hộ khẩu -->
+    <VBox styleClass="dashboard-card">
+        <ImageView fx:id="iconHouseholds"
+                   styleClass="dashboard-card-icon"/>
+        <Label text="Tổng hộ khẩu"
+               styleClass="dashboard-card-title"/>
+        <Label fx:id="lblTotalHouseholds"
+               text="0"
+               styleClass="dashboard-card-value"/>
+    </VBox>
+
+    <!-- Card Tổng nhân khẩu -->
+    <VBox styleClass="dashboard-card">
+        <ImageView fx:id="iconResidents"
+                   styleClass="dashboard-card-icon"/>
+        <Label text="Tổng nhân khẩu"
+               styleClass="dashboard-card-title"/>
+        <Label fx:id="lblTotalResidents"
+               text="0"
+               styleClass="dashboard-card-value"/>
+    </VBox>
+
+    <!-- Card Số phương tiện -->
+    <VBox styleClass="dashboard-card">
+        <ImageView fx:id="iconUnits"
+                   styleClass="dashboard-card-icon"/>
+        <Label text="Số phương tiện"
+               styleClass="dashboard-card-title"/>
+        <Label fx:id="lblTotalUnits"
+               text="0"
+               styleClass="dashboard-card-value"/>
+    </VBox>
+
+</HBox>

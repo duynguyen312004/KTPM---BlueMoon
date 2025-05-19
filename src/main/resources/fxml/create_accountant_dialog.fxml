@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.condomanagement.controller.CreateAccountantDialogController"
+            styleClass="dialog-pane">
+
+<content>
+    <VBox spacing="15" alignment="CENTER_LEFT" styleClass="dialog-content">
+        <Label text="Tạo tài khoản kế toán mới" styleClass="title-large"/>
+
+        <VBox spacing="10" styleClass="form-group">
+            <Label text="Họ tên" styleClass="label-field"/>
+            <TextField fx:id="txtFullName" promptText="Nhập họ tên" styleClass="text-input-large"/>
+        </VBox>
+
+        <VBox spacing="10" styleClass="form-group">
+            <Label text="Số điện thoại" styleClass="label-field"/>
+            <TextField fx:id="txtPhone" promptText="Nhập số điện thoại" styleClass="text-input-large"/>
+        </VBox>
+
+        <VBox spacing="10" styleClass="form-group">
+            <Label text="Username" styleClass="label-field"/>
+            <TextField fx:id="txtUsername" promptText="Nhập username" styleClass="text-input-large"/>
+        </VBox>
+
+        <VBox spacing="10" styleClass="form-group">
+            <Label text="Password" styleClass="label-field"/>
+            <PasswordField fx:id="txtPassword" promptText="Nhập mật khẩu" styleClass="text-input-large"/>
+        </VBox>
+    </VBox>
+</content>
+
+    <buttonTypes>
+        <ButtonType fx:id="okButton" text="Tạo mới" buttonData="OK_DONE"/>
+        <ButtonType text="Hủy bỏ" buttonData="CANCEL_CLOSE"/>
+    </buttonTypes>
+</DialogPane>

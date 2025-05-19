@@ -1,0 +1,62 @@
+# Java class files
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# VS Code settings
+.vscode/
+
+# Eclipse/IntelliJ project files (nếu VS Code sinh ra)
+*.iml
+.idea/
+.project
+.classpath
+.settings/
+target/
+
+# Maven output directory
+/target/
+
+# JavaFX build output (nếu có)
+bin/
+build/
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# IntelliJ run configs
+*.iws
+*.ipr
+
+# Logs
+*.out
+
+# Environment files
+.env
+*.env
+
+# Hibernate cache (nếu dùng)
+*.h2.db
+*.mv.db
+
+# Local database keys (cẩn thận nếu bạn dùng Firebase hay AWS key)
+firebase-key.json
+*.key
+*.pem
+*.p12
+
+# Dump or temp
+*.swp
+*.tmp
+~$*
+
+# Compiled JavaFX CSS
+*.bss
