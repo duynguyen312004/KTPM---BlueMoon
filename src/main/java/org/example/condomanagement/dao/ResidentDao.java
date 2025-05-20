@@ -51,4 +51,15 @@ public class ResidentDao {
             throw e;
         }
     }
+
+    public List<Resident> findAllWithAssociations() {
+        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+            return s.createQuery(
+                    "SELECT DISTINCT r FROM Resident r " +
+                            "JOIN FETCH r.household h " +
+                            "LEFT JOIN FETCH r.user u",
+                    Resident.class
+            ).list();
+        }
+    }
 }

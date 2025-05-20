@@ -1,12 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.condomanagement.controller.HouseholdListController"
+            prefWidth="800" prefHeight="480"
             styleClass="content-pane"
-            prefWidth="800" prefHeight="500">
-    <Label text="Danh sách Hộ khẩu (Placeholder)"
-           styleClass="subheader"
-           layoutX="20" layoutY="20"/>
+            >
+
+    <!-- Tiêu đề -->
+    <Label text="Quản lý Hộ khẩu"
+           style="-fx-font-size:18px; -fx-font-weight:bold;"
+           AnchorPane.topAnchor="10"
+           AnchorPane.leftAnchor="20"/>
+
+    <!-- Search bar -->
+    <HBox spacing="10"
+          AnchorPane.topAnchor="50"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20">
+        <ComboBox fx:id="cbFilter"
+                  prefWidth="120" prefHeight="36"/>
+        <TextField fx:id="txtSearch"
+                   promptText="Nhập nội dung tìm kiếm..."
+                   prefHeight="36"
+                   HBox.hgrow="ALWAYS"
+                   maxWidth="Infinity"/>
+        <Button fx:id="btnSearch"
+                text="Tìm kiếm"
+                onAction="#onSearch"
+                prefWidth="100" prefHeight="36"
+                style="-fx-background-color:#0d6efd;-fx-text-fill:white;-fx-font-size:14px;-fx-font-weight:bold;"/>
+    </HBox>
+
+    <!-- Action buttons -->
+    <HBox spacing="10"
+          AnchorPane.topAnchor="100"
+          AnchorPane.leftAnchor="20">
+        <Button fx:id="btnAdd"
+                text="Thêm mới"
+                onAction="#onAdd"
+                style="-fx-background-color:#28a745;-fx-text-fill:white;"/>
+        <Button fx:id="btnEdit"
+                text="Sửa"
+                onAction="#onEdit"
+                style="-fx-background-color:#ffc107;-fx-text-fill:white;"/>
+        <Button fx:id="btnDelete"
+                text="Xóa"
+                onAction="#onDelete"
+                style="-fx-background-color:#dc3545;-fx-text-fill:white;"/>
+    </HBox>
+
+    <!-- TableView -->
+    <TableView fx:id="tableHouseholds"
+               AnchorPane.topAnchor="150"
+               AnchorPane.leftAnchor="20"
+               AnchorPane.rightAnchor="20"
+               AnchorPane.bottomAnchor="20">
+
+
+        <columns>
+            <TableColumn fx:id="colCode"         text="Mã hộ khẩu"    prefWidth="140"/>
+            <TableColumn fx:id="colHead"         text="Chủ hộ"        prefWidth="160"/>
+            <TableColumn fx:id="colRoomCount"    text="Số phòng"      prefWidth="100"/>
+            <TableColumn fx:id="colMemberCount"  text="Số thành viên" prefWidth="120"/>
+            <TableColumn fx:id="colArea"         text="Diện tích"     prefWidth="120"/>
+            <TableColumn fx:id="colAddress"      text="Địa chỉ"       prefWidth="140"/>
+        </columns>
+    </TableView>
+
 </AnchorPane>

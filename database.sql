@@ -52,6 +52,7 @@ CREATE TABLE residents (
   user_id        INT REFERENCES users(user_id),
   household_id   INT NOT NULL REFERENCES households(household_id),
   name           VARCHAR(100) NOT NULL,
+  national_id // CCCD
   birthday       DATE NOT NULL,
   relationship   VARCHAR(50) NOT NULL,
   created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -30,6 +30,11 @@ public class Household extends BaseEntity {
     @OneToMany(mappedBy = "household")
     private List<Vehicle> vehicles = new ArrayList<>();
 
+    @Column(name = "head_resident_id")
+    private Integer headResidentId;
+
+
+
     // getters & setters
     public Integer getHouseholdId() {
         return householdId;
@@ -86,5 +91,13 @@ public class Household extends BaseEntity {
     public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
     }
+
+    public Integer getHeadResidentId() {
+        return headResidentId;
+    }
+    public void setHeadResidentId(Integer headResidentId) {
+        this.headResidentId = headResidentId;
+    }
+
 
 }
