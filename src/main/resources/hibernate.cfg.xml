@@ -4,20 +4,16 @@
         "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <!-- Driver & Dialect -->
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-
-    <!-- URL/Username/Password sẽ bị override bởi HibernateUtil (Constants) -->
-    <property name="hibernate.connection.url">${hibernate.connection.url}</property>
-    <property name="hibernate.connection.username">${hibernate.connection.username}</property>
-    <property name="hibernate.connection.password">${hibernate.connection.password}</property>
-
-    <!-- Schema auto-update -->
+    <property name="hibernate.connection.password">272004</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/bluemoon</property>
+    <property name="hibernate.connection.username">postgres</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.hbm2ddl.auto">update</property>
-
-    <!-- Hiện SQL ra console để debug -->
-    <property name="show_sql">true</property>
-    <property name="format_sql">true</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+    <property name="hibernate.use_sql_comments">true</property>
+    <property name="hibernate.current_session_context_class">thread</property>
 
     <!-- Các entity sẽ được scan tự động trong package này -->
     <mapping class="org.example.condomanagement.model.User"/>
