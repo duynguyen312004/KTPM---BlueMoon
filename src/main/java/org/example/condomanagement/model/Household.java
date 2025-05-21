@@ -21,7 +21,7 @@ public class Household extends BaseEntity {
     @Column(nullable = false)
     private Double area; // diện tích m²
 
-    @OneToMany(mappedBy = "household")
+    @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resident> residents = new ArrayList<>();
 
     @OneToMany(mappedBy = "household")
@@ -29,6 +29,12 @@ public class Household extends BaseEntity {
 
     @OneToMany(mappedBy = "household")
     private List<Vehicle> vehicles = new ArrayList<>();
+
+    @Column(name = "head_resident_id")
+    private Integer headResidentId;
+
+
+
 
     // getters & setters
     public Integer getHouseholdId() {
@@ -87,4 +93,15 @@ public class Household extends BaseEntity {
         this.vehicles = vehicles;
     }
 
-}
+    public Integer getHeadResidentId() {
+        return headResidentId;
+    }
+    public void setHeadResidentId(Integer headResidentId) {
+        this.headResidentId = headResidentId;
+    }
+    @Override
+    public String toString() {
+        return apartmentCode;
+
+    }
+    }

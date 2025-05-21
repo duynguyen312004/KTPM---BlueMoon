@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.dao.UserDao;
+import org.example.condomanagement.model.Transaction;
 import org.example.condomanagement.model.User;
 import org.hibernate.Session;
 
@@ -95,4 +96,6 @@ public class UserService {
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
+
+
 }

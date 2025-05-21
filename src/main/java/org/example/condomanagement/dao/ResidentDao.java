@@ -18,7 +18,12 @@ public class ResidentDao {
             return s.createQuery("FROM Resident", Resident.class).list();
         }
     }
-
+    public List<Resident> findAllWithAssociations() {
+        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+            // JOIN FETCH household để tránh lazy load error khi truy cập household từ resident
+            return s.createQuery("SELECT DISTINCT r FROM Resident r JOIN FETCH r.household h", Resident.class).list();
+        }
+    }
     public int countAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Long result = session.createQuery("SELECT COUNT(r) FROM Resident r", Long.class).uniqueResult();
@@ -51,4 +56,6 @@ public class ResidentDao {
             throw e;
         }
     }
+
+
 }
