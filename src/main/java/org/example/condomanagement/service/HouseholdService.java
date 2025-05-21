@@ -37,14 +37,10 @@ public class HouseholdService {
      * @param h Household entity to save
      * @return true if operation succeeded
      */
-    public boolean saveOrUpdate(Household h) {
-        try {
-            dao.save(h);  // merge() handles insert or update
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Household  saveOrUpdate (Household h) {
+
+         return    dao.save(h);  // merge() handles insert or update
+
     }
 
     /**

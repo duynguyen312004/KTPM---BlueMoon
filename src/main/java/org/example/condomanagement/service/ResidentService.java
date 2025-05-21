@@ -3,6 +3,7 @@ package org.example.condomanagement.service;
 import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.dao.ResidentDao;
 import org.example.condomanagement.dao.UserDao;
+import org.example.condomanagement.model.Household;
 import org.example.condomanagement.model.Resident;
 import org.example.condomanagement.model.User;
 import org.hibernate.Transaction;
@@ -56,15 +57,28 @@ public class ResidentService {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
 
-            Resident resident = session.get(Resident.class, residentId);
-            if (resident != null) {
-                session.delete(resident);
-                tx.commit();
-                return true;
+            // 1) Lấy tất cả hộ khẩu mà resident này là chủ
+            List<Household> owned = session.createQuery(
+                            "FROM Household h WHERE h.headResidentId = :rid", Household.class)
+                    .setParameter("rid", residentId)
+                    .list();
+
+            // 2) Set headResidentId = null cho từng hộ khẩu
+            for (Household h : owned) {
+                h.setHeadResidentId(null);
+                session.merge(h);
             }
-            return false;
+
+            // 3) Cuối cùng mới xoá Resident
+            Resident r = session.get(Resident.class, residentId);
+            if (r != null) {
+                session.delete(r);
+            }
+
+            tx.commit();
+            return true;
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null && tx.isActive()) tx.rollback();
             e.printStackTrace();
             return false;
         }

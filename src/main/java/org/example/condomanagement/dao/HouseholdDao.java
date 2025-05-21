@@ -31,15 +31,22 @@ public class HouseholdDao {
         }
     }
 
-    public void save(Household hh) {
+    public Household  save(Household hh) {
         Transaction tx = null;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             tx = s.beginTransaction();
-            s.merge(hh);
+            if (hh.getHouseholdId() == null) {
+                // tạo mới: persist + flush để ID gán về object gốc
+                s.persist(hh);
+                s.flush();
+            } else {
+                // cập nhật: merge và gán trả về cho hh
+                hh = s.merge(hh);
+            }
             tx.commit();
+            return hh;
         } catch (Exception e) {
-            if (tx != null)
-                tx.rollback();
+            if (tx != null) tx.rollback();
             throw e;
         }
     }

@@ -5,11 +5,16 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.example.condomanagement.model.Household;
 import org.example.condomanagement.model.Resident;
 import org.example.condomanagement.service.HouseholdService;
 import org.example.condomanagement.service.ResidentService;
+import org.example.condomanagement.controller.CreateHouseholdDialogController;
 
 public class HouseholdListController {
 
@@ -95,14 +100,38 @@ public class HouseholdListController {
 
     @FXML
     void onAdd() {
-        // TODO: mở form thêm mới, sau đó reload masterData
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/create_household_dialog.fxml"));
+            Parent root = loader.load();
+            CreateHouseholdDialogController controller = loader.getController();
+            // Không truyền household là ADD
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Thêm hộ khẩu");
+            stage.showAndWait();
+            // Sau khi đóng form, reload
+            masterData.setAll(service.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void onEdit() {
         Household sel = tableHouseholds.getSelectionModel().getSelectedItem();
-        if (sel != null) {
-            // TODO: mở form sửa, truyền sel, sau đó reload masterData
+        if (sel == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/create_household_dialog.fxml"));
+            Parent root = loader.load();
+            CreateHouseholdDialogController controller = loader.getController();
+            controller.setHousehold(sel); // Truyền household vào để edit
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Sửa hộ khẩu");
+            stage.showAndWait();
+            masterData.setAll(service.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
