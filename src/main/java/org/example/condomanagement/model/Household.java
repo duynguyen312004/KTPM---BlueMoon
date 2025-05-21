@@ -98,6 +98,9 @@ public class Household extends BaseEntity {
     public void setHeadResidentId(Integer headResidentId) {
         this.headResidentId = headResidentId;
     }
+    @Override
+    public String toString() {
+        return apartmentCode;
 
-
-}
+    }
+    }
