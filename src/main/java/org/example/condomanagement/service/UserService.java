@@ -97,21 +97,5 @@ public class UserService {
         userDao.updateUser(user);
     }
 
-    /**
-     * Tạo mới một User (dùng cho resident dialog).
-     * Trả về true nếu tạo thành công, false nếu có lỗi.
-     */
-    public boolean createResidentUser(User user) {
-        Transaction tx = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            tx = (Transaction) session.beginTransaction();
-            session.persist(user);
-            tx.commit();
-            return true;
-        } catch (Exception ex) {
-            if (tx != null) tx.rollback();
-            ex.printStackTrace();
-            return false;
-        }
-    }
+
 }

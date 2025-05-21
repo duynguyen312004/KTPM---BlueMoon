@@ -34,7 +34,7 @@ public class CreateResidentDialogController {
      *   dialogStage: cửa sổ Form,
      *   resSvc     : ResidentService,
      *   hhSvc      : HouseholdService,
-     *   usrSvc     : UserService để lưu số điện thoại
+
      */
     public void init(Stage dialogStage,
                      ResidentService resSvc,
@@ -60,8 +60,7 @@ public class CreateResidentDialogController {
             dpBirthday.setValue(resident.getBirthday());
             cbRelationship.setValue(resident.getRelationship());
             cbHousehold.setValue(resident.getHousehold());
-            txtPhoneNumber.setText(
-                    resident.getUser() != null ? resident.getUser().getPhoneNumber() : ""
+            txtPhoneNumber.setText(resident.getPhoneNumber() != null ? resident.getPhoneNumber() : ""
             );
         }
     }
@@ -85,21 +84,10 @@ public class CreateResidentDialogController {
         r.setRelationship(cbRelationship.getValue());
         r.setNationalId(txtNationalId.getText().trim());
         r.setHousehold(cbHousehold.getValue());
-        // Xử lý user (1 Resident gắn 1 User)
-        User u;
-        if (r.getUser() != null) {
-            u = r.getUser();
-        } else {
-            u = new User();
-            u.setRole(User.Role.Resident);
-            u.setIsActive(true);
-        }
-        u.setUsername(txtNationalId.getText().trim()); // dùng số CMT làm username, hoặc tự sinh
-        u.setPassword("123456"); // hoặc random, hoặc để người dùng đổi sau
-        u.setFullName(txtName.getText().trim());
-        u.setPhoneNumber(txtPhoneNumber.getText().trim());
+        r.setPhoneNumber(txtPhoneNumber.getText().trim()); // <-- Lưu SĐT vào resident
 
-        r.setUser(u);
+
+
         // TODO: nếu cần username/password, set thêm ở đây
 
 

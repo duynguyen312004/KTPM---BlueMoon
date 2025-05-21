@@ -12,7 +12,7 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.condomanagement.model.Resident;
-import org.example.condomanagement.model.User;
+
 import org.example.condomanagement.service.HouseholdService;
 import org.example.condomanagement.service.ResidentService;
 
@@ -58,11 +58,9 @@ public class ResidentListController {
         colNationalId.setCellValueFactory(r ->
                 new ReadOnlyStringWrapper(r.getValue().getNationalId())
         );
-        colPhone.setCellValueFactory(r -> {
-            User u = r.getValue().getUser();
-            String phone = (u != null ? u.getPhoneNumber() : "");
-            return new ReadOnlyStringWrapper(phone);
-        });
+        colPhone.setCellValueFactory(r ->
+                new ReadOnlyStringWrapper(r.getValue().getPhoneNumber())
+        );
         colHouseholdCode.setCellValueFactory(r ->
                 new ReadOnlyStringWrapper(r.getValue().getHousehold().getApartmentCode())
         );
@@ -102,8 +100,7 @@ public class ResidentListController {
                 case "CMND/CCCD":
                     return r.getNationalId().toLowerCase().contains(key);
                 case "Số điện thoại":
-                    return r.getUser() != null &&
-                            r.getUser().getPhoneNumber().contains(key);
+                    return r.getPhoneNumber().contains(key);
                 default:
                     return r.getResidentId().toString().contains(key);
             }
