@@ -4,6 +4,9 @@ import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.Fee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.util.Collections;
 import java.util.List;
 
 public class FeeDao {
@@ -18,6 +21,18 @@ public class FeeDao {
             return s.createQuery("FROM Fee", Fee.class).list();
         }
     }
+
+    public List<String> findAllName() {
+        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query<String> query=s.createQuery("SELECT t.feeName FROM Fee t", String.class);
+            return query.getResultList();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+
 
     public void save(Fee hh) {
         Transaction tx = null;

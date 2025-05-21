@@ -368,3 +368,200 @@
     -fx-background-color: #c82333;
 }
 
+/* style.css */
+.root-pane {
+    -fx-background-color: #f0f0f0; /* Light gray background for the whole window/scene */
+    -fx-font-family: "Arial", "Segoe UI", sans-serif; /* Common sans-serif fonts */
+}
+
+.title-bar {
+    -fx-background-color: #868e96; /* Gray from image */
+    -fx-padding: 12px 25px;
+}
+
+.title-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.content-wrapper {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0.1, 0, 1); /* Subtle shadow */
+    /* Margin and Padding are set in FXML */
+}
+
+.filter-placeholder-region {
+    -fx-background-color: #e9ecef; /* Light gray for the placeholder rectangle */
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    /* Height and width are set in FXML */
+}
+
+.search-field {
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #6c757d; /* Gray for prompt text */
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px 10px;
+    /* Height is set in FXML */
+}
+.search-field:focused {
+    -fx-border-color: #80bdff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.25), 3, 0, 0, 0);
+}
+
+
+/* General button styles, specific colors will override */
+.button {
+    -fx-font-size: 14px;
+    -fx-padding: 8px 18px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0; /* Ensure background covers the whole button */
+    /* Height is set in FXML */
+}
+
+.search-button {
+    -fx-background-color: #0d6efd; /* Blue */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.search-button:hover {
+    -fx-background-color: #0b5ed7;
+}
+
+.add-button {
+    -fx-background-color: #28a745; /* Green */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.add-button:hover {
+    -fx-background-color: #1e7e34;
+}
+
+.edit-button {
+    -fx-background-color: #ffc107; /* Yellow */
+    -fx-text-fill: #212529; /* Dark text for yellow background */
+    -fx-font-weight: bold;
+}
+.edit-button:hover {
+    -fx-background-color: #d39e00;
+}
+
+.delete-button {
+    -fx-background-color: #dc3545; /* Red */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.delete-button:hover {
+    -fx-background-color: #c82333;
+}
+
+.back-button {
+    -fx-background-color: #6c757d; /* Dark Gray */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.back-button:hover {
+    -fx-background-color: #545b62;
+}
+
+/* TableView Styling */
+.table-view1 {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px 0 1px 0; /* Top and bottom border for the table view */
+    -fx-background-insets: 0;
+    -fx-padding: 0; /* Remove default padding */
+}
+
+.table-view1 .column-header-background {
+    -fx-background-color: #f8f9fa; /* Very light gray for header background */
+}
+
+.table-view1 .column-header-background .filler {
+    -fx-background-color: #f8f9fa; /* Match header background for the empty space right of columns */
+}
+
+.table-view1 .column-header {
+    -fx-background-color: transparent; /* Background is handled by .column-header-background */
+    -fx-padding: 10px 8px; /* Padding for header text */
+    -fx-border-color: transparent #e0e0e0 transparent transparent; /* Right border for header cells */
+    -fx-border-width: 0 1px 0 0;
+}
+
+/*.table-view .column-header:last-visible {*/
+/*    -fx-border-width: 0 0 0 0; !* No right border for the last visible header cell *!*/
+/*}*/
+
+.table-view1 .column-header .label {
+    -fx-text-fill: #212529; /* Dark text for header */
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 0 5px 0 0; /* Padding within the label if needed */
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-view1 .table-cell {
+    -fx-padding: 10px 8px; /* Padding for cells */
+    -fx-font-size: 13px;
+    -fx-border-color: transparent #e9ecef transparent transparent; /* Lighter right border for cells */
+    -fx-border-width: 0 1px 0 0;
+    -fx-alignment: CENTER_LEFT; /* Default cell alignment */
+}
+/*.table-view .table-cell:last-visible {*/
+/*    -fx-border-width: 0 0 0 0; !* No right border for cells in the last visible column *!*/
+/*}*/
+
+.table-view1 .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #dee2e6 transparent; /* Bottom border for rows */
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 0px; /* Remove default padding of row-cell */
+}
+
+.table-view1 .table-row-cell:empty { /* Style for empty rows */
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+
+/* Optional: alternating row colors - uncomment if desired
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+*/
+
+.table-view1 .table-row-cell:selected {
+    -fx-background-color: #007bff; /* Blue selection color */
+}
+
+.table-view1 .table-row-cell:selected .table-cell {
+    -fx-text-fill: white; /* White text for selected cells */
+}
+
+/* Style classes for text alignment in specific columns */
+/* Apply these to TableColumn in FXML: <TableColumn styleClass="centered-text-column" ... /> */
+.centered-text-column .table-cell {
+    -fx-alignment: CENTER;
+}
+.right-aligned-text-column .table-cell {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+/* Ensure column header labels also respect alignment if the column has alignment style */
+.centered-text-column .label {
+    -fx-alignment: CENTER;
+}
+.right-aligned-text-column .label {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+
+
+
+
