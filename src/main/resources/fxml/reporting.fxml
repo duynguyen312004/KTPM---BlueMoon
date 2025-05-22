@@ -1,12 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml"
-            styleClass="content-pane"
-            prefWidth="800" prefHeight="500">
-    <Label text="Báo cáo (Placeholder)"
-           styleClass="subheader"
-           layoutX="20" layoutY="20"/>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <!-- ScrollPane bao bọc toàn bộ VBox chính -->
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <content>
+                <!-- VBox chính chứa toàn bộ giao diện -->
+                <VBox spacing="0">
+                    <children>
+                        <!-- Title Bar -->
+                        <HBox alignment="CENTER_LEFT" styleClass="title-bar">
+                            <children>
+                                <Label styleClass="title-label" text="Thống kê và báo cáo" />
+                            </children>
+                        </HBox>
+
+                        <!-- Content Wrapper -->
+                        <!-- Bỏ VBox.vgrow="ALWAYS" ở đây nếu bạn muốn ScrollPane quyết định chiều cao dựa trên nội dung -->
+                        <VBox styleClass="content-wrapper">
+                            <padding>
+                                <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
+                            </padding>
+                            <VBox.margin>
+                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            </VBox.margin>
+                            <children>
+                                <!-- Filter Section -->
+                                <HBox alignment="BOTTOM_LEFT" spacing="15.0" styleClass="filter-pane">
+                                    <children>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="filter-label" text="Thống kê theo" />
+                                                <ComboBox fx:id="statTypeComboBox" maxWidth="Infinity" prefWidth="160.0" promptText="Loại thống kê" styleClass="filter-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="filter-label" text="Chọn đối tượng" />
+                                                <ComboBox fx:id="objectComboBox" maxWidth="Infinity" prefWidth="160.0" promptText="Đối tượng" styleClass="filter-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="filter-label" text="Từ ngày" />
+                                                <DatePicker fx:id="fromDateDatePicker" maxWidth="Infinity" prefWidth="140.0" styleClass="filter-input" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="filter-label" text="Đến ngày" />
+                                                <DatePicker fx:id="toDateDatePicker" maxWidth="Infinity" prefWidth="140.0" styleClass="filter-input" />
+                                            </children>
+                                        </VBox>
+                                        <Button fx:id="filterButton" mnemonicParsing="false" styleClass="primary-button" text="Thống kê" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" />
+                                    </VBox.margin>
+                                </HBox>
+
+                                <!-- Summary Stats Section -->
+                                <HBox spacing="20.0" styleClass="summary-stats-pane">
+                                    <children>
+                                        <VBox styleClass="stat-block" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stat-title" text="Tổng số" />
+                                                <Label fx:id="totalCountLabel" styleClass="stat-value" text="20 hộ" />
+                                            </children>
+                                        </VBox>
+                                        <VBox styleClass="stat-block" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stat-title" text="Đã thu" />
+                                                <Label fx:id="collectedAmountLabel" styleClass="stat-value-green" text="15,000,000đ" />
+                                            </children>
+                                        </VBox>
+                                        <VBox styleClass="stat-block" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stat-title" text="Chưa thu" />
+                                                <Label fx:id="pendingAmountLabel" styleClass="stat-value-red" text="5,000,000đ" />
+                                            </children>
+                                        </VBox>
+                                        <VBox styleClass="stat-block" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="stat-title" text="Tỷ lệ thu" />
+                                                <Label fx:id="collectionRateLabel" styleClass="stat-value" text="75%" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" />
+                                    </VBox.margin>
+                                </HBox>
+
+                                <!-- Chart and Top Debtors Section -->
+                                <HBox prefHeight="250.0" spacing="25.0" styleClass="chart-debtors-pane">
+                                    <VBox.margin>
+                                        <Insets bottom="25.0" />
+                                    </VBox.margin>
+                                    <children>
+                                        <StackPane styleClass="chart-placeholder" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label styleClass="placeholder-text" text="Biểu đồ" />
+                                            </children>
+                                        </StackPane>
+                                        <VBox minWidth="280.0" prefWidth="280.0" spacing="10.0" styleClass="top-debtors-list">
+                                            <children>
+                                                <Label styleClass="section-subtitle" text="Top 3 hộ nợ nhiều nhất" />
+                                                <VBox styleClass="debtor-item">
+                                                    <children>
+                                                        <Label styleClass="debtor-name" text="Hộ A" />
+                                                        <Label fx:id="topDebtor1AmountLabel" styleClass="debtor-amount" text="2,000,000đ" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox styleClass="debtor-item">
+                                                    <children>
+                                                        <Label styleClass="debtor-name" text="Hộ B" />
+                                                        <Label fx:id="topDebtor2AmountLabel" styleClass="debtor-amount" text="1,500,000đ" />
+                                                    </children>
+                                                </VBox>
+                                                <VBox styleClass="debtor-item">
+                                                    <children>
+                                                        <Label styleClass="debtor-name" text="Hộ C" />
+                                                        <Label fx:id="topDebtor3AmountLabel" styleClass="debtor-amount" text="1,000,000đ" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- Detailed Table Section -->
+                                <!-- Để TableView phát triển theo nội dung của nó và ScrollPane xử lý cuộn tổng thể, -->
+                                <!-- bạn có thể bỏ VBox.vgrow="ALWAYS" ở đây và đặt prefHeight hoặc minHeight phù hợp -->
+                                <!-- Hoặc, giữ VBox.vgrow="ALWAYS" nếu bạn muốn TableView tự cuộn nội bộ trước khi ScrollPane chính cuộn -->
+                                <TableView fx:id="detailsTableView" minHeight="200" VBox.vgrow="ALWAYS"> <!-- Giữ VBox.vgrow hoặc đặt minHeight/prefHeight -->
+                                    <columns>
+                                        <TableColumn fx:id="householdIdColumn" prefWidth="120.0" text="Mã hộ khẩu" />
+                                        <TableColumn fx:id="householdNameColumn" prefWidth="300.0" text="Tên hộ" />
+                                        <TableColumn fx:id="amountCollectedColumn" prefWidth="200.0" text="Đã thu" />
+                                        <TableColumn fx:id="amountDueColumn" prefWidth="200.0" text="Còn thiếu" />
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                    </columnResizePolicy>
+                                    <placeholder>
+                                        <Label text="No content in table" />
+                                    </placeholder>
+                                </TableView>
+
+                                <!-- Bottom Actions -->
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="bottom-actions">
+                                    <VBox.margin>
+                                        <Insets top="20.0" />
+                                    </VBox.margin>
+                                    <children>
+                                        <Button fx:id="backButton" mnemonicParsing="false" styleClass="secondary-button" text="Quay lại" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="exportReportButton" mnemonicParsing="false" styleClass="success-button" text="Xuất báo cáo" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
 </AnchorPane>

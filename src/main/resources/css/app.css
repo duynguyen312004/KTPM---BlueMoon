@@ -115,7 +115,7 @@
     -fx-pref-height: 100%;
     -fx-max-width: Infinity;
     -fx-max-height: Infinity;
-    -fx-min-height: 400;
+    -fx-min-height: 300;
 }
 
 /* =================== OTHER =================== */
@@ -606,6 +606,264 @@
     -fx-background-color: #5a6268;
 }
 
+
+
+/* style.css */
+.root-pane {
+    -fx-background-color: #f4f6f9; /* Light greyish-blue background */
+    -fx-font-family: "Arial", "Segoe UI", sans-serif;
+}
+
+.title-bar {
+    -fx-background-color: #ffffff; /* White title bar, or a very light grey if preferred */
+    -fx-padding: 15px 25px;
+    -fx-border-color: #e0e0e0 transparent transparent transparent; /* Bottom border */
+    -fx-border-width: 0 0 1px 0;
+}
+
+.title-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark grey text */
+}
+
+.content-wrapper {
+    -fx-background-color: white;
+    -fx-border-color: #e0e4e8; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0.15, 0, 2); /* Subtle shadow */
+}
+
+.filter-pane .filter-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-padding: 0 0 3px 0; /* Small padding below label */
+}
+
+.filter-input, .combo-box, .date-picker {
+    -fx-pref-height: 38px;
+    -fx-background-color: #f0f2f5; /* Light grey background for inputs */
+    -fx-border-color: #d1d7de;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-font-size: 14px;
+}
+.filter-input:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #007bff;
+    -fx-background-color: white;
+}
+.combo-box .arrow-button {
+    -fx-background-color: #f0f2f5;
+}
+.combo-box .list-cell {
+    -fx-font-size: 14px;
+}
+
+/* General button styles */
+.button {
+    -fx-font-size: 14px;
+    -fx-padding: 8px 18px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-pref-height: 38px;
+    -fx-font-weight: bold;
+}
+
+.primary-button {
+    -fx-background-color: #007bff; /* Blue */
+    -fx-text-fill: white;
+}
+.primary-button:hover {
+    -fx-background-color: #0069d9;
+}
+
+.secondary-button {
+    -fx-background-color: #e9ecef; /* Light Grey */
+    -fx-text-fill: #212529;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+}
+.secondary-button:hover {
+    -fx-background-color: #d3d9df;
+}
+
+.success-button {
+    -fx-background-color: #28a745; /* Green */
+    -fx-text-fill: white;
+}
+.success-button:hover {
+    -fx-background-color: #1e7e34;
+}
+
+
+.summary-stats-pane .stat-block {
+    -fx-background-color: #f8f9fa; /* Very light grey background */
+    -fx-padding: 15px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 5px;
+}
+
+.stat-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6c757d; /* Grey text */
+}
+
+.stat-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #343a40; /* Dark grey */
+}
+
+.stat-value-green {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #28a745; /* Green */
+}
+
+.stat-value-red {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #dc3545; /* Red */
+}
+
+.chart-debtors-pane {
+    /* Adjust height or min-height if needed for the chart area */
+}
+
+/* style.css */
+/* ... các style khác ... */
+
+.chart-placeholder {
+    -fx-background-color: #eef1f4; /* Light grey for placeholder */
+    -fx-border-color: #d1d7de;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-alignment: CENTER;
+    /*-fx-min-height: 100px;*/
+    /*Bỏ dòng này hoặc giảm giá trị, ví dụ: -fx-min-height: 200px; */
+    /* Nếu muốn nó co hoàn toàn theo prefHeight của FXML, hãy xóa dòng này */
+}
+
+/* ... các style khác ... */
+
+.placeholder-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #6c757d;
+}
+
+.top-debtors-list {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1px;
+}
+
+.section-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #343a40;
+    -fx-padding: 0 0 10px 0;
+}
+
+.debtor-item {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-border-radius: 3px;
+    -fx-border-color: #e0e4e8;
+    -fx-border-width: 1px;
+    -fx-spacing: 3px;
+}
+
+.debtor-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #495057;
+}
+
+.debtor-amount {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #dc3545; /* Red for debt amount */
+}
+
+/* TableView Styling - You can reuse or adapt styles from previous example */
+.table-view2 {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px 0 1px 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-min-height: 200;
+}
+
+.table-view2 .column-header-background {
+    -fx-background-color: #f8f9fa;
+}
+.table-view2 .column-header-background .filler {
+    -fx-background-color: #f8f9fa;
+}
+.table-view2 .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 10px 8px;
+    -fx-border-color: transparent #e0e0e0 transparent transparent;
+    -fx-border-width: 0 1px 0 0;
+}
+.table-view2 .column-header .label {
+    -fx-text-fill: #212529;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+}
+.table-view2 .table-cell {
+    -fx-padding: 10px 8px;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent #e9ecef transparent transparent;
+    -fx-border-width: 0 1px 0 0;
+    -fx-alignment: CENTER_LEFT;
+}
+.table-view2 .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #dee2e6 transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 0px;
+}
+.table-view2 .table-row-cell:empty {
+    -fx-background-color: white;
+    -fx-border-width: 0;
+}
+.table-view2 .table-row-cell:selected {
+    -fx-background-color: #007bff;
+}
+.table-view2 .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.currency-column .table-cell { /* For "Đã thu" */
+    -fx-alignment: CENTER_RIGHT;
+    -fx-text-fill: #28a745; /* Green text for collected amounts */
+    -fx-font-weight: bold;
+}
+.currency-column-red .table-cell { /* For "Còn thiếu" */
+    -fx-alignment: CENTER_RIGHT;
+    -fx-text-fill: #dc3545; /* Red text for due amounts */
+    -fx-font-weight: bold;
+}
+/* Ensure column header labels also respect alignment if the column has alignment style */
+.currency-column .label, .currency-column-red .label {
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.bottom-actions {
+    /* Padding already applied via VBox.margin in FXML */
+}
 
 
 
