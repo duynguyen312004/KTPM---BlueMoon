@@ -2,6 +2,7 @@ package org.example.condomanagement.dao;
 
 import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.Household;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
@@ -55,11 +56,18 @@ public class HouseholdDao {
         Transaction tx = null;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             tx = s.beginTransaction();
-            s.remove(hh);
+
+            // Xử lý: set head_resident_id về null trước khi xóa resident
+            hh = s.merge(hh); // Đảm bảo entity đã managed
+
+            hh.setHeadResidentId(null);  // Quan trọng! Giải phóng FK trước
+            s.merge(hh);
+            s.flush(); // Sync với DB
+
+            s.remove(hh); // Lúc này Hibernate sẽ xóa household và toàn bộ residents nhờ cascade+orphanRemoval
             tx.commit();
         } catch (Exception e) {
-            if (tx != null)
-                tx.rollback();
+            if (tx != null) tx.rollback();
             throw e;
         }
     }

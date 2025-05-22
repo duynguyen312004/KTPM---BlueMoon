@@ -57,29 +57,25 @@ public class ResidentService {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
 
-            // 1) Lấy tất cả hộ khẩu mà resident này là chủ
-            List<Household> owned = session.createQuery(
+            // Tìm các household mà resident này là chủ hộ
+            List<Household> households = session.createQuery(
                             "FROM Household h WHERE h.headResidentId = :rid", Household.class)
                     .setParameter("rid", residentId)
                     .list();
-
-            // 2) Set headResidentId = null cho từng hộ khẩu
-            for (Household h : owned) {
+            for (Household h : households) {
                 h.setHeadResidentId(null);
                 session.merge(h);
             }
+            session.flush();
 
-            // 3) Cuối cùng mới xoá Resident
+            // Giờ mới xóa Resident
             Resident r = session.get(Resident.class, residentId);
-            if (r != null) {
-                session.delete(r);
-            }
+            if (r != null) session.delete(r);
 
             tx.commit();
             return true;
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            e.printStackTrace();
+            if (tx != null) tx.rollback();
             return false;
         }
     }
