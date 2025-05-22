@@ -20,14 +20,13 @@ import org.example.condomanagement.model.Fee;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FeeManagementController {
 
     FeeDao feeDao = new FeeDao();
-
-    private Fee feeToEdit;
-
 
     @FXML
     private TextField searchFeeTextField;
@@ -50,20 +49,36 @@ public class FeeManagementController {
 
     @FXML
     public void searchFeeButton(javafx.event.ActionEvent actionEvent) {
+        String selectedName = feeTypeComboBox.getValue();
+        String keyword = searchFeeTextField.getText().toLowerCase().trim();
+
+        List<Fee> allFees = feeDao.findAll();
+        List<Fee> filtered = allFees.stream()
+                .filter(fee -> {
+                    boolean matchName = selectedName.equals("Tất cả") || fee.getFeeCategory().toString().equals(selectedName);
+                    boolean matchKeyword = keyword.isEmpty() || fee.getFeeName().toLowerCase().contains(keyword);
+                    return matchName && matchKeyword;
+                })
+                .toList();
+
+        feeTableView.setItems(FXCollections.observableArrayList(filtered));
     }
 
     @FXML
     public void addFeeButton(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader=new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
             Parent root = loader.load();
 
+            // Truyền observable list hiện tại cho controller
+            AddFeeController controller = loader.getController();
+            controller.setFeeTableView(feeTableView); // Truyền danh sách đang hiển thị
+
             Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Add Fee");
+            stage.setScene(new Scene(root));
+            stage.setTitle("Thêm khoản phí");
             stage.show();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -85,9 +100,14 @@ public class FeeManagementController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
             Parent root = loader.load();
 
-            // Truyền fee sang controller
+             // ✅ Lấy controller
             AddFeeController controller = loader.getController();
-            controller.setFeeToEdit(selectedFee);  // <-- truyền dữ liệu cần sửa
+
+             // ✅ Truyền fee được chọn
+            controller.setFeeToEdit(selectedFee);
+
+             // ✅ Truyền cả feeTableView (QUAN TRỌNG!)
+            controller.setFeeTableView(feeTableView); // <-- bạn đang thiếu dòng này
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -141,13 +161,26 @@ public class FeeManagementController {
     }
 
     @FXML
-    public void backButton(ActionEvent actionEvent) {
+    public void resetButton(ActionEvent actionEvent) {
+        feeTypeComboBox.setValue("Tất cả");
+        searchFeeTextField.clear();
+        feeTableView.setItems(FXCollections.observableArrayList(feeDao.findAll()));
     }
 
     @FXML
     public void initialize() {
-        List<String> fees=feeDao.findAllName();
-        feeTypeComboBox.setItems(FXCollections.observableArrayList(fees));
+        List<String> categoryList = Arrays.stream(Fee.FeeCategory.values())
+                .map(Enum::name) // "Management", "Parking", ...
+                .toList();
+
+        List<String> comboItems = new ArrayList<>();
+        comboItems.add("Tất cả");
+        comboItems.addAll(categoryList);
+
+        feeTypeComboBox.setItems(FXCollections.observableArrayList(comboItems));
+        feeTypeComboBox.setValue("Tất cả");
+
+
         ObservableList<Fee> feeList= FXCollections.observableArrayList(feeDao.findAll());
         feeTableView.setItems(feeList);
         maKhoanPhiColumn.setCellValueFactory(cellData-> new SimpleIntegerProperty(cellData.getValue().getFeeId()).asObject().asString());

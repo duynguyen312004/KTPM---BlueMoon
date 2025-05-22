@@ -2,6 +2,7 @@ package org.example.condomanagement.controller;
 
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,6 +18,7 @@ public class AddFeeController {
 
     private Fee feeToEdit;
 
+    private TableView<Fee> feeTableView;
 
     @FXML
     private TextField tenKhoanPhiField;
@@ -45,33 +47,42 @@ public class AddFeeController {
     @FXML
     public void handleSave(ActionEvent actionEvent) {
         try {
-            Fee fee = new Fee(
-                    tenKhoanPhiField.getText(),
-                    loaiComboBox.getValue(),
-                    Double.parseDouble(soTienField.getText()),
-                    cachTinhComboBox.getValue()
-            );
+            String name = tenKhoanPhiField.getText();
+            Fee.FeeCategory category = loaiComboBox.getValue();
+            double amount = Double.parseDouble(soTienField.getText());
+            Fee.CalculationMethod method = cachTinhComboBox.getValue();
 
-            feeDao.saveOrUpdate(fee);
+            if (feeToEdit != null) {
+                // ✅ Trường hợp SỬA
+                feeToEdit.setFeeName(name);
+                feeToEdit.setFeeCategory(category);
+                feeToEdit.setFeeAmount(amount);
+                feeToEdit.setCalculationMethod(method);
 
-            // Thông báo thành công
+                feeDao.update(feeToEdit);           // <-- dùng update thay vì merge
+                feeTableView.refresh();             // Làm mới giao diện
+
+            } else {
+                // ✅ Trường hợp THÊM MỚI
+                Fee fee = new Fee(name, category, amount, method);
+                Fee saved = feeDao.save(fee);
+                feeTableView.getItems().add(saved);
+            }
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thêm khoản phí");
+            alert.setTitle("Thành công");
             alert.setHeaderText(null);
-            alert.setContentText("Đã thêm khoản phí thành công!");
+            alert.setContentText("Đã lưu khoản phí!");
             alert.showAndWait();
 
-            // Đóng cửa sổ sau khi thêm
             ((Stage) ((Button) actionEvent.getSource()).getScene().getWindow()).close();
 
         } catch (Exception e) {
             e.printStackTrace();
-
-            // Thông báo lỗi
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Lỗi");
-            alert.setHeaderText("Không thể thêm khoản phí");
-            alert.setContentText("Vui lòng kiểm tra lại dữ liệu nhập vào.\nChi tiết lỗi: " + e.getMessage());
+            alert.setHeaderText("Không thể lưu khoản phí");
+            alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
     }
@@ -84,13 +95,18 @@ public class AddFeeController {
         cachTinhComboBox.setItems(FXCollections.observableArrayList(Fee.CalculationMethod.values()));
     }
 
-    public void setFeeToEdit(Fee selectedFee) {
-        this.feeToEdit = selectedFee;
+    public void setFeeTableView(TableView<Fee> feeTableView) {
+        this.feeTableView = feeTableView;
+    }
+
+    public void setFeeToEdit(Fee fee) {
+        this.feeToEdit = fee;
 
         // Gán dữ liệu vào các trường giao diện
-        tenKhoanPhiField.setText(selectedFee.getFeeName());
-        loaiComboBox.setValue(selectedFee.getFeeCategory()); // Enum
-        soTienField.setText(String.valueOf(selectedFee.getFeeAmount()));
-        cachTinhComboBox.setValue(selectedFee.getCalculationMethod()); // Enum
+        tenKhoanPhiField.setText(fee.getFeeName());
+        loaiComboBox.setValue(fee.getFeeCategory()); // Enum
+        soTienField.setText(String.valueOf(fee.getFeeAmount()));
+        cachTinhComboBox.setValue(fee.getCalculationMethod()); // Enum
     }
+
 }

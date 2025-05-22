@@ -52,15 +52,15 @@ public class FeeDao {
         return Collections.emptyList();
     }
 
-    public void save(Fee hh) {
+    public Fee save(Fee fee) {
         Transaction tx = null;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             tx = s.beginTransaction();
-            s.merge(hh);
+            Fee saved = (Fee) s.merge(fee); // merge trả về bản đã có id
             tx.commit();
+            return saved;
         } catch (Exception e) {
-            if (tx != null)
-                tx.rollback();
+            if (tx != null) tx.rollback();
             throw e;
         }
     }
@@ -74,14 +74,6 @@ public class FeeDao {
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             throw e;
-        }
-    }
-
-    public void saveOrUpdate(Fee fee) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            session.merge(fee); // Smart: insert hoặc update tùy ID
-            tx.commit();
         }
     }
 

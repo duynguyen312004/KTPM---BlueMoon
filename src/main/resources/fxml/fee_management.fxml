@@ -30,7 +30,8 @@
                             <children>
                         <ComboBox fx:id="feeTypeComboBox" prefHeight="26.0" prefWidth="210.0" promptText="Chọn tên thu phí" />
                                 <TextField fx:id="searchFeeTextField" prefHeight="38.0" promptText="Nhập nội dung tìm kiếm..." styleClass="search-field" HBox.hgrow="ALWAYS" />
-                                <Button mnemonicParsing="false" onAction="#searchFeeButton" prefHeight="38.0" styleClass="search-button" text="Tìm kiếm" />
+                                <Button defaultButton="true" mnemonicParsing="false" onAction="#searchFeeButton" prefHeight="38.0" styleClass="search-button" text="Tìm kiếm" />
+                                <Button mnemonicParsing="false" onAction="#resetButton" prefHeight="38.0" styleClass="back-button" text="Reset" />
                             </children>
                             <VBox.margin>
                                 <Insets bottom="20.0" />
@@ -69,9 +70,6 @@
                      </content>
                   </ScrollPane>
                         <HBox alignment="CENTER_RIGHT">
-                            <children>
-                                <Button mnemonicParsing="false" onAction="#backButton" prefHeight="38.0" styleClass="back-button" text="Quay lại" />
-                            </children>
                      <padding>
                         <Insets top="30.0" />
                      </padding>

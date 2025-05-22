@@ -53,7 +53,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                         </Button>
-                        <Button fx:id="saveButton" onAction="#handleSave" styleClass="save-button" text="Lưu">
+                        <Button fx:id="saveButton" defaultButton="true" onAction="#handleSave" styleClass="save-button" text="Lưu">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
