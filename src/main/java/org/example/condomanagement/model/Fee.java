@@ -41,6 +41,18 @@ public class Fee extends BaseEntity {
     @OneToMany(mappedBy = "fee")
     private List<BatchFee> batchFees = new ArrayList<>();
 
+    //constructor
+    public Fee() {
+
+    }
+
+    public Fee(String feeName, FeeCategory feeCategory, Double feeAmount, CalculationMethod calculationMethod) {
+        this.feeName = feeName;
+        this.feeCategory = feeCategory;
+        this.feeAmount = feeAmount;
+        this.calculationMethod = calculationMethod;
+    }
+
     // getters & setters
     public Integer getFeeId() {
         return feeId;

@@ -32,7 +32,25 @@ public class FeeDao {
         return Collections.emptyList();
     }
 
+    public List<Fee.FeeCategory> findAllCategory() {
+        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Fee.FeeCategory> query=s.createQuery("SELECT t.feeCategory FROM Fee t", Fee.FeeCategory.class);
+            return query.getResultList();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
 
+    public List<Fee.CalculationMethod> findAllMethod() {
+        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Fee.CalculationMethod> query=s.createQuery("SELECT distinct t.calculationMethod distinct FROM Fee t", Fee.CalculationMethod.class);
+            return query.getResultList();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
 
     public void save(Fee hh) {
         Transaction tx = null;
@@ -44,6 +62,26 @@ public class FeeDao {
             if (tx != null)
                 tx.rollback();
             throw e;
+        }
+    }
+
+    public void update(Fee fee) {
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            session.update(fee); // ⚠️ khác với merge(): chỉ hoạt động nếu entity đã tồn tại và được quản lý
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw e;
+        }
+    }
+
+    public void saveOrUpdate(Fee fee) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+            session.merge(fee); // Smart: insert hoặc update tùy ID
+            tx.commit();
         }
     }
 
