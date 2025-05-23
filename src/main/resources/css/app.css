@@ -738,15 +738,19 @@
 /* style.css */
 /* ... các style khác ... */
 
+/*.chart-bar {*/
+/*    -fx-bar-fill: #4CAF50;*/
+/*}*/
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
 .chart-placeholder {
     -fx-background-color: #eef1f4; /* Light grey for placeholder */
     -fx-border-color: #d1d7de;
     -fx-border-width: 1px;
     -fx-border-radius: 4px;
     -fx-alignment: CENTER;
-    /*-fx-min-height: 100px;*/
-    /*Bỏ dòng này hoặc giảm giá trị, ví dụ: -fx-min-height: 200px; */
-    /* Nếu muốn nó co hoàn toàn theo prefHeight của FXML, hãy xóa dòng này */
 }
 
 /* ... các style khác ... */

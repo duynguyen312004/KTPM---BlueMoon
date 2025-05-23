@@ -90,6 +90,10 @@ public class BillingItemDao {
         public void setTotalActualAmount(Double totalActualAmount) {
             this.totalActualAmount = totalActualAmount;
         }
+
+        public Double getDebtAmount() {
+            return this.totalExpectedAmount - this.totalActualAmount;
+        }
     }
 
     public List<BillingSummary> getBillingSummaryByHousehold() {
@@ -102,5 +106,7 @@ public class BillingItemDao {
             return session.createQuery(hql, BillingSummary.class).getResultList();
         }
     }
+
+
 
 }

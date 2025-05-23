@@ -11,7 +11,7 @@ module CondoManagement {
 
     // Optional UI framework
     requires org.kordamp.bootstrapfx.core;
-    requires java.desktop;
+    requires org.apache.poi.ooxml;
 
     opens org.example.condomanagement to javafx.fxml;
     exports org.example.condomanagement to javafx.graphics;
