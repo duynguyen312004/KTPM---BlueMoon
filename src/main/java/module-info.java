@@ -21,4 +21,7 @@ module CondoManagement {
 
     opens org.example.condomanagement.model to org.hibernate.orm.core;
     exports org.example.condomanagement.model to org.hibernate.orm.core;
+
+    opens org.example.condomanagement.dao to org.hibernate.orm.core;
+    exports org.example.condomanagement.dao to org.hibernate.orm.core;
 }

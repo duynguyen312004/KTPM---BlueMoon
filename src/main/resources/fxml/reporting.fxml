@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.ReportingController">
     <children>
         <!-- ScrollPane bao bọc toàn bộ VBox chính -->
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -23,11 +23,7 @@
                 <VBox spacing="0">
                     <children>
                         <!-- Title Bar -->
-                        <HBox alignment="CENTER_LEFT" styleClass="title-bar">
-                            <children>
-                                <Label styleClass="title-label" text="Thống kê và báo cáo" />
-                            </children>
-                        </HBox>
+                        <HBox alignment="CENTER_LEFT" styleClass="title-bar" />
 
                         <!-- Content Wrapper -->
                         <!-- Bỏ VBox.vgrow="ALWAYS" ở đây nếu bạn muốn ScrollPane quyết định chiều cao dựa trên nội dung -->
