@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,71 +9,36 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.condomanagement.controller.HouseholdListController"
-            prefWidth="800" prefHeight="480"
-            styleClass="content-pane"
-            >
+<AnchorPane prefHeight="480" prefWidth="800" styleClass="content-pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.HouseholdListController">
 
     <!-- Tiêu đề -->
-    <Label text="Quản lý Hộ khẩu"
-           style="-fx-font-size:18px; -fx-font-weight:bold;"
-           AnchorPane.topAnchor="10"
-           AnchorPane.leftAnchor="20"/>
+    <Label style="-fx-font-size:18px; -fx-font-weight:bold;" text="Quản lý Hộ khẩu" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="10" />
 
     <!-- Search bar -->
-    <HBox spacing="10"
-          AnchorPane.topAnchor="50"
-          AnchorPane.leftAnchor="20"
-          AnchorPane.rightAnchor="20">
-        <ComboBox fx:id="cbFilter"
-                  prefWidth="120" prefHeight="36"/>
-        <TextField fx:id="txtSearch"
-                   promptText="Nhập nội dung tìm kiếm..."
-                   prefHeight="36"
-                   HBox.hgrow="ALWAYS"
-                   maxWidth="Infinity"/>
-        <Button fx:id="btnSearch"
-                text="Tìm kiếm"
-                onAction="#onSearch"
-                prefWidth="100" prefHeight="36"
-                style="-fx-background-color:#0d6efd;-fx-text-fill:white;-fx-font-size:14px;-fx-font-weight:bold;"/>
+    <HBox spacing="10" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="50">
+        <ComboBox fx:id="cbFilter" prefHeight="36" prefWidth="163.0" />
+        <TextField fx:id="txtSearch" maxWidth="Infinity" prefHeight="36" promptText="Nhập nội dung tìm kiếm..." HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnSearch" onAction="#onSearch" prefHeight="36" prefWidth="100" style="-fx-background-color:#0d6efd;-fx-text-fill:white;-fx-font-size:14px;-fx-font-weight:bold;" text="Tìm kiếm" />
     </HBox>
 
     <!-- Action buttons -->
-    <HBox spacing="10"
-          AnchorPane.topAnchor="100"
-          AnchorPane.leftAnchor="20">
-        <Button fx:id="btnAdd"
-                text="Thêm mới"
-                onAction="#onAdd"
-                style="-fx-background-color:#28a745;-fx-text-fill:white;"/>
-        <Button fx:id="btnEdit"
-                text="Sửa"
-                onAction="#onEdit"
-                style="-fx-background-color:#ffc107;-fx-text-fill:white;"/>
-        <Button fx:id="btnDelete"
-                text="Xóa"
-                onAction="#onDelete"
-                style="-fx-background-color:#dc3545;-fx-text-fill:white;"/>
+    <HBox spacing="10" AnchorPane.leftAnchor="20" AnchorPane.topAnchor="100">
+        <Button fx:id="btnAdd" onAction="#onAdd" style="-fx-background-color:#28a745;-fx-text-fill:white;" text="Thêm mới" />
+        <Button fx:id="btnEdit" onAction="#onEdit" style="-fx-background-color:#ffc107;-fx-text-fill:white;" text="Sửa" />
+        <Button fx:id="btnDelete" onAction="#onDelete" style="-fx-background-color:#dc3545;-fx-text-fill:white;" text="Xóa" />
     </HBox>
 
     <!-- TableView -->
-    <TableView fx:id="tableHouseholds"
-               AnchorPane.topAnchor="150"
-               AnchorPane.leftAnchor="20"
-               AnchorPane.rightAnchor="20"
-               AnchorPane.bottomAnchor="20">
+    <TableView fx:id="tableHouseholds" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="150">
 
 
         <columns>
-            <TableColumn fx:id="colCode"         text="Mã hộ khẩu"    prefWidth="140"/>
-            <TableColumn fx:id="colHead"         text="Chủ hộ"        prefWidth="160"/>
-            <TableColumn fx:id="colRoomCount"    text="Số phòng"      prefWidth="100"/>
-            <TableColumn fx:id="colMemberCount"  text="Số thành viên" prefWidth="120"/>
-            <TableColumn fx:id="colArea"         text="Diện tích"     prefWidth="120"/>
-            <TableColumn fx:id="colAddress"      text="Địa chỉ"       prefWidth="140"/>
+            <TableColumn fx:id="colCode" prefWidth="140" text="Mã hộ khẩu" />
+            <TableColumn fx:id="colHead" prefWidth="160" text="Chủ hộ" />
+            <TableColumn fx:id="colRoomCount" prefWidth="100" text="Số phòng" />
+            <TableColumn fx:id="colMemberCount" prefWidth="120" text="Số thành viên" />
+            <TableColumn fx:id="colArea" prefWidth="120" text="Diện tích" />
+            <TableColumn fx:id="colAddress" prefWidth="140" text="Địa chỉ" />
         </columns>
     </TableView>
 
