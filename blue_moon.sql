@@ -1,3 +1,7 @@
+--1. users
+INSERT INTO users (username, password, full_name, phone_number, role, is_active, last_login,created_at,updated_at) VALUES
+('accountant02', 'hashed_acc_password2', 'pham hong duong', '0933333333', 'Accountant', FALSE, NULL,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
 -- 2. fees
 INSERT INTO fees (feename, feecategory, feeamount, calculationmethod,created_at,updated_at) VALUES
 ('Phí Quản Lý Chung Cư', 'Management', 2000, 'PerSqM',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP),
