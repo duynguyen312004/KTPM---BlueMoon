@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="15" styleClass="fee-collection-root" prefWidth="900" prefHeight="500" fx:controller="org.example.condomanagement.controller.FeeCollectionController">
+    <!-- Thanh tìm kiếm -->
+    <HBox spacing="10">
+        <ComboBox fx:id="cbSearchType" prefWidth="140"/>
+        <TextField fx:id="txtSearch" promptText="Nhập nội dung tìm kiếm..." HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnSearch" text="Tìm kiếm" styleClass="btn-primary"/>
+    </HBox>
+
+    <!-- Các nút chức năng -->
+    <HBox spacing="10">
+        <Button fx:id="btnAdd" text="Thêm mới" styleClass="btn-success"/>
+        <Button fx:id="btnEdit" text="Sửa" styleClass="btn-warning"/>
+        <Button fx:id="btnDelete" text="Xóa" styleClass="btn-danger"/>
+    </HBox>
+
+    <!-- Bảng dữ liệu -->
+    <TableView fx:id="tableFeeCollection" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colFeeCode" text="Mã thu phí" prefWidth="100"/>
+            <TableColumn fx:id="colHouseholdCode" text="Mã hộ khẩu" prefWidth="100"/>
+            <TableColumn fx:id="colFeeName" text="Tên khoản thu" prefWidth="200"/>
+            <TableColumn fx:id="colBatch" text="Đợt thu" prefWidth="120"/>
+            <TableColumn fx:id="colAmount" text="Số tiền" prefWidth="120"/>
+            <TableColumn fx:id="colActualAmount" text="Đã thu" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Ngày nộp" prefWidth="120"/>
+        </columns>
+    </TableView>
+</VBox>

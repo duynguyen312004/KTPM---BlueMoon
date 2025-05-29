@@ -55,7 +55,7 @@ public class AccountantDashboardController {
         setupNav(btnResident, "/fxml/resident_list.fxml", "Nhân khẩu", "", false, "resident.png");
         setupNav(btnHousehold, "/fxml/household_list.fxml", "Hộ khẩu", "", false, "household.png");
         setupNav(btnFee, "/fxml/fee_management.fxml", "Khoản thu", "", false, "fee.png");
-        setupNav(btnCollection, "/fxml/transaction_list.fxml", "Thu phí", "Thêm thu phí", true, "collection.png");
+        setupNav(btnCollection, "/fxml/fee_collection_management.fxml", "Thu phí", "Thêm thu phí", true, "collection.png");
         setupNav(btnReports, "/fxml/reporting.fxml", "Báo cáo", "", false, "reports.png");
 
         // 4) logout button
@@ -92,6 +92,7 @@ public class AccountantDashboardController {
 
     private void loadContent(String fxmlPath) {
         try {
+            System.out.println("Loading FXML: " + fxmlPath);
             contentPane.getChildren().setAll(
                     (javafx.scene.Node) FXMLLoader.load(getClass().getResource(fxmlPath)));
         } catch (IOException ex) {
