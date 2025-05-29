@@ -71,25 +71,25 @@ INSERT INTO billing_items (household_id, fee_id, batch_id, expected_amount, actu
 
 
 INSERT INTO transactions (billing_item_id, amount_paid, payment_date, created_by, created_at, updated_at) VALUES
-                                                                                                              (15, 151000, '2024-06-05', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (16, 100000, '2024-06-05', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (17, 15000, '2024-06-06',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (18, 50000, '2024-06-06',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (19, 20000, '2024-06-07',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (20, 15000, '2024-06-10',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (21, 50000, '2024-06-10',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                              (22, 50000, '2024-07-08',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+                                                                                                              (1, 151000, '2024-06-05', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (2, 100000, '2024-06-05', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (3, 15000, '2024-06-06',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (4, 50000, '2024-06-06',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (5, 20000, '2024-06-07',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (6, 15000, '2024-06-10',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (7, 50000, '2024-06-10',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                              (8, 50000, '2024-07-08',  1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 INSERT INTO receipts (transaction_id, receipt_number, issue_date, file_url, created_at, updated_at) VALUES
-                                                                                                        (9, 'RCPT0624A101001', '2024-06-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (10, 'RCPT0624A101002', '2024-06-05', '/receipts/RCPT0624A101002.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (11, 'RCPT0624A101003', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (12, 'RCPT0624A101004', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (13, 'RCPT0624A101005', '2024-06-07', '/receipts/RCPT0624A101005.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (14, 'RCPT0624B205001', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (15, 'RCPT0624B205002', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                                        (16, 'RCPT0724C303001', '2024-07-08', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+                                                                                                        (1, 'RCPT0624A101001', '2024-06-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (2, 'RCPT0624A101002', '2024-06-05', '/receipts/RCPT0624A101002.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (3, 'RCPT0624A101003', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (4, 'RCPT0624A101004', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (5, 'RCPT0624A101005', '2024-06-07', '/receipts/RCPT0624A101005.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (6, 'RCPT0624B205001', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (7, 'RCPT0624B205002', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (8, 'RCPT0724C303001', '2024-07-08', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 UPDATE fees SET
@@ -141,25 +141,25 @@ WHERE apartment_code = 'C303';
 UPDATE residents SET
                      name = 'Tran Thi Cu Dan',
                      relationship = 'Chu ho'
-WHERE name = 'Trần Thị Cư Dân' AND household_id = 12;
+WHERE name = 'Trần Thị Cư Dân' AND household_id = 1;
 
 UPDATE residents SET
                      name = 'Tran Van An',
                      relationship = 'Chong'
-WHERE name = 'Trần Văn An' AND household_id = 12;
+WHERE name = 'Trần Văn An' AND household_id = 2;
 
 UPDATE residents SET
                      name = 'Tran Bao Ngoc',
                      relationship = 'Con gai'
-WHERE name = 'Trần Bảo Ngọc' AND household_id = 12;
+WHERE name = 'Trần Bảo Ngọc' AND household_id = 2;
 
 -- Hộ B205 (id=13)
 UPDATE residents SET
                      name = 'Le Van Binh',
                      relationship = 'Chu ho'
-WHERE name = 'Lê Văn Bình' AND household_id = 13;
+WHERE name = 'Lê Văn Bình' AND household_id = 3;
 
 UPDATE residents SET
                      name = 'Pham Thi Yen',
                      relationship = 'Vo'
-WHERE name = 'Phạm Thị Yên' AND household_id = 13;
+WHERE name = 'Phạm Thị Yên' AND household_id = 3;
