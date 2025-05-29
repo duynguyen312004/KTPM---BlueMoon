@@ -1,4 +1,3 @@
-
 -- ENUM Definitions (PostgreSQL requires separate type creation)
 DO $$ BEGIN
     CREATE TYPE user_role AS ENUM ('Admin', 'Accountant', 'Resident');
@@ -20,7 +19,7 @@ DO $$ BEGIN
     CREATE TYPE vehicle_type_enum AS ENUM ('MOTORBIKE', 'CAR');
 EXCEPTION WHEN duplicate_object THEN null; END $$;
 
-SELECT setval('residents_resident_id_seq', (SELECT MAX(resident_id) FROM residents)); // nếu anh em bị lỗi khi thêm nhân khẩu mà thấy nó  bao lỗi đã tồn tại id hãy chạy lệnh này : ))
+-- SELECT setval('residents_resident_id_seq', (SELECT MAX(resident_id) FROM residents)); // nếu anh em bị lỗi khi thêm nhân khẩu mà thấy nó bao lỗi đã tồn tại id hãy chạy lệnh này : ))
 -- 1. users: tài khoản hệ thống
 CREATE TABLE users (
   user_id      SERIAL PRIMARY KEY,
@@ -52,8 +51,8 @@ CREATE TABLE residents (
   user_id        INT REFERENCES users(user_id),
   household_id   INT NOT NULL REFERENCES households(household_id),
   name           VARCHAR(100) NOT NULL,
-  national_id // CCCD
-  phone_number // SDT
+  national_id VARCHAR(20), -- CCCD
+  phone_number VARCHAR(15), -- SDT
   birthday       DATE NOT NULL,
   relationship   VARCHAR(50) NOT NULL,
   created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
