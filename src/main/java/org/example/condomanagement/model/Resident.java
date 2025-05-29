@@ -31,14 +31,12 @@
         private String nationalId;
 
         // Số điện thoại riêng của Resident
-        @Column(name = "phone_number", nullable = false)
+        @Column(name = "phone_number", nullable = false, unique = true)
         private String phoneNumber;
         // getters & setters
         public Integer getResidentId() {
             return residentId;
         }
-
-
 
         public Household getHousehold() {
             return household;
