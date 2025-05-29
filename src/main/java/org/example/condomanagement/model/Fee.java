@@ -13,7 +13,7 @@ public class Fee extends BaseEntity {
     @Column(name = "fee_id")
     private Integer feeId;
 
-    @Column(nullable = false)
+    @Column(name = "fee_name", nullable = false)
     private String feeName;
 
     public enum FeeCategory {
@@ -21,10 +21,10 @@ public class Fee extends BaseEntity {
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "fee_category", nullable = false)
     private FeeCategory feeCategory;
 
-    @Column(nullable = false)
+    @Column(name = "fee_amount", nullable = false)
     private Double feeAmount;
 
     public enum CalculationMethod {
@@ -32,7 +32,7 @@ public class Fee extends BaseEntity {
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "calculation_method", nullable = false)
     private CalculationMethod calculationMethod;
 
     @OneToMany(mappedBy = "fee")
