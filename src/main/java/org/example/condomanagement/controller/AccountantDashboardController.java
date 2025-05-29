@@ -55,7 +55,7 @@ public class AccountantDashboardController {
         setupNav(btnResident, "/fxml/resident_list.fxml", "Nhân khẩu", "", false, "resident.png");
         setupNav(btnHousehold, "/fxml/household_list.fxml", "Hộ khẩu", "", false, "household.png");
         setupNav(btnFee, "/fxml/fee_management.fxml", "Khoản thu", "", false, "fee.png");
-        setupNav(btnCollection, "/fxml/transaction_list.fxml", "Thu phí", "Thêm thu phí", true, "collection.png");
+        setupNav(btnCollection, "/fxml/transaction_list.fxml", "Thu phí", "", false, "collection.png");
         setupNav(btnReports, "/fxml/reporting.fxml", "Báo cáo", "", false, "reports.png");
 
         // 4) logout button
