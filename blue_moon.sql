@@ -1,3 +1,18 @@
+-- TRUNCATE/DELETE only removes data, not sequence state.
+-- Use ALTER SEQUENCE ... RESTART WITH 1 to reset auto-increment IDs if you want new data to start from 1.
+TRUNCATE TABLE receipts, transactions, billing_items, batch_fees, collection_batches, vehicle_fee_mapping, vehicles, residents, households, fees, users CASCADE;
+
+-- Reset sequences (replace sequence names as needed)
+ALTER SEQUENCE users_user_id_seq RESTART WITH 1;
+ALTER SEQUENCE households_household_id_seq RESTART WITH 1;
+ALTER SEQUENCE residents_resident_id_seq RESTART WITH 1;
+ALTER SEQUENCE vehicles_vehicle_id_seq RESTART WITH 1;
+ALTER SEQUENCE fees_fee_id_seq RESTART WITH 1;
+ALTER SEQUENCE collection_batches_batch_id_seq RESTART WITH 1;
+ALTER SEQUENCE batch_fees_batch_fee_id_seq RESTART WITH 1;
+ALTER SEQUENCE billing_items_billing_item_id_seq RESTART WITH 1;
+ALTER SEQUENCE transactions_transaction_id_seq RESTART WITH 1;
+ALTER SEQUENCE receipts_receipt_id_seq RESTART WITH 1;
 --1. users
 INSERT INTO users (username, password, full_name, phone_number, role, is_active, last_login, created_at, updated_at) VALUES
     ('accountant02', 'hashed_acc_password2', 'pham hong duong', '0933333333', 'Accountant', FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
