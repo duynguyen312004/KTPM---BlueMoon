@@ -19,6 +19,7 @@ import java.util.List;
 public class CreateFeeCollectionController {
     @FXML private ComboBox<Household> cbHousehold;
     @FXML private TextField txtFeeName;
+    @FXML private ComboBox<Fee.FeeCategory> cbFeeCategory;
     @FXML private ComboBox<CollectionBatch> cbBatch;
     @FXML private TextField txtAmount;
     @FXML private TextField txtActualAmount;
@@ -42,6 +43,21 @@ public class CreateFeeCollectionController {
             @Override public Household fromString(String s) { return null; }
         });
 
+        // Load danh sách loại phí
+        cbFeeCategory.setItems(FXCollections.observableArrayList(Fee.FeeCategory.values()));
+        cbFeeCategory.setConverter(new javafx.util.StringConverter<>() {
+            @Override public String toString(Fee.FeeCategory c) { 
+                return c == null ? "" : switch(c) {
+                    case Service -> "Dịch vụ";
+                    case Management -> "Quản lý";
+                    case Parking -> "Gửi xe";
+                    case Utility -> "Tiện ích";
+                    case Voluntary -> "Tự nguyện";
+                };
+            }
+            @Override public Fee.FeeCategory fromString(String s) { return null; }
+        });
+
         // Load danh sách đợt thu
         List<CollectionBatch> batches = batchDao.findAll();
         cbBatch.setItems(FXCollections.observableArrayList(batches));
@@ -59,6 +75,7 @@ public class CreateFeeCollectionController {
         if (editingItem != null) {
             cbHousehold.setValue(editingItem.getHousehold());
             txtFeeName.setText(editingItem.getFee().getFeeName());
+            cbFeeCategory.setValue(editingItem.getFee().getFeeCategory());
             cbBatch.setValue(editingItem.getBatch());
             txtAmount.setText(editingItem.getExpectedAmount().toString());
             txtActualAmount.setText(editingItem.getActualAmount().toString());
@@ -69,12 +86,13 @@ public class CreateFeeCollectionController {
         try {
             Household household = cbHousehold.getValue();
             String feeName = txtFeeName.getText().trim();
+            Fee.FeeCategory feeCategory = cbFeeCategory.getValue();
             CollectionBatch batch = cbBatch.getValue();
             double expectedAmount = Double.parseDouble(txtAmount.getText().trim());
             double actualAmount = Double.parseDouble(txtActualAmount.getText().trim());
             LocalDate date = dpDate.getValue();
 
-            if (household == null || feeName.isEmpty() || batch == null || date == null) {
+            if (household == null || feeName.isEmpty() || feeCategory == null || batch == null || date == null) {
                 showAlert("Vui lòng nhập đầy đủ thông tin!");
                 return;
             }
@@ -83,7 +101,7 @@ public class CreateFeeCollectionController {
             if (fee == null) {
                 fee = new Fee();
                 fee.setFeeName(feeName);
-                fee.setFeeCategory(Fee.FeeCategory.Service);
+                fee.setFeeCategory(feeCategory);
                 fee.setFeeAmount(expectedAmount);
                 fee.setCalculationMethod(Fee.CalculationMethod.Fixed);
                 fee = feeDao.save(fee);

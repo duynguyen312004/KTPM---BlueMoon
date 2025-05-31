@@ -13,6 +13,7 @@ ALTER SEQUENCE batch_fees_batch_fee_id_seq RESTART WITH 1;
 ALTER SEQUENCE billing_items_billing_item_id_seq RESTART WITH 1;
 ALTER SEQUENCE transactions_transaction_id_seq RESTART WITH 1;
 ALTER SEQUENCE receipts_receipt_id_seq RESTART WITH 1;
+
 --1. users
 INSERT INTO users (username, password, full_name, phone_number, role, is_active, last_login, created_at, updated_at) VALUES
     ('accountant02', 'hashed_acc_password2', 'pham hong duong', '0933333333', 'Accountant', FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
