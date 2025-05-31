@@ -15,28 +15,21 @@
             <RowConstraints minHeight="32"/>
             <RowConstraints minHeight="32"/>
             <RowConstraints minHeight="32"/>
-            <RowConstraints minHeight="32"/>
         </rowConstraints>
         <Label text="Mã hộ khẩu:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <ComboBox fx:id="cbHousehold" promptText="Chọn mã hộ khẩu" prefWidth="220" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
         <Label text="Tên khoản thu:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtFeeName" promptText="Nhập tên khoản thu" prefWidth="220" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <ComboBox fx:id="cbFeeName" promptText="Chọn khoản thu" prefWidth="220" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <Label text="Loại phí:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbFeeCategory" promptText="Chọn loại phí" prefWidth="220" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Đợt thu:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="cbBatch" promptText="Chọn đợt thu" prefWidth="220" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Label text="Đợt thu:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="cbBatch" promptText="Chọn đợt thu" prefWidth="220" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Số tiền:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtAmount" promptText="Nhập số tiền" prefWidth="220" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <Label text="Số tiền:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtAmount" promptText="Nhập số tiền" prefWidth="220" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-        <Label text="Đã thu:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-        <TextField fx:id="txtActualAmount" promptText="Nhập số tiền đã thu" prefWidth="220" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-
-        <Label text="Ngày nộp:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-        <DatePicker fx:id="dpDate" promptText="Chọn ngày nộp" prefWidth="220" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label text="Đã thu:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtActualAmount" promptText="Nhập số tiền đã thu" prefWidth="220" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
     </GridPane>
     <HBox spacing="18" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
         <Button fx:id="btnCancel" text="Hủy" prefWidth="100" styleClass="btn-secondary"/>

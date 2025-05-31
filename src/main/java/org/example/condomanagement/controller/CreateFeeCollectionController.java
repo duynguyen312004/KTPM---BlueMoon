@@ -12,18 +12,17 @@ import org.example.condomanagement.model.BillingItem;
 import org.example.condomanagement.model.CollectionBatch;
 import org.example.condomanagement.model.Fee;
 import org.example.condomanagement.model.Household;
+import org.hibernate.Session;
+import org.example.condomanagement.config.HibernateUtil;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class CreateFeeCollectionController {
     @FXML private ComboBox<Household> cbHousehold;
-    @FXML private TextField txtFeeName;
-    @FXML private ComboBox<Fee.FeeCategory> cbFeeCategory;
+    @FXML private ComboBox<Fee> cbFeeName;
     @FXML private ComboBox<CollectionBatch> cbBatch;
     @FXML private TextField txtAmount;
     @FXML private TextField txtActualAmount;
-    @FXML private DatePicker dpDate;
     @FXML private Button btnCancel, btnSave;
 
     private final HouseholdDao householdDao = new HouseholdDao();
@@ -43,19 +42,21 @@ public class CreateFeeCollectionController {
             @Override public Household fromString(String s) { return null; }
         });
 
-        // Load danh sách loại phí
-        cbFeeCategory.setItems(FXCollections.observableArrayList(Fee.FeeCategory.values()));
-        cbFeeCategory.setConverter(new javafx.util.StringConverter<>() {
-            @Override public String toString(Fee.FeeCategory c) { 
-                return c == null ? "" : switch(c) {
-                    case Service -> "Dịch vụ";
-                    case Management -> "Quản lý";
-                    case Parking -> "Gửi xe";
-                    case Utility -> "Tiện ích";
-                    case Voluntary -> "Tự nguyện";
-                };
+        // Load danh sách khoản thu
+        List<Fee> fees = feeDao.findAll();
+        cbFeeName.setItems(FXCollections.observableArrayList(fees));
+        cbFeeName.setConverter(new javafx.util.StringConverter<>() {
+            @Override public String toString(Fee f) { return f == null ? "" : f.getFeeName(); }
+            @Override public Fee fromString(String s) { return null; }
+        });
+
+        // Khi chọn khoản thu, tự động điền số tiền
+        cbFeeName.setOnAction(e -> {
+            Fee selectedFee = cbFeeName.getValue();
+            if (selectedFee != null) {
+                txtAmount.setText(String.valueOf(selectedFee.getFeeAmount()));
+                txtAmount.setDisable(true); // Không cho phép sửa số tiền
             }
-            @Override public Fee.FeeCategory fromString(String s) { return null; }
         });
 
         // Load danh sách đợt thu
@@ -74,37 +75,35 @@ public class CreateFeeCollectionController {
         editingItem = new BillingItemDao().findById(row.getBillingItemId());
         if (editingItem != null) {
             cbHousehold.setValue(editingItem.getHousehold());
-            txtFeeName.setText(editingItem.getFee().getFeeName());
-            cbFeeCategory.setValue(editingItem.getFee().getFeeCategory());
+            cbFeeName.setValue(editingItem.getFee());
             cbBatch.setValue(editingItem.getBatch());
             txtAmount.setText(editingItem.getExpectedAmount().toString());
             txtActualAmount.setText(editingItem.getActualAmount().toString());
+            
+            // Kiểm tra xem khoản thu đã có actual_amount chưa
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                String hql = "SELECT COUNT(t) FROM Transaction t WHERE t.billingItem.fee.feeId = :feeId";
+                Long count = session.createQuery(hql, Long.class)
+                        .setParameter("feeId", editingItem.getFee().getFeeId())
+                        .uniqueResult();
+                
+                // Nếu đã có giao dịch, không cho phép sửa số tiền
+                txtAmount.setDisable(count != null && count > 0);
+            }
         }
     }
 
     private void handleSave() {
         try {
             Household household = cbHousehold.getValue();
-            String feeName = txtFeeName.getText().trim();
-            Fee.FeeCategory feeCategory = cbFeeCategory.getValue();
+            Fee fee = cbFeeName.getValue();
             CollectionBatch batch = cbBatch.getValue();
             double expectedAmount = Double.parseDouble(txtAmount.getText().trim());
             double actualAmount = Double.parseDouble(txtActualAmount.getText().trim());
-            LocalDate date = dpDate.getValue();
 
-            if (household == null || feeName.isEmpty() || feeCategory == null || batch == null || date == null) {
+            if (household == null || fee == null || batch == null) {
                 showAlert("Vui lòng nhập đầy đủ thông tin!");
                 return;
-            }
-
-            Fee fee = feeDao.findAll().stream().filter(f -> f.getFeeName().equalsIgnoreCase(feeName)).findFirst().orElse(null);
-            if (fee == null) {
-                fee = new Fee();
-                fee.setFeeName(feeName);
-                fee.setFeeCategory(feeCategory);
-                fee.setFeeAmount(expectedAmount);
-                fee.setCalculationMethod(Fee.CalculationMethod.Fixed);
-                fee = feeDao.save(fee);
             }
 
             if (editingItem != null) {

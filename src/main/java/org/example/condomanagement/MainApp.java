@@ -1,4 +1,4 @@
-package org.example.condomanagement.controller;
+package org.example.condomanagement;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
