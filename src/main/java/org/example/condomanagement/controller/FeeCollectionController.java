@@ -10,8 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.FeeCollectionRow;
 import org.example.condomanagement.service.FeeCollectionService;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Locale;
@@ -140,11 +143,65 @@ public class FeeCollectionController {
         confirm.showAndWait().ifPresent(result -> {
             if (result == ButtonType.YES) {
                 try {
-                    org.example.condomanagement.dao.BillingItemDao dao = new org.example.condomanagement.dao.BillingItemDao();
-                    org.example.condomanagement.model.BillingItem item = dao.findById(selected.getBillingItemId());
-                    dao.delete(item);
-                    boolean changed = reloadTableData();
-                    if (changed) showQuickAlert("Đã xóa khoản thu!");
+                    org.example.condomanagement.dao.BillingItemDao billingItemDao = new org.example.condomanagement.dao.BillingItemDao();
+                    org.example.condomanagement.dao.FeeDao feeDao = new org.example.condomanagement.dao.FeeDao();
+                    
+                    // Lấy thông tin khoản thu cần xóa
+                    org.example.condomanagement.model.BillingItem item = billingItemDao.findById(selected.getBillingItemId());
+                    if (item != null) {
+                        // Lưu lại thông tin fee trước khi xóa billing item
+                        org.example.condomanagement.model.Fee fee = item.getFee();
+                        
+                        // Xóa các giao dịch liên quan trước
+                        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                            session.beginTransaction();
+                            
+                            // Xóa các receipts liên quan
+                            String deleteReceiptsHql = "DELETE FROM Receipt r WHERE r.transaction.billingItem.billingItemId = :billingItemId";
+                            session.createQuery(deleteReceiptsHql)
+                                    .setParameter("billingItemId", item.getBillingItemId())
+                                    .executeUpdate();
+                            
+                            // Xóa các transactions liên quan
+                            String deleteTransactionsHql = "DELETE FROM Transaction t WHERE t.billingItem.billingItemId = :billingItemId";
+                            session.createQuery(deleteTransactionsHql)
+                                    .setParameter("billingItemId", item.getBillingItemId())
+                                    .executeUpdate();
+                            
+                            session.getTransaction().commit();
+                        }
+                        
+                        // Xóa billing item
+                        billingItemDao.delete(item);
+                        
+                        // Kiểm tra xem fee có còn được sử dụng bởi billing item nào khác không
+                        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                            // Kiểm tra trong bảng billing_items
+                            String hql = "SELECT COUNT(bi) FROM BillingItem bi WHERE bi.fee.feeId = :feeId";
+                            Long count = session.createQuery(hql, Long.class)
+                                    .setParameter("feeId", fee.getFeeId())
+                                    .uniqueResult();
+                            
+                            // Kiểm tra trong bảng vehicle_fee_mapping
+                            String hql2 = "SELECT COUNT(vfm) FROM VehicleFeeMapping vfm WHERE vfm.fee.feeId = :feeId";
+                            Long count2 = session.createQuery(hql2, Long.class)
+                                    .setParameter("feeId", fee.getFeeId())
+                                    .uniqueResult();
+                            
+                            // Nếu không còn được sử dụng ở cả hai bảng, xóa fee
+                            if ((count == null || count == 0) && (count2 == null || count2 == 0)) {
+                                try {
+                                    feeDao.delete(fee);
+                                } catch (Exception e) {
+                                    // Nếu có lỗi khi xóa fee, ghi log nhưng không dừng chương trình
+                                    System.err.println("Lỗi khi xóa fee: " + e.getMessage());
+                                }
+                            }
+                        }
+                        
+                        boolean changed = reloadTableData();
+                        if (changed) showQuickAlert("Đã xóa khoản thu!");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     new Alert(Alert.AlertType.ERROR, "Lỗi khi xóa khoản thu!").show();
