@@ -25,7 +25,7 @@
             <TableColumn fx:id="colBatch" text="Đợt thu" prefWidth="120"/>
             <TableColumn fx:id="colAmount" text="Số tiền" prefWidth="120"/>
             <TableColumn fx:id="colActualAmount" text="Đã thu" prefWidth="120"/>
-            <TableColumn fx:id="colDate" text="Ngày nộp" prefWidth="120"/>
+            <TableColumn fx:id="colDate" text="Ngày tạo" prefWidth="120"/>
         </columns>
     </TableView>
 </VBox>
