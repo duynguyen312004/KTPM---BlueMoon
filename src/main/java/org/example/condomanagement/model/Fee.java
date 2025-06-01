@@ -63,14 +63,14 @@ public class Fee extends BaseEntity {
      * List of billing items associated with this fee
      * One-to-many relationship with BillingItem
      */
-    @OneToMany(mappedBy = "fee")
+    @OneToMany(mappedBy = "fee",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillingItem> billingItems = new ArrayList<>();
 
     /**
      * List of batch fees associated with this fee
      * One-to-many relationship with BatchFee
      */
-    @OneToMany(mappedBy = "fee")
+    @OneToMany(mappedBy = "fee",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BatchFee> batchFees = new ArrayList<>();
 
     //constructor
