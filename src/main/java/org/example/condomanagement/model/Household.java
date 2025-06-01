@@ -24,10 +24,10 @@ public class Household extends BaseEntity {
     @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resident> residents = new ArrayList<>();
 
-    @OneToMany(mappedBy = "household")
+    @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true )
     private List<BillingItem> billingItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "household")
+    @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vehicle> vehicles = new ArrayList<>();
 
     @Column(name = "head_resident_id")

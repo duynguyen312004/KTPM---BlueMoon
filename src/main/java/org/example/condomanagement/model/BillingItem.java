@@ -38,7 +38,7 @@ public class BillingItem extends BaseEntity {
     @Column(nullable = false)
     private Status status;
 
-    @OneToMany(mappedBy = "billingItem")
+    @OneToMany(mappedBy = "billingItem",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
     public BillingItem() {
