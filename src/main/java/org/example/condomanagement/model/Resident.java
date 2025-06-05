@@ -11,8 +11,6 @@
         @Column(name = "resident_id")
         private Integer residentId;
 
-
-
         @ManyToOne(optional = false)
         @JoinColumn(name = "household_id")
         private Household household;

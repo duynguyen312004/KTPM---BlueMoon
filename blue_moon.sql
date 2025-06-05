@@ -213,24 +213,24 @@ INSERT INTO transactions (billing_item_id, amount_paid, payment_date, created_by
 
 -- 11. receipts
 INSERT INTO receipts (transaction_id, receipt_number, issue_date, file_url, created_at, updated_at) VALUES
-    (1, 'RCPT0624A101001', '2024-06-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (2, 'RCPT0624A101002', '2024-06-05', '/receipts/RCPT0624A101002.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (3, 'RCPT0624A101003', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (4, 'RCPT0624A101004', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (5, 'RCPT0624A101005', '2024-06-07', '/receipts/RCPT0624A101005.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (6, 'RCPT0624B205001', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (7, 'RCPT0624B205002', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (8, 'RCPT0724C303001', '2024-07-08', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (14, 'RCPT0824A102001', '2024-08-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (15, 'RCPT0924A103001', '2024-09-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (16, 'RCPT1024B206001', '2024-10-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (17, 'RCPT1124B207001', '2024-11-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (18, 'RCPT1224C304001', '2024-12-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (20, 'RCPT0225D401001', '2025-02-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (21, 'RCPT0325D402001', '2025-03-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (22, 'RCPT0425E501001', '2025-04-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (23, 'RCPT0525E502001', '2025-05-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
+                                                                                                        (1, 'RCPT0624A101001', '2024-06-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (2, 'RCPT0624A101002', '2024-06-05', '/receipts/RCPT0624A101002.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (3, 'RCPT0624A101003', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (4, 'RCPT0624A101004', '2024-06-06', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (5, 'RCPT0624A101005', '2024-06-07', '/receipts/RCPT0624A101005.pdf', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (6, 'RCPT0624B205001', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (7, 'RCPT0624B205002', '2024-06-10', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (8, 'RCPT0724C303001', '2024-07-08', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (9, 'RCPT0824A102001', '2024-08-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (10, 'RCPT0924A103001', '2024-09-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (11, 'RCPT1024B206001', '2024-10-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (12, 'RCPT1124B207001', '2024-11-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (13, 'RCPT1224C304001', '2024-12-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (14, 'RCPT0225D401001', '2025-02-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (15, 'RCPT0325D402001', '2025-03-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (16, 'RCPT0425E501001', '2025-04-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (17, 'RCPT0525E502001', '2025-05-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+                                                                                                        (18, 'RCPT0525E503001', '2025-06-05', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 UPDATE fees SET
                 fee_name = 'Phi Quan Ly Chung Cu',
                 fee_category = 'Management'
