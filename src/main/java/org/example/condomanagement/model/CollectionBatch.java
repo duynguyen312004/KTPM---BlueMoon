@@ -20,10 +20,10 @@ public class CollectionBatch extends BaseEntity {
     @Column(nullable = false)
     private LocalDate period;
 
-    @OneToMany(mappedBy = "batch")
+    @OneToMany(mappedBy = "batch",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillingItem> billingItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "batch")
+    @OneToMany(mappedBy = "batch",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BatchFee> batchFees = new ArrayList<>();
 
     // getters & setters
