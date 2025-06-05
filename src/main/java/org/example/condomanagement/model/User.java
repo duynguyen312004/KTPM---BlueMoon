@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "role", columnDefinition = "user_role", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "createdBy")

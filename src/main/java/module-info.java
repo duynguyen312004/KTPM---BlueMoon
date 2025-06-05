@@ -19,7 +19,7 @@ module CondoManagement {
     opens org.example.condomanagement.controller to javafx.fxml;
     exports org.example.condomanagement.controller to javafx.graphics;
 
-    opens org.example.condomanagement.model to org.hibernate.orm.core;
+    opens org.example.condomanagement.model to org.hibernate.orm.core, javafx.base;
     exports org.example.condomanagement.model to org.hibernate.orm.core;
 
     opens org.example.condomanagement.dao to org.hibernate.orm.core;

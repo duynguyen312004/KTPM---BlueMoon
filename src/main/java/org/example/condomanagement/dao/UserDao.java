@@ -4,6 +4,7 @@ import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -32,12 +33,11 @@ public class UserDao {
      */
     public List<User> findByRole(User.Role role) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            return s.createQuery(
-                    "SELECT u FROM User u WHERE u.role = :role", User.class)
-                    .setParameter("role", role)
-                    .getResultList();
+            String hql = "FROM User u WHERE CAST(u.role AS string) = :role";
+            Query<User> query = s.createQuery(hql, User.class);
+            query.setParameter("role", role.name());
+            return query.getResultList();
         }
-
     }
 
     public List<User> findAll() {

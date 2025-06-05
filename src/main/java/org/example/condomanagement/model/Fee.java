@@ -5,6 +5,10 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+/**
+ * Entity class representing a fee in the condominium management system.
+ * This class manages different types of fees that can be charged to households.
+ */
 @Entity
 @Table(name = "fees")
 public class Fee extends BaseEntity {
@@ -13,32 +17,60 @@ public class Fee extends BaseEntity {
     @Column(name = "fee_id")
     private Integer feeId;
 
-    @Column(nullable = false)
+    /**
+     * The name of the fee (e.g., "Phi Quan Ly Chung Cu", "Phi Gui Xe")
+     */
+    @Column(name = "fee_name", nullable = false)
     private String feeName;
 
+    /**
+     * Categories of fees in the system
+     * Service: Regular maintenance and service fees
+     * Management: Administrative and management fees
+     * Parking: Vehicle parking related fees
+     * Utility: Basic utility fees
+     * Voluntary: Optional contribution fees
+     */
     public enum FeeCategory {
         Service, Management, Parking, Utility, Voluntary
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "fee_category", nullable = false)
     private FeeCategory feeCategory;
 
-    @Column(nullable = false)
+    /**
+     * The base amount for the fee
+     */
+    @Column(name = "fee_amount", nullable = false)
     private Double feeAmount;
 
+    /**
+     * Methods for calculating the fee amount
+     * Fixed: Fixed amount regardless of other factors
+     * PerSqM: Amount calculated based on square meters
+     * PerVehicle: Amount calculated per vehicle
+     */
     public enum CalculationMethod {
         Fixed, PerSqM, PerVehicle
     }
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "calculation_method", nullable = false)
     private CalculationMethod calculationMethod;
 
-    @OneToMany(mappedBy = "fee")
+    /**
+     * List of billing items associated with this fee
+     * One-to-many relationship with BillingItem
+     */
+    @OneToMany(mappedBy = "fee",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillingItem> billingItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "fee")
+    /**
+     * List of batch fees associated with this fee
+     * One-to-many relationship with BatchFee
+     */
+    @OneToMany(mappedBy = "fee",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BatchFee> batchFees = new ArrayList<>();
 
     //constructor
