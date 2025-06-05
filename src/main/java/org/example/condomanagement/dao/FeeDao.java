@@ -24,9 +24,9 @@ public class FeeDao {
 
     public List<String> findAllName() {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query<String> query=s.createQuery("SELECT t.feeName FROM Fee t", String.class);
+            Query<String> query = s.createQuery("SELECT t.feeName FROM Fee t", String.class);
             return query.getResultList();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -34,9 +34,9 @@ public class FeeDao {
 
     public List<Fee.FeeCategory> findAllCategory() {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Fee.FeeCategory> query=s.createQuery("SELECT t.feeCategory FROM Fee t", Fee.FeeCategory.class);
+            Query<Fee.FeeCategory> query = s.createQuery("SELECT t.feeCategory FROM Fee t", Fee.FeeCategory.class);
             return query.getResultList();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -44,9 +44,10 @@ public class FeeDao {
 
     public List<Fee.CalculationMethod> findAllMethod() {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Fee.CalculationMethod> query=s.createQuery("SELECT distinct t.calculationMethod distinct FROM Fee t", Fee.CalculationMethod.class);
+            Query<Fee.CalculationMethod> query = s.createQuery(
+                    "SELECT distinct t.calculationMethod distinct FROM Fee t", Fee.CalculationMethod.class);
             return query.getResultList();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -60,7 +61,8 @@ public class FeeDao {
             tx.commit();
             return saved;
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             throw e;
         }
     }
@@ -69,10 +71,11 @@ public class FeeDao {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            session.update(fee); // ⚠️ khác với merge(): chỉ hoạt động nếu entity đã tồn tại và được quản lý
+            session.merge(fee); // ⚠️ khác với merge(): chỉ hoạt động nếu entity đã tồn tại và được quản lý
             tx.commit();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             throw e;
         }
     }

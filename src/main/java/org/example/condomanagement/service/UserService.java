@@ -11,6 +11,7 @@ import org.hibernate.Session;
 /**
  * Business logic for authentication and account/resident management.
  */
+@SuppressWarnings("unused")
 public class UserService {
     private final UserDao userDao = new UserDao();
 
@@ -96,6 +97,5 @@ public class UserService {
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
-
 
 }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FeeManagementController {
 
     FeeDao feeDao = new FeeDao();
@@ -55,7 +56,8 @@ public class FeeManagementController {
         List<Fee> allFees = feeDao.findAll();
         List<Fee> filtered = allFees.stream()
                 .filter(fee -> {
-                    boolean matchName = selectedName.equals("Tất cả") || fee.getFeeCategory().toString().equals(selectedName);
+                    boolean matchName = selectedName.equals("Tất cả")
+                            || fee.getFeeCategory().toString().equals(selectedName);
                     boolean matchKeyword = keyword.isEmpty() || fee.getFeeName().toLowerCase().contains(keyword);
                     return matchName && matchKeyword;
                 })
@@ -100,13 +102,13 @@ public class FeeManagementController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
             Parent root = loader.load();
 
-             // ✅ Lấy controller
+            // ✅ Lấy controller
             AddFeeController controller = loader.getController();
 
-             // ✅ Truyền fee được chọn
+            // ✅ Truyền fee được chọn
             controller.setFeeToEdit(selectedFee);
 
-             // ✅ Truyền cả feeTableView (QUAN TRỌNG!)
+            // ✅ Truyền cả feeTableView (QUAN TRỌNG!)
             controller.setFeeTableView(feeTableView); // <-- bạn đang thiếu dòng này
 
             Stage stage = new Stage();
@@ -141,8 +143,8 @@ public class FeeManagementController {
 
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
-                feeDao.delete(selectedFee);  // Gọi DAO để xóa trong DB
-                feeTableView.getItems().remove(selectedFee);  // Xóa khỏi giao diện
+                feeDao.delete(selectedFee); // Gọi DAO để xóa trong DB
+                feeTableView.getItems().remove(selectedFee); // Xóa khỏi giao diện
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Xóa thành công");
@@ -180,13 +182,16 @@ public class FeeManagementController {
         feeTypeComboBox.setItems(FXCollections.observableArrayList(comboItems));
         feeTypeComboBox.setValue("Tất cả");
 
-
-        ObservableList<Fee> feeList= FXCollections.observableArrayList(feeDao.findAll());
+        ObservableList<Fee> feeList = FXCollections.observableArrayList(feeDao.findAll());
         feeTableView.setItems(feeList);
-        maKhoanPhiColumn.setCellValueFactory(cellData-> new SimpleIntegerProperty(cellData.getValue().getFeeId()).asObject().asString());
-        tenKhoanPhiColumn.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getFeeName()));
-        loaiColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getFeeCategory().toString()));
-        soTienColumn.setCellValueFactory(cellData->new SimpleDoubleProperty(cellData.getValue().getFeeAmount()).asObject());
-        cachtinhColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getCalculationMethod().toString()));
+        maKhoanPhiColumn.setCellValueFactory(
+                cellData -> new SimpleIntegerProperty(cellData.getValue().getFeeId()).asObject().asString());
+        tenKhoanPhiColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFeeName()));
+        loaiColumn.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getFeeCategory().toString()));
+        soTienColumn.setCellValueFactory(
+                cellData -> new SimpleDoubleProperty(cellData.getValue().getFeeAmount()).asObject());
+        cachtinhColumn.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getCalculationMethod().toString()));
     }
 }

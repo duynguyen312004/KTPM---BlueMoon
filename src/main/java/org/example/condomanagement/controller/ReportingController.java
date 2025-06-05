@@ -27,6 +27,7 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class ReportingController {
 
     @FXML
@@ -74,32 +75,30 @@ public class ReportingController {
     private final BillingItemDao billingItemDao = new BillingItemDao();
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-
     @FXML
     void initialize() {
-        List<BillingItemDao.BillingSummary> billingItemList=billingItemDao.getBillingSummaryByHousehold();
+        List<BillingItemDao.BillingSummary> billingItemList = billingItemDao.getBillingSummaryByHousehold();
 
-        //Điền thông tin các Label tương ứng
+        // Điền thông tin các Label tương ứng
         fillLabel(billingItemList);
 
-        //Hiển thị biểu đồ thống kê
+        // Hiển thị biểu đồ thống kê
         loadChar(billingItemList);
         householdBarChart.setCategoryGap(10);
         householdBarChart.setBarGap(5);
         householdBarChart.setTitle("Mức đóng của các hộ");
 
-        //top 3 hộ nợ nhiều nhất
+        // top 3 hộ nợ nhiều nhất
         loadTopList(billingItemList);
 
-        //tabel-view
+        // tabel-view
         loadTable(billingItemList);
 
         exportReportButton.setOnAction(this::handleExportReport);
 
-
     }
 
-    void fillLabel(List<BillingItemDao.BillingSummary> billingItemList){
+    void fillLabel(List<BillingItemDao.BillingSummary> billingItemList) {
         int totalHouseholds = billingItemList.size();
 
         double totalCollected = billingItemList.stream()
@@ -122,7 +121,7 @@ public class ReportingController {
         collectionRateLabel.setText(String.format("%.0f%%", collectionRate));
     }
 
-    void loadChar(List<BillingItemDao.BillingSummary> billingItemList){
+    void loadChar(List<BillingItemDao.BillingSummary> billingItemList) {
         statTypeComboBox.setItems(FXCollections.observableArrayList("Tất cả", "Đã thu", "Chưa thu"));
         statTypeComboBox.getSelectionModel().selectFirst(); // chọn sẵn "Tất cả"
         List<String> apartmentCodes = billingItemList.stream()
@@ -142,20 +141,19 @@ public class ReportingController {
                 .filter(b -> {
                     boolean matchesType = switch (selectedType) {
                         case "Đã thu" -> b.getTotalActualAmount() > 0;
-                        case "Chưa thu" -> b.getTotalExpectedAmount()-b.getTotalActualAmount() > 0;
+                        case "Chưa thu" -> b.getTotalExpectedAmount() - b.getTotalActualAmount() > 0;
                         default -> true;
                     };
 
                     boolean matchesHousehold = selectedHousehold == null || selectedHousehold.isEmpty()
                             || b.getHouseholdId().equals(selectedHousehold);
 
-
                     return matchesType && matchesHousehold;
                 })
                 .collect(Collectors.toList());
 
         updateBarChart(filtered);
-    
+
     }
 
     private void updateBarChart(List<BillingItemDao.BillingSummary> data) {
@@ -173,7 +171,7 @@ public class ReportingController {
             String household = summary.getHouseholdId();
             Double actual = summary.getTotalActualAmount();
             Double expected = summary.getTotalExpectedAmount();
-            Double unpaid = expected-actual;
+            Double unpaid = expected - actual;
 
             switch (selectedType) {
                 case "Tất cả" -> {
@@ -215,38 +213,44 @@ public class ReportingController {
         });
     }
 
-    void loadTopList(List<BillingItemDao.BillingSummary> billingItemList){
+    void loadTopList(List<BillingItemDao.BillingSummary> billingItemList) {
         List<BillingItemDao.BillingSummary> sorted = billingItemList.stream()
                 .sorted(Comparator.comparing(BillingItemDao.BillingSummary::getDebtAmount).reversed())
                 .limit(3)
-                .collect(Collectors.toList()
-                );
+                .collect(Collectors.toList());
 
         if (sorted.size() > 0) {
             BillingItemDao.BillingSummary debtor1 = sorted.get(0);
             topDebtor1CodeLabel.setText(debtor1.getHouseholdId()); // hoặc debtor1.getHouseholdName()
-            topDebtor1AmountLabel.setText(currencyFormat.format(debtor1.getTotalExpectedAmount()-debtor1.getTotalActualAmount()));
+            topDebtor1AmountLabel
+                    .setText(currencyFormat.format(debtor1.getTotalExpectedAmount() - debtor1.getTotalActualAmount()));
         }
 
         if (sorted.size() > 1) {
             BillingItemDao.BillingSummary debtor2 = sorted.get(1);
             topDebtor2CodeLabel.setText(debtor2.getHouseholdId());
-            topDebtor2AmountLabel.setText(currencyFormat.format(debtor2.getTotalExpectedAmount()-debtor2.getTotalActualAmount()));
+            topDebtor2AmountLabel
+                    .setText(currencyFormat.format(debtor2.getTotalExpectedAmount() - debtor2.getTotalActualAmount()));
         }
 
         if (sorted.size() > 2) {
             BillingItemDao.BillingSummary debtor3 = sorted.get(2);
             topDebtor3CodeLabel.setText(debtor3.getHouseholdId());
-            topDebtor3AmountLabel.setText(currencyFormat.format(debtor3.getTotalExpectedAmount()-debtor3.getTotalActualAmount()));
+            topDebtor3AmountLabel
+                    .setText(currencyFormat.format(debtor3.getTotalExpectedAmount() - debtor3.getTotalActualAmount()));
         }
     }
 
-    void loadTable(List<BillingItemDao.BillingSummary> billingItemList){
+    void loadTable(List<BillingItemDao.BillingSummary> billingItemList) {
         detailsTableView.setItems(FXCollections.observableArrayList(billingItemList));
-        householdIdColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getHouseholdId()));
-        householdNameColumn.setCellValueFactory(cellData->new SimpleStringProperty(cellData.getValue().getHouseholdName()));
-        amountCollectedColumn.setCellValueFactory(cellData->new SimpleStringProperty(formatCurrency(cellData.getValue().getTotalActualAmount())));
-        amountDueColumn.setCellValueFactory(cellData->new SimpleStringProperty(formatCurrency(cellData.getValue().getTotalExpectedAmount()-cellData.getValue().getTotalActualAmount())));
+        householdIdColumn
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHouseholdId()));
+        householdNameColumn
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getHouseholdName()));
+        amountCollectedColumn.setCellValueFactory(
+                cellData -> new SimpleStringProperty(formatCurrency(cellData.getValue().getTotalActualAmount())));
+        amountDueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(formatCurrency(
+                cellData.getValue().getTotalExpectedAmount() - cellData.getValue().getTotalActualAmount())));
     }
 
     private String formatCurrency(Double amount) {

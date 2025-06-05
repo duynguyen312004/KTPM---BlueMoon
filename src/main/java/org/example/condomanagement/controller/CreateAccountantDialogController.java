@@ -11,7 +11,7 @@ public class CreateAccountantDialogController {
 
     private UserService userService;
 
-    public void setUserService(UserService userService) {
+    public void setUserService(@SuppressWarnings("exports") UserService userService) {
         this.userService = userService;
     }
 

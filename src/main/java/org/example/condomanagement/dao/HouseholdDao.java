@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class HouseholdDao {
     public Household findById(Integer id) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
@@ -19,9 +20,8 @@ public class HouseholdDao {
             return session.createQuery(
                     "SELECT DISTINCT h " +
                             "FROM Household h " +
-                            "LEFT JOIN FETCH h.residents",  // đảm bảo residents được load luôn
-                    Household.class
-            ).list();
+                            "LEFT JOIN FETCH h.residents", // đảm bảo residents được load luôn
+                    Household.class).list();
         }
     }
 
@@ -32,7 +32,7 @@ public class HouseholdDao {
         }
     }
 
-    public Household  save(Household hh) {
+    public Household save(Household hh) {
         Transaction tx = null;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             tx = s.beginTransaction();
@@ -47,7 +47,8 @@ public class HouseholdDao {
             tx.commit();
             return hh;
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             throw e;
         }
     }
@@ -60,14 +61,16 @@ public class HouseholdDao {
             // Xử lý: set head_resident_id về null trước khi xóa resident
             hh = s.merge(hh); // Đảm bảo entity đã managed
 
-            hh.setHeadResidentId(null);  // Quan trọng! Giải phóng FK trước
+            hh.setHeadResidentId(null); // Quan trọng! Giải phóng FK trước
             s.merge(hh);
             s.flush(); // Sync với DB
 
-            s.remove(hh); // Lúc này Hibernate sẽ xóa household và toàn bộ residents nhờ cascade+orphanRemoval
+            s.remove(hh); // Lúc này Hibernate sẽ xóa household và toàn bộ residents nhờ
+                          // cascade+orphanRemoval
             tx.commit();
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             throw e;
         }
     }
@@ -79,8 +82,7 @@ public class HouseholdDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Long cnt = session.createQuery(
                     "SELECT COUNT(h) FROM Household h WHERE h.headResidentId IS NOT NULL",
-                    Long.class
-            ).getSingleResult();
+                    Long.class).getSingleResult();
             return cnt != null ? cnt : 0L;
         }
     }
