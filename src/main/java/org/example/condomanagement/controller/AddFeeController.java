@@ -49,7 +49,20 @@ public class AddFeeController {
         try {
             String name = tenKhoanPhiField.getText();
             Fee.FeeCategory category = loaiComboBox.getValue();
-            double amount = Double.parseDouble(soTienField.getText());
+            String amountText = soTienField.getText().trim();
+
+            if (name.isEmpty() || amountText.isEmpty() || category == null || cachTinhComboBox.getValue() == null) {
+                showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin.");
+                return;
+            }
+
+            double amount = Double.parseDouble(amountText);
+
+            if (amount < 0) {
+                showAlert(Alert.AlertType.ERROR, "Giá trị không hợp lệ", "Số tiền không được nhỏ hơn 0.");
+                return;
+            }
+
             Fee.CalculationMethod method = cachTinhComboBox.getValue();
 
             if (feeToEdit != null) {
@@ -59,9 +72,8 @@ public class AddFeeController {
                 feeToEdit.setFeeAmount(amount);
                 feeToEdit.setCalculationMethod(method);
 
-                feeDao.update(feeToEdit);           // <-- dùng update thay vì merge
-                feeTableView.refresh();             // Làm mới giao diện
-
+                feeDao.update(feeToEdit);
+                feeTableView.refresh();
             } else {
                 // ✅ Trường hợp THÊM MỚI
                 Fee fee = new Fee(name, category, amount, method);
@@ -69,23 +81,26 @@ public class AddFeeController {
                 feeTableView.getItems().add(saved);
             }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thành công");
-            alert.setHeaderText(null);
-            alert.setContentText("Đã lưu khoản phí!");
-            alert.showAndWait();
-
+            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã lưu khoản phí!");
             ((Stage) ((Button) actionEvent.getSource()).getScene().getWindow()).close();
 
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi định dạng", "Vui lòng nhập số tiền hợp lệ.");
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText("Không thể lưu khoản phí");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể lưu khoản phí\nChi tiết: " + e.getMessage());
         }
     }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
 
     @FXML
     public void initialize() {
