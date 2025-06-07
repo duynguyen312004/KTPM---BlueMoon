@@ -65,6 +65,11 @@ public class CreateHouseholdDialogController {
             new Alert(Alert.AlertType.ERROR, "Diện tích phải là số!").show();
             return;
         }
+        // Bổ sung kiểm tra không âm:
+        if (area < 0) {
+            new Alert(Alert.AlertType.ERROR, "Diện tích không được âm!").show();
+            return;
+        }
 
         // 2) Validate input chủ hộ
         String headName = txtHeadName.getText().trim();
@@ -125,10 +130,10 @@ public class CreateHouseholdDialogController {
 
             tx.commit();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu dữ liệu: " + ex.getMessage()).show();
+            showConstraintViolationAlert(ex);
             return;
         }
+
 
         // 4) Đóng dialog
         ((Stage) btnSave.getScene().getWindow()).close();
@@ -137,5 +142,31 @@ public class CreateHouseholdDialogController {
     @FXML
     public void onCancel() {
         ((Stage) btnCancel.getScene().getWindow()).close();
+    }
+    private void showConstraintViolationAlert(Throwable ex) {
+        Throwable root = ex;
+        while (root.getCause() != null) {
+            root = root.getCause();
+        }
+        String msg = root.getMessage();
+
+        if (msg.contains("unique_national_id")) {
+            showAlert(Alert.AlertType.ERROR, "CCCD/CMND đã tồn tại!");
+        } else if (msg.contains("unique_phone_number")) {
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại đã tồn tại!");
+        } else if (msg.contains("check_national_id_length")) {
+            showAlert(Alert.AlertType.ERROR, "CCCD/CMND phải có đúng 12 chữ số!");
+        } else if (msg.contains("check_phone_number_format")) {
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!");
+        } else if (msg.contains("check_birthday")) {
+            showAlert(Alert.AlertType.ERROR, "Ngày sinh không hợp lệ (phải trước hoặc bằng ngày hôm nay)!");
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi khi lưu dữ liệu: " + msg);
+        }
+        ex.printStackTrace();
+    }
+
+    private void showAlert(Alert.AlertType type, String content) {
+        new Alert(type, content).show();
     }
 }

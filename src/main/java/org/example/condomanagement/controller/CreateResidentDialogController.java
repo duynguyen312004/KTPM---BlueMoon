@@ -91,14 +91,46 @@ public class CreateResidentDialogController {
         r.setPhoneNumber(txtPhoneNumber.getText().trim()); // <-- Lưu SĐT vào resident
 
         // 3. Lưu trong 1 transaction
-        boolean ok = residentService.saveOrUpdate(r);
-        if (ok) {
-            saved = true;
-            dialogStage.close();
-        } else {
-            new Alert(Alert.AlertType.ERROR,
-                    "Lỗi khi lưu dữ liệu!").show();
+        try {
+            boolean ok = residentService.saveOrUpdate(r);
+            if (ok) {
+                saved = true;
+                dialogStage.close();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Lỗi không xác định khi lưu!").show();
+            }
+        } catch (Exception ex) {
+            showConstraintViolationAlert(ex);
         }
+    }
+    /**
+     * Hiển thị thông báo lỗi rõ ràng khi gặp constraint database.
+     */
+    private void showConstraintViolationAlert(Throwable ex) {
+        Throwable root = ex;
+        while (root.getCause() != null) {
+            root = root.getCause();
+        }
+        String msg = root.getMessage();
+
+        if (msg.contains("duplicate key value") && msg.contains("national_id")) {
+            showAlert(Alert.AlertType.ERROR, "CCCD/CMND đã tồn tại!");
+        } else if (msg.contains("duplicate key value") && msg.contains("phone_number")) {
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại đã tồn tại!");
+        } else if (msg.contains("check_national_id_length")) {
+            showAlert(Alert.AlertType.ERROR, "CCCD/CMND phải có đúng 12 chữ số!");
+        } else if (msg.contains("check_phone_number_format")) {
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!");
+        } else if (msg.contains("check_birthday")) {
+            showAlert(Alert.AlertType.ERROR, "Ngày sinh không hợp lệ (phải trước hoặc bằng ngày hôm nay)!");
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Lỗi khi lưu dữ liệu: " + msg);
+        }
+        ex.printStackTrace();
+    }
+
+    private void showAlert(Alert.AlertType type, String content) {
+        new Alert(type, content).show();
     }
 
     @FXML
