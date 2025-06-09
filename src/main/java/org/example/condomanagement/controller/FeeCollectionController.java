@@ -20,20 +20,34 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class FeeCollectionController {
-    @FXML private TableView<FeeCollectionRow> tableFeeCollection;
-    @FXML private TableColumn<FeeCollectionRow, Integer> colFeeCode;
-    @FXML private TableColumn<FeeCollectionRow, String> colHouseholdCode;
-    @FXML private TableColumn<FeeCollectionRow, String> colFeeName;
-    @FXML private TableColumn<FeeCollectionRow, String> colBatch;
-    @FXML private TableColumn<FeeCollectionRow, Double> colAmount;
-    @FXML private TableColumn<FeeCollectionRow, Double> colActualAmount;
-    @FXML private TableColumn<FeeCollectionRow, String> colDate;
-    @FXML private ComboBox<String> cbSearchType;
-    @FXML private TextField txtSearch;
-    @FXML private Button btnSearch;
-    @FXML private Button btnAdd;
-    @FXML private Button btnEdit, btnDelete;
+    @FXML
+    private TableView<FeeCollectionRow> tableFeeCollection;
+    @FXML
+    private TableColumn<FeeCollectionRow, Integer> colFeeCode;
+    @FXML
+    private TableColumn<FeeCollectionRow, String> colHouseholdCode;
+    @FXML
+    private TableColumn<FeeCollectionRow, String> colFeeName;
+    @FXML
+    private TableColumn<FeeCollectionRow, String> colBatch;
+    @FXML
+    private TableColumn<FeeCollectionRow, Double> colAmount;
+    @FXML
+    private TableColumn<FeeCollectionRow, Double> colActualAmount;
+    @FXML
+    private TableColumn<FeeCollectionRow, String> colDate;
+    @FXML
+    private ComboBox<String> cbSearchType;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private Button btnSearch;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnEdit, btnDelete;
 
     private final FeeCollectionService service = new FeeCollectionService();
     private ObservableList<FeeCollectionRow> masterData;
@@ -76,7 +90,8 @@ public class FeeCollectionController {
         ObservableList<FeeCollectionRow> filtered = masterData.stream().filter(row -> {
             switch (type) {
                 case "Mã hộ khẩu":
-                    return row.getHouseholdCode() != null && row.getHouseholdCode().toLowerCase(Locale.ROOT).contains(keyword);
+                    return row.getHouseholdCode() != null
+                            && row.getHouseholdCode().toLowerCase(Locale.ROOT).contains(keyword);
                 case "Tên khoản phí":
                     return row.getFeeName() != null && row.getFeeName().toLowerCase(Locale.ROOT).contains(keyword);
                 case "Đợt thu":
@@ -100,7 +115,8 @@ public class FeeCollectionController {
 
             // Sau khi dialog đóng, reload lại dữ liệu
             boolean changed = reloadTableData();
-            if (changed) showQuickAlert("Đã thêm khoản thu mới!");
+            if (changed)
+                showQuickAlert("Đã thêm khoản thu mới!");
         } catch (Exception e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Không mở được form thêm khoản thu!").show();
@@ -124,20 +140,23 @@ public class FeeCollectionController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
             boolean changed = reloadTableData();
-            if (changed) showQuickAlert("Đã cập nhật khoản thu!");
+            if (changed)
+                showQuickAlert("Đã cập nhật khoản thu!");
         } catch (Exception e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Không mở được form sửa khoản thu!").show();
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void handleDelete() {
         FeeCollectionRow selected = tableFeeCollection.getSelectionModel().getSelectedItem();
         if (selected == null) {
             showQuickAlert("Vui lòng chọn khoản thu để xóa!");
             return;
         }
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa khoản thu này?", ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Bạn có chắc chắn muốn xóa khoản thu này?",
+                ButtonType.YES, ButtonType.NO);
         confirm.setTitle("Xác nhận xóa");
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(result -> {
@@ -145,35 +164,36 @@ public class FeeCollectionController {
                 try {
                     org.example.condomanagement.dao.BillingItemDao billingItemDao = new org.example.condomanagement.dao.BillingItemDao();
                     org.example.condomanagement.dao.FeeDao feeDao = new org.example.condomanagement.dao.FeeDao();
-                    
+
                     // Lấy thông tin khoản thu cần xóa
-                    org.example.condomanagement.model.BillingItem item = billingItemDao.findById(selected.getBillingItemId());
+                    org.example.condomanagement.model.BillingItem item = billingItemDao
+                            .findById(selected.getBillingItemId());
                     if (item != null) {
                         // Lưu lại thông tin fee trước khi xóa billing item
                         org.example.condomanagement.model.Fee fee = item.getFee();
-                        
+
                         // Xóa các giao dịch liên quan trước
                         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                             session.beginTransaction();
-                            
+
                             // Xóa các receipts liên quan
                             String deleteReceiptsHql = "DELETE FROM Receipt r WHERE r.transaction.billingItem.billingItemId = :billingItemId";
                             session.createQuery(deleteReceiptsHql)
                                     .setParameter("billingItemId", item.getBillingItemId())
                                     .executeUpdate();
-                            
+
                             // Xóa các transactions liên quan
                             String deleteTransactionsHql = "DELETE FROM Transaction t WHERE t.billingItem.billingItemId = :billingItemId";
                             session.createQuery(deleteTransactionsHql)
                                     .setParameter("billingItemId", item.getBillingItemId())
                                     .executeUpdate();
-                            
+
                             session.getTransaction().commit();
                         }
-                        
+
                         // Xóa billing item
                         billingItemDao.delete(item);
-                        
+
                         // Kiểm tra xem fee có còn được sử dụng bởi billing item nào khác không
                         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                             // Kiểm tra trong bảng billing_items
@@ -181,13 +201,13 @@ public class FeeCollectionController {
                             Long count = session.createQuery(hql, Long.class)
                                     .setParameter("feeId", fee.getFeeId())
                                     .uniqueResult();
-                            
+
                             // Kiểm tra trong bảng vehicle_fee_mapping
                             String hql2 = "SELECT COUNT(vfm) FROM VehicleFeeMapping vfm WHERE vfm.fee.feeId = :feeId";
                             Long count2 = session.createQuery(hql2, Long.class)
                                     .setParameter("feeId", fee.getFeeId())
                                     .uniqueResult();
-                            
+
                             // Nếu không còn được sử dụng ở cả hai bảng, xóa fee
                             if ((count == null || count == 0) && (count2 == null || count2 == 0)) {
                                 try {
@@ -198,9 +218,10 @@ public class FeeCollectionController {
                                 }
                             }
                         }
-                        
+
                         boolean changed = reloadTableData();
-                        if (changed) showQuickAlert("Đã xóa khoản thu!");
+                        if (changed)
+                            showQuickAlert("Đã xóa khoản thu!");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -233,7 +254,10 @@ public class FeeCollectionController {
         alert.show();
         // Tự động tắt sau 1.5s
         new Thread(() -> {
-            try { Thread.sleep(1500); } catch (InterruptedException ignored) {}
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException ignored) {
+            }
             javafx.application.Platform.runLater(alert::close);
         }).start();
     }

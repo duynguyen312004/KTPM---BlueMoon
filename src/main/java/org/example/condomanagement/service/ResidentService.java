@@ -8,20 +8,20 @@ import org.example.condomanagement.model.Resident;
 import org.example.condomanagement.model.User;
 import org.hibernate.Transaction;
 
-
 import org.hibernate.Session;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ResidentService {
     private final ResidentDao dao = new ResidentDao();
-    private final UserDao userDao     = new UserDao();
-
+    private final UserDao userDao = new UserDao();
 
     /** Lấy tất cả nhân khẩu, JOIN-fetch household để tránh Lazy lỗi */
     public List<Resident> findAllWithAssociations() {
         return dao.findAll();
     }
+
     public Resident findById(Integer id) {
         return dao.findById(id);
     }
@@ -59,7 +59,7 @@ public class ResidentService {
 
             // Tìm các household mà resident này là chủ hộ
             List<Household> households = session.createQuery(
-                            "FROM Household h WHERE h.headResidentId = :rid", Household.class)
+                    "FROM Household h WHERE h.headResidentId = :rid", Household.class)
                     .setParameter("rid", residentId)
                     .list();
             for (Household h : households) {
@@ -70,15 +70,18 @@ public class ResidentService {
 
             // Giờ mới xóa Resident
             Resident r = session.get(Resident.class, residentId);
-            if (r != null) session.delete(r);
+            if (r != null)
+                session.remove(r);
 
             tx.commit();
             return true;
         } catch (Exception e) {
-            if (tx != null) tx.rollback();
+            if (tx != null)
+                tx.rollback();
             return false;
         }
     }
+
     public int countAll() {
         return dao.countAll();
     }

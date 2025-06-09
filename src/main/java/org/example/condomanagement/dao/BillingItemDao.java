@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class BillingItemDao {
     public BillingItem findById(Integer id) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
@@ -52,7 +53,8 @@ public class BillingItemDao {
         private Double totalExpectedAmount;
         private Double totalActualAmount;
 
-        public BillingSummary(String householdId,String householdName, Double totalExpectedAmount, Double totalActualAmount) {
+        public BillingSummary(String householdId, String householdName, Double totalExpectedAmount,
+                Double totalActualAmount) {
             this.householdId = householdId;
             this.householdName = householdName;
             this.totalExpectedAmount = totalExpectedAmount;
@@ -106,7 +108,5 @@ public class BillingItemDao {
             return session.createQuery(hql, BillingSummary.class).getResultList();
         }
     }
-
-
 
 }

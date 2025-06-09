@@ -12,7 +12,7 @@ import org.example.condomanagement.model.Fee;
 
 import java.util.List;
 
-
+@SuppressWarnings("unused")
 public class AddFeeController {
     FeeDao feeDao = new FeeDao();
 
@@ -102,9 +102,9 @@ public class AddFeeController {
 
     @FXML
     public void initialize() {
-        List<Fee.FeeCategory> feeTypeList=feeDao.findAllCategory();
+        List<Fee.FeeCategory> feeTypeList = feeDao.findAllCategory();
         loaiComboBox.setItems(FXCollections.observableArrayList(Fee.FeeCategory.values()));
-        List<Fee.CalculationMethod> feeMethodList=feeDao.findAllMethod();
+        List<Fee.CalculationMethod> feeMethodList = feeDao.findAllMethod();
         cachTinhComboBox.setItems(FXCollections.observableArrayList(Fee.CalculationMethod.values()));
     }
 

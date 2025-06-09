@@ -23,20 +23,26 @@ import java.util.List;
 
 public class ResidentListController {
 
-    @FXML private ComboBox<String> cbFilter;
-    @FXML private TextField      txtSearch;
-    @FXML private Button         btnAdd, btnEdit, btnDelete;
-    @FXML private TableView<Resident> tableResidents;
+    @FXML
+    private ComboBox<String> cbFilter;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private Button btnAdd, btnEdit, btnDelete;
+    @FXML
+    private TableView<Resident> tableResidents;
 
-    @FXML private TableColumn<Resident, String> colResId, colName, colNationalId, colPhone, colHouseholdCode, colIsHead;
-    @FXML private TableColumn<Resident, Integer> colAge;
+    @FXML
+    private TableColumn<Resident, String> colResId, colName, colNationalId, colPhone, colHouseholdCode, colIsHead;
+    @FXML
+    private TableColumn<Resident, Integer> colAge;
 
-
-    private final ResidentService  residentService  = new ResidentService();
+    private final ResidentService residentService = new ResidentService();
     private final HouseholdService householdService = new HouseholdService();
 
     private final ObservableList<Resident> masterData = FXCollections.observableArrayList();
 
+    @SuppressWarnings("deprecation")
     @FXML
     public void initialize() {
         // 1) Thiết lập filter dropdown
@@ -44,26 +50,17 @@ public class ResidentListController {
         cbFilter.getSelectionModel().selectFirst();
 
         // 2) Binding các cột
-        colResId.setCellValueFactory(r ->
-                new ReadOnlyStringWrapper(r.getValue().getResidentId().toString())
-        );
-        colName.setCellValueFactory(r ->
-                new ReadOnlyStringWrapper(r.getValue().getName())
-        );
+        colResId.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getResidentId().toString()));
+        colName.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getName()));
         colAge.setCellValueFactory(r -> {
             LocalDate bd = r.getValue().getBirthday();
             int age = bd != null ? Period.between(bd, LocalDate.now()).getYears() : 0;
             return new ReadOnlyObjectWrapper<>(age);
         });
-        colNationalId.setCellValueFactory(r ->
-                new ReadOnlyStringWrapper(r.getValue().getNationalId())
-        );
-        colPhone.setCellValueFactory(r ->
-                new ReadOnlyStringWrapper(r.getValue().getPhoneNumber())
-        );
-        colHouseholdCode.setCellValueFactory(r ->
-                new ReadOnlyStringWrapper(r.getValue().getHousehold().getApartmentCode())
-        );
+        colNationalId.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getNationalId()));
+        colPhone.setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getPhoneNumber()));
+        colHouseholdCode
+                .setCellValueFactory(r -> new ReadOnlyStringWrapper(r.getValue().getHousehold().getApartmentCode()));
         colIsHead.setCellValueFactory(r -> {
             boolean isHead = r.getValue().getResidentId()
                     .equals(r.getValue().getHousehold().getHeadResidentId());
@@ -71,8 +68,7 @@ public class ResidentListController {
         });
 
         // 3) Bật/tắt Edit & Delete
-        BooleanBinding noSelection =
-                tableResidents.getSelectionModel().selectedItemProperty().isNull();
+        BooleanBinding noSelection = tableResidents.getSelectionModel().selectedItemProperty().isNull();
         btnEdit.disableProperty().bind(noSelection);
         btnDelete.disableProperty().bind(noSelection);
 
@@ -112,8 +108,7 @@ public class ResidentListController {
     void onAdd() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/create_resident_dialog.fxml")
-            );
+                    getClass().getResource("/fxml/create_resident_dialog.fxml"));
             Parent root = loader.load();
 
             CreateResidentDialogController formCtrl = loader.getController();
@@ -134,8 +129,6 @@ public class ResidentListController {
             new Alert(Alert.AlertType.ERROR, "Không mở được form thêm!").show();
         }
     }
-
-
 
     @FXML
     private void onEdit() {
@@ -179,7 +172,8 @@ public class ResidentListController {
     @FXML
     void onDelete() {
         Resident sel = tableResidents.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
+        if (sel == null)
+            return;
         Alert cf = new Alert(Alert.AlertType.CONFIRMATION,
                 "Xóa nhân khẩu " + sel.getResidentId() + "?", ButtonType.YES, ButtonType.NO);
         cf.showAndWait().filter(b -> b == ButtonType.YES).ifPresent(b -> {

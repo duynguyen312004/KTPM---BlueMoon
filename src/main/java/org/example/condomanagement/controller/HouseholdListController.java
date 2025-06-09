@@ -16,22 +16,32 @@ import org.example.condomanagement.service.HouseholdService;
 import org.example.condomanagement.service.ResidentService;
 import org.example.condomanagement.controller.CreateHouseholdDialogController;
 
+@SuppressWarnings("unused")
 public class HouseholdListController {
 
-    @FXML private ComboBox<String> cbFilter;
-    @FXML private TextField    txtSearch;
-    @FXML private Button       btnSearch, btnAdd, btnEdit, btnDelete;
+    @FXML
+    private ComboBox<String> cbFilter;
+    @FXML
+    private TextField txtSearch;
+    @FXML
+    private Button btnSearch, btnAdd, btnEdit, btnDelete;
 
-    @FXML private TableView<Household> tableHouseholds;
-    @FXML private TableColumn<Household, String>  colCode, colHead;
-    @FXML private TableColumn<Household, Integer> colRoomCount, colMemberCount;
-    @FXML private TableColumn<Household, Double>  colArea;
-    @FXML private TableColumn<Household, String>  colAddress;
+    @FXML
+    private TableView<Household> tableHouseholds;
+    @FXML
+    private TableColumn<Household, String> colCode, colHead;
+    @FXML
+    private TableColumn<Household, Integer> colRoomCount, colMemberCount;
+    @FXML
+    private TableColumn<Household, Double> colArea;
+    @FXML
+    private TableColumn<Household, String> colAddress;
 
-    private final HouseholdService service     = new HouseholdService();
-    private final ResidentService  residentSvc = new ResidentService();
+    private final HouseholdService service = new HouseholdService();
+    private final ResidentService residentSvc = new ResidentService();
     private final ObservableList<Household> masterData = FXCollections.observableArrayList();
 
+    @SuppressWarnings("deprecation")
     @FXML
     public void initialize() {
         // 1) Filter dropdown
@@ -39,14 +49,14 @@ public class HouseholdListController {
         cbFilter.getSelectionModel().selectFirst();
 
         // 2) Column binding
-        colCode.setCellValueFactory(c ->
-                new ReadOnlyStringWrapper(c.getValue().getApartmentCode()));
+        colCode.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getApartmentCode()));
 
         colHead.setCellValueFactory(c -> {
             Integer headId = c.getValue().getHeadResidentId();
             if (headId != null) {
                 Resident r = residentSvc.findById(headId);
-                if (r != null) return new ReadOnlyStringWrapper(r.getName());
+                if (r != null)
+                    return new ReadOnlyStringWrapper(r.getName());
             }
             return new ReadOnlyStringWrapper("");
         });
@@ -54,23 +64,19 @@ public class HouseholdListController {
         // Tính tổng số phòng đã có chủ (COUNT(*) WHERE head_resident_id IS NOT NULL)
         colRoomCount.setCellValueFactory(cell -> {
             Household h = cell.getValue();
-            int index = masterData.indexOf(h) + 1;  // masterData là ObservableList<Household>
+            int index = masterData.indexOf(h) + 1; // masterData là ObservableList<Household>
             return new ReadOnlyObjectWrapper<>(index);
         });
 
         // Số thành viên = size của collection residents (JOIN-FETCH trong DAO)
-        colMemberCount.setCellValueFactory(c ->
-                new ReadOnlyObjectWrapper<>(c.getValue().getResidents().size()));
+        colMemberCount.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().getResidents().size()));
 
-        colArea.setCellValueFactory(c ->
-                new ReadOnlyObjectWrapper<>(c.getValue().getArea()));
+        colArea.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().getArea()));
 
-        colAddress.setCellValueFactory(c ->
-                new ReadOnlyStringWrapper(c.getValue().getAddress()));
+        colAddress.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getAddress()));
         tableHouseholds.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // 3) Enable/Disable nút Sửa & Xóa
-        BooleanBinding noSelection =
-                tableHouseholds.getSelectionModel().selectedItemProperty().isNull();
+        BooleanBinding noSelection = tableHouseholds.getSelectionModel().selectedItemProperty().isNull();
         btnEdit.disableProperty().bind(noSelection);
         btnDelete.disableProperty().bind(noSelection);
 
@@ -119,7 +125,8 @@ public class HouseholdListController {
     @FXML
     void onEdit() {
         Household sel = tableHouseholds.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
+        if (sel == null)
+            return;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/create_household_dialog.fxml"));
             Parent root = loader.load();
@@ -138,7 +145,8 @@ public class HouseholdListController {
     @FXML
     void onDelete() {
         Household sel = tableHouseholds.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
+        if (sel == null)
+            return;
         Alert cf = new Alert(Alert.AlertType.CONFIRMATION,
                 "Bạn có chắc muốn xóa hộ khẩu " + sel.getApartmentCode() + "?",
                 ButtonType.YES, ButtonType.NO);

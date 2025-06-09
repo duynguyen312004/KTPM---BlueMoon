@@ -1,3 +1,20 @@
+ALTER TABLE residents
+  ALTER COLUMN national_id SET NOT NULL,
+  ADD CONSTRAINT unique_national_id UNIQUE (national_id),
+  ALTER COLUMN phone_number SET NOT NULL,
+  ADD CONSTRAINT unique_phone_number UNIQUE (phone_number);
+ALTER TABLE residents
+  ADD CONSTRAINT check_national_id_length CHECK (LENGTH(national_id) = 12);
+ALTER TABLE residents
+  ADD CONSTRAINT check_phone_number_format CHECK (phone_number ~ '^0[35789][0-9]{8}$');
+ALTER TABLE residents
+  ADD CONSTRAINT check_birthday CHECK (birthday <= CURRENT_DATE);
+  ALTER TABLE households
+    ADD CONSTRAINT check_area_positive CHECK (area >= 0);
+
+
+
+
 -- TRUNCATE/DELETE only removes data, not sequence state.
 -- Use ALTER SEQUENCE ... RESTART WITH 1 to reset auto-increment IDs if you want new data to start from 1.
 TRUNCATE TABLE receipts, transactions, billing_items, batch_fees, collection_batches, vehicle_fee_mapping, vehicles, residents, households, fees, users CASCADE;
