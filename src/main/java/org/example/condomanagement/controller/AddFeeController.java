@@ -100,8 +100,6 @@ public class AddFeeController {
         alert.showAndWait();
     }
 
-
-
     @FXML
     public void initialize() {
         List<Fee.FeeCategory> feeTypeList=feeDao.findAllCategory();
