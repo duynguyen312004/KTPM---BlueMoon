@@ -21,7 +21,7 @@ public class Household extends BaseEntity {
     @Column(nullable = false)
     private Double area; // diện tích m²
 
-    @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Resident> residents = new ArrayList<>();
 
     @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true )
@@ -29,6 +29,7 @@ public class Household extends BaseEntity {
 
     @OneToMany(mappedBy = "household",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vehicle> vehicles = new ArrayList<>();
+
 
     @Column(name = "head_resident_id")
     private Integer headResidentId;

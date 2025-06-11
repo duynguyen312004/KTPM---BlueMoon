@@ -11,6 +11,7 @@ import org.example.condomanagement.service.HouseholdService;
 import org.example.condomanagement.service.ResidentService;
 import org.example.condomanagement.service.UserService;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -81,6 +82,10 @@ public class CreateResidentDialogController {
                     "Vui lòng điền đầy đủ thông tin").show();
             return;
         }
+        String name = cleanInput(txtName.getText());
+        String nationalId = cleanInput(txtNationalId.getText());
+        String phoneNumber = cleanInput(txtPhoneNumber.getText());
+        String relationship = cbRelationship.getValue();
         Resident r = (editingResident != null) ? editingResident : new Resident();
 
         r.setName(txtName.getText().trim());
@@ -90,9 +95,37 @@ public class CreateResidentDialogController {
         r.setHousehold(cbHousehold.getValue());
         r.setPhoneNumber(txtPhoneNumber.getText().trim()); // <-- Lưu SĐT vào resident
 
+        // ✅ Kiểm tra: nếu chỉ có 1 resident và chọn "Thành viên" thì báo lỗi
+        Household household = r.getHousehold();
+        if ("Thành viên".equals(relationship) && household.getResidents().size() == 1) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Hộ khẩu phải có ít nhất 1 Chủ hộ!").show();
+            return;
+        }
+
         // 3. Lưu trong 1 transaction
         try {
             boolean ok = residentService.saveOrUpdate(r);
+            // Nếu là chủ hộ, tự động chuyển các resident khác trong household thành "Thành viên"
+            if ("Chủ hộ".equals(relationship)) {
+
+
+                // 1. Lấy danh sách tất cả resident trong household
+                List<Resident> residentsInHousehold = household.getResidents();
+
+                // 2. Chuyển role của tất cả resident thành "Thành viên", trừ resident hiện tại
+                for (Resident other : residentsInHousehold) {
+                    if (!other.getResidentId().equals(r.getResidentId())) {
+                        other.setRelationship("Thành viên");
+                        residentService.saveOrUpdate(other); // Lưu lại resident khác
+                    }
+                }
+
+                // 3. Cập nhật headResidentId của household
+                household.setHeadResidentId(r.getResidentId());
+                householdService.saveOrUpdate(household);
+            }
+
             if (ok) {
                 saved = true;
                 dialogStage.close();
@@ -103,6 +136,14 @@ public class CreateResidentDialogController {
             showConstraintViolationAlert(ex);
         }
     }
+    private String cleanInput(String input) {
+        if (input == null) return null;
+        // Chỉ giữ ký tự Unicode chuẩn (loại bỏ ký tự lỗi - dấu hỏi vuông vỡ font)
+        String cleaned = Normalizer.normalize(input.trim(), Normalizer.Form.NFC);
+        cleaned = cleaned.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", ""); // loại control
+        return cleaned;
+    }
+
     /**
      * Hiển thị thông báo lỗi rõ ràng khi gặp constraint database.
      */
@@ -120,7 +161,7 @@ public class CreateResidentDialogController {
         } else if (msg.contains("check_national_id_length")) {
             showAlert(Alert.AlertType.ERROR, "CCCD/CMND phải có đúng 12 chữ số!");
         } else if (msg.contains("check_phone_number_format")) {
-            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!");
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!nhập đủ 10 số ");
         } else if (msg.contains("check_birthday")) {
             showAlert(Alert.AlertType.ERROR, "Ngày sinh không hợp lệ (phải trước hoặc bằng ngày hôm nay)!");
         } else {
