@@ -57,27 +57,36 @@ public class ResidentService {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
 
-            // Tìm các household mà resident này là chủ hộ
-            List<Household> households = session.createQuery(
-                    "FROM Household h WHERE h.headResidentId = :rid", Household.class)
-                    .setParameter("rid", residentId)
-                    .list();
-            for (Household h : households) {
-                h.setHeadResidentId(null);
-                session.merge(h);
-            }
-            session.flush();
+            // Tìm resident
+            Resident resident = session.get(Resident.class, residentId);
+            if (resident != null) {
+                // 1️⃣ Nếu resident đang là chủ hộ, bỏ headResidentId
+                List<Household> households = session.createQuery(
+                                "FROM Household h WHERE h.headResidentId = :rid", Household.class)
+                        .setParameter("rid", residentId)
+                        .list();
+                for (Household h : households) {
+                    h.setHeadResidentId(null);
+                    session.merge(h);
+                }
 
-            // Giờ mới xóa Resident
-            Resident r = session.get(Resident.class, residentId);
-            if (r != null)
-                session.remove(r);
+                // 2️⃣ Bỏ resident khỏi list residents của household (tránh lỗi orphanRemoval)
+                Household household = resident.getHousehold();
+                if (household != null) {
+                    household.getResidents().remove(resident);
+                    session.merge(household);
+                }
+
+                // 3️⃣ Xóa resident
+                session.remove(resident);
+            }
 
             tx.commit();
             return true;
         } catch (Exception e) {
             if (tx != null)
                 tx.rollback();
+            e.printStackTrace();
             return false;
         }
     }

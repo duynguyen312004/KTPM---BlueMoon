@@ -23,7 +23,7 @@
     <Label text="Địa chỉ:"       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField fx:id="txtAddress"      GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <Label text="Diện tích (m²):"  GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <Label text="Diện tích:"  GridPane.rowIndex="2" GridPane.columnIndex="0"/>
     <TextField fx:id="txtArea"         GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
     <!-- Thông tin chủ hộ mới -->
