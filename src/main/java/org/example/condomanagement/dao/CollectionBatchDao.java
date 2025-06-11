@@ -19,18 +19,18 @@ public class CollectionBatchDao {
         }
     }
 
-    public void save(CollectionBatch hh) {
-        Transaction tx = null;
-        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            tx = s.beginTransaction();
-            s.merge(hh);
-            tx.commit();
+    public void save(CollectionBatch collectionBatch) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(collectionBatch);
+            transaction.commit();
         } catch (Exception e) {
-            if (tx != null)
-                tx.rollback();
+            if (transaction != null) transaction.rollback();
             throw e;
         }
     }
+
 
     public void delete(CollectionBatch hh) {
         Transaction tx = null;
@@ -42,6 +42,16 @@ public class CollectionBatchDao {
             if (tx != null)
                 tx.rollback();
             throw e;
+        }
+    }
+
+    public boolean existsByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Long count = session.createQuery(
+                            "SELECT COUNT(cb.id) FROM CollectionBatch cb WHERE cb.name = :name", Long.class)
+                    .setParameter("name", name)
+                    .uniqueResult();
+            return count != null && count > 0;
         }
     }
 }

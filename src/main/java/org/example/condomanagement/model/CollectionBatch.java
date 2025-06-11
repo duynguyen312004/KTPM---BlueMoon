@@ -26,6 +26,13 @@ public class CollectionBatch extends BaseEntity {
     @OneToMany(mappedBy = "batch",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BatchFee> batchFees = new ArrayList<>();
 
+    public CollectionBatch(String name, LocalDate period) {
+        this.name = name;
+        this.period = period;
+    }
+
+    public CollectionBatch() {}
+
     // getters & setters
     public Integer getBatchId() {
         return batchId;

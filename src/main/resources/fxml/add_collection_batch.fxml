@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="250.0" prefWidth="400.0" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.AddCollectionBatchController">
+
+    <padding>
+        <Insets bottom="20" left="25" right="25" top="20" />
+    </padding>
+
+    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Thêm đợt thu mới" />
+
+    <TextField fx:id="batchNameField" prefHeight="26.0" prefWidth="249.0" promptText="Tên đợt thu" />
+
+    <DatePicker fx:id="batchDatePicker" prefWidth="351.0" promptText="Ngày bắt đầu" />
+
+    <HBox alignment="CENTER" spacing="15.0">
+        <Button fx:id="saveButton" onAction="#onSave" text="Lưu" />
+        <Button fx:id="cancelButton" onAction="#onCancel" text="Hủy" />
+    </HBox>
+</VBox>

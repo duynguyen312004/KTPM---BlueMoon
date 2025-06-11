@@ -28,7 +28,7 @@
                         <!-- Search and Actions -->
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                             <children>
-                        <ComboBox fx:id="feeTypeComboBox" prefHeight="26.0" prefWidth="210.0" promptText="Chọn tên thu phí" />
+                        <ComboBox fx:id="dotthuComboBox" prefHeight="26.0" prefWidth="210.0" promptText="Chọn đợt thu phí" />
                                 <TextField fx:id="searchFeeTextField" prefHeight="38.0" promptText="Nhập nội dung tìm kiếm..." styleClass="search-field" HBox.hgrow="ALWAYS" />
                                 <Button defaultButton="true" mnemonicParsing="false" onAction="#searchFeeButton" prefHeight="38.0" styleClass="search-button" text="Tìm kiếm" />
                                 <Button mnemonicParsing="false" onAction="#resetButton" prefHeight="38.0" styleClass="back-button" text="Reset" />
@@ -43,6 +43,7 @@
                                 <Button mnemonicParsing="false" onAction="#addFeeButton" prefHeight="38.0" styleClass="add-button" text="Thêm mới" />
                                 <Button mnemonicParsing="false" onAction="#updateFeeButton" prefHeight="38.0" styleClass="edit-button" text="Sửa" />
                                 <Button mnemonicParsing="false" onAction="#deleteFeeButton" prefHeight="38.0" styleClass="delete-button" text="Xóa" />
+                                <Button mnemonicParsing="false" onAction="#addCollectionBatchButton" prefHeight="38.0" styleClass="add-button" text="Thêm đợt thu" />
                             </children>
                             <VBox.margin>
                                 <Insets bottom="25.0" />
@@ -55,18 +56,21 @@
                      <content>
       
                               <!-- Table View -->
-                              <TableView fx:id="feeTableView" styleClass="table-view1">
-                                  <columns>
-                                      <TableColumn fx:id="maKhoanPhiColumn" minWidth="100.0" prefWidth="120.0" text="Mã khoản phí" />
-                                      <TableColumn fx:id="tenKhoanPhiColumn" minWidth="150.0" prefWidth="280.0" text="Tên khoản phí" />
-                                      <TableColumn fx:id="loaiColumn" minWidth="100.0" prefWidth="150.0" text="Loại" />
-                                      <TableColumn fx:id="soTienColumn" minWidth="100.0" prefWidth="150.0" styleClass="right-aligned-text-column" text="Số tiền" />
-                                      <TableColumn fx:id="cachtinhColumn" minWidth="100.0" prefWidth="150.0" styleClass="centered-text-column" text="Cách tính" />
-                                  </columns>
-                                  <columnResizePolicy>
-                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                  </columnResizePolicy>
-                              </TableView>
+                         <!-- Thay thế TableView cũ bằng bảng mới cho BillingItem -->
+                         <TableView fx:id="billingItemTableView" styleClass="table-view1">
+                             <columns>
+                                 <TableColumn fx:id="billingItemIdColumn" minWidth="100.0" prefWidth="120.0" text="Mã khoản thu" />
+                                 <TableColumn fx:id="batchNameColumn" minWidth="150.0" prefWidth="200.0" text="Tên đợt thu" />
+                                 <TableColumn fx:id="feeNameColumn" minWidth="150.0" prefWidth="200.0" text="Tên khoản phí" />
+                                 <TableColumn fx:id="expectedAmountColumn" minWidth="120.0" prefWidth="150.0" styleClass="right-aligned-text-column" text="Số tiền cần thu" />
+                                 <TableColumn fx:id="actualAmountColumn" minWidth="120.0" prefWidth="150.0" styleClass="right-aligned-text-column" text="Số tiền đã thu" />
+                                 <TableColumn fx:id="householdCodeColumn" minWidth="120.0" prefWidth="150.0" text="Mã hộ khẩu" />
+                             </columns>
+                             <columnResizePolicy>
+                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                             </columnResizePolicy>
+                         </TableView>
+
                      </content>
                   </ScrollPane>
                         <HBox alignment="CENTER_RIGHT">
