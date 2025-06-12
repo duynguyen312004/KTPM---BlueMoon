@@ -29,7 +29,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                             <children>
                         <ComboBox fx:id="dotthuComboBox" prefHeight="26.0" prefWidth="210.0" promptText="Chọn đợt thu phí" />
-                                <TextField fx:id="searchFeeTextField" prefHeight="38.0" promptText="Nhập nội dung tìm kiếm..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                                <TextField fx:id="searchFeeTextField" prefHeight="38.0" promptText="Nhập tên phí cần tìm" styleClass="search-field" HBox.hgrow="ALWAYS" />
                                 <Button defaultButton="true" mnemonicParsing="false" onAction="#searchFeeButton" prefHeight="38.0" styleClass="search-button" text="Tìm kiếm" />
                                 <Button mnemonicParsing="false" onAction="#resetButton" prefHeight="38.0" styleClass="back-button" text="Reset" />
                             </children>
