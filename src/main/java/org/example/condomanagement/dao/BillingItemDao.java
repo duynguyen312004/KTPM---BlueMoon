@@ -3,6 +3,8 @@ package org.example.condomanagement.dao;
 import jakarta.persistence.EntityManager;
 import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.BillingItem;
+import org.example.condomanagement.model.CollectionBatch;
+import org.example.condomanagement.model.Fee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
@@ -21,15 +23,24 @@ public class BillingItemDao {
         }
     }
 
-    public void save(BillingItem hh) {
-        Transaction tx = null;
-        try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            tx = s.beginTransaction();
-            s.merge(hh);
-            tx.commit();
+    public BillingItem save(BillingItem item) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Dùng merge để xử lý các entity detached
+            BillingItem mergedItem = (BillingItem) session.merge(item);
+
+            transaction.commit();
+            return mergedItem;
         } catch (Exception e) {
-            if (tx != null)
-                tx.rollback();
+            if (transaction != null && transaction.isActive()) {
+                try {
+                    transaction.rollback();
+                } catch (Exception rollbackEx) {
+                    rollbackEx.printStackTrace(); // rollback cũng có thể ném lỗi nếu session đã bị đóng
+                }
+            }
             throw e;
         }
     }
@@ -43,6 +54,18 @@ public class BillingItemDao {
         } catch (Exception e) {
             if (tx != null)
                 tx.rollback();
+            throw e;
+        }
+    }
+
+    public void update(BillingItem item) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(item); // dùng merge thay vì update
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             throw e;
         }
     }

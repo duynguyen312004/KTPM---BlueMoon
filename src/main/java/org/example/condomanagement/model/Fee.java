@@ -141,4 +141,9 @@ public class Fee extends BaseEntity {
     public void setBatchFees(List<BatchFee> batchFees) {
         this.batchFees = batchFees;
     }
+
+    @Override
+    public String toString() {
+        return this.feeName;
+    }
 }

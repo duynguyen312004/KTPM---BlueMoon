@@ -86,4 +86,22 @@ public class HouseholdDao {
             return cnt != null ? cnt : 0L;
         }
     }
+
+    public Double getAreaByHouseholdId(int householdId) {
+        Transaction transaction = null;
+        Double area = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            area = session.createQuery(
+                            "SELECT h.area FROM Household h WHERE h.id = :id", Double.class)
+                    .setParameter("id", householdId)
+                    .uniqueResult();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+        return area;
+    }
+
 }

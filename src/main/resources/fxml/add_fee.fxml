@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -12,48 +11,44 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="360.0" prefWidth="500.0" styleClass="dialog-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.AddFeeController">
-
+<AnchorPane prefHeight="300.0" prefWidth="480.0" styleClass="dialog-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.AddBillingItemController">
     <children>
-        <VBox alignment="TOP_LEFT" spacing="20.0" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+        <VBox alignment="TOP_LEFT" spacing="20.0" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
             <children>
-                <Label styleClass="title-label" text="Thêm khoản phí mới" />
+                <Label styleClass="title-label" text="Thêm khoản thu hộ gia đình" />
 
-                <GridPane hgap="15" styleClass="form-grid" vgap="10">
+                <GridPane hgap="15" vgap="12" styleClass="form-grid">
                     <columnConstraints>
                         <ColumnConstraints percentWidth="35" />
                         <ColumnConstraints percentWidth="65" />
                     </columnConstraints>
 
                     <children>
-                        <Label text="Tên khoản phí:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="tenKhoanPhiField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label text="Đợt thu:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <ComboBox fx:id="collectionBatchComboBox" promptText="Chọn đợt thu" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                        <Label text="Loại:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="loaiComboBox" promptText="Chọn loại" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Khoản phí:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="feeComboBox" promptText="Chọn khoản phí" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                        <Label text="Số tiền:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="soTienField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-                        <Label text="Cách tính:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <ComboBox fx:id="cachTinhComboBox" promptText="Chọn cách tính" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Hộ khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="householdComboBox" promptText="Chọn mã hộ khẩu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
-               <rowConstraints>
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-                  <RowConstraints />
-               </rowConstraints>
+
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
                 </GridPane>
 
                 <HBox alignment="CENTER_RIGHT" spacing="10.0">
                     <children>
                         <Button fx:id="cancelButton" onAction="#handleCancel" styleClass="back-button" text="Hủy">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
                         </Button>
-                        <Button fx:id="saveButton" defaultButton="true" onAction="#handleSave" styleClass="save-button" text="Lưu">
+                        <Button fx:id="saveButton" onAction="#handleSave" defaultButton="true" styleClass="save-button" text="Lưu">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>

@@ -1,9 +1,7 @@
 package org.example.condomanagement.controller;
 
 import javafx.beans.Observable;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,8 +29,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class FeeManagementController {
 
-
-
     @FXML
     private TableView<BillingItem> billingItemTableView;
     @FXML
@@ -57,6 +53,8 @@ public class FeeManagementController {
     private final CollectionBatchDao collectionBatchDao = new CollectionBatchDao();
     private final BillingItemDao billingItemDao = new BillingItemDao();
 
+    CollectionBatch placeholder = new CollectionBatch();
+
     @FXML
     public void initialize() {
         // Load danh sách đợt thu
@@ -65,15 +63,36 @@ public class FeeManagementController {
                 .map(CollectionBatch::getName)
                 .toList();
 
+        placeholder.setBatchId(-1); // ID giả
+        placeholder.setName("Chọn đợt thu"); // Tên hiển thị
+        batches.add(0, placeholder);
         dotthuComboBox.setItems(FXCollections.observableArrayList(batchNames));
 
         // Thiết lập bảng billing item
-        billingItemIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        batchNameColumn.setCellValueFactory(new PropertyValueFactory<>("batchName"));
-        feeNameColumn.setCellValueFactory(new PropertyValueFactory<>("feeName"));
-        expectedAmountColumn.setCellValueFactory(new PropertyValueFactory<>("expectedAmount"));
-        actualAmountColumn.setCellValueFactory(new PropertyValueFactory<>("actualAmount"));
-        householdCodeColumn.setCellValueFactory(new PropertyValueFactory<>("householdCode"));
+        billingItemIdColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getBillingItemId())
+        );
+
+        batchNameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(cellData.getValue().getBatch().getName())
+        );
+
+        feeNameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(cellData.getValue().getFee().getFeeName())
+        );
+
+        expectedAmountColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getExpectedAmount())
+        );
+
+        actualAmountColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getActualAmount())
+        );
+
+        householdCodeColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(cellData.getValue().getHousehold().getApartmentCode())
+        );
+
 
         refreshBillingItems();
     }
@@ -117,7 +136,7 @@ public class FeeManagementController {
                 .filter(billingItem -> {
                     boolean matchName = selectedName.equals("Tất cả")
                             || billingItem.getBatch().getName().equals(selectedName);
-                    boolean matchKeyword = keyword.isEmpty() || billingItem.getBatch().getName().toLowerCase().contains(keyword);
+                    boolean matchKeyword = keyword.isEmpty() || billingItem.getFee().getFeeName().toLowerCase().contains(keyword);
                     return matchName && matchKeyword;
                 })
                 .toList();
@@ -127,56 +146,56 @@ public class FeeManagementController {
 
     @FXML
     public void addFeeButton(ActionEvent actionEvent) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
-//            Parent root = loader.load();
-//
-//            // Truyền observable list hiện tại cho controller
-//            AddFeeController controller = loader.getController();
-//            controller.setFeeTableView(feeTableView); // Truyền danh sách đang hiển thị
-//
-//            Stage stage = new Stage();
-//            stage.setScene(new Scene(root));
-//            stage.setTitle("Thêm khoản phí");
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
+            Parent root = loader.load();
+
+            // Truyền observable list hiện tại cho controller
+            AddBillingItemController controller = loader.getController();
+            controller.setBillingItemTable(billingItemTableView); // Truyền danh sách đang hiển thị
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Thêm khoản phí");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void updateFeeButton(ActionEvent actionEvent) {
-//        Fee selectedFee = feeTableView.getSelectionModel().getSelectedItem();
-//
-//        if (selectedFee == null) {
-//            Alert alert = new Alert(Alert.AlertType.WARNING);
-//            alert.setTitle("Cập nhật khoản phí");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Vui lòng chọn một khoản phí để sửa.");
-//            alert.showAndWait();
-//            return;
-//        }
-//
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
-//            Parent root = loader.load();
-//
-//            // ✅ Lấy controller
-//            AddFeeController controller = loader.getController();
-//
-//            // ✅ Truyền fee được chọn
-//            controller.setFeeToEdit(selectedFee);
-//
-//            // ✅ Truyền cả feeTableView (QUAN TRỌNG!)
-//            controller.setFeeTableView(feeTableView); // <-- bạn đang thiếu dòng này
-//
-//            Stage stage = new Stage();
-//            stage.setScene(new Scene(root));
-//            stage.setTitle("Cập nhật khoản phí");
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+       BillingItem billingItem = billingItemTableView.getSelectionModel().getSelectedItem();
+
+        if (billingItem == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Cập nhật khoản phí");
+            alert.setHeaderText(null);
+            alert.setContentText("Vui lòng chọn một khoản phí để sửa.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_fee.fxml"));
+            Parent root = loader.load();
+
+            // ✅ Lấy controller
+            AddBillingItemController controller = loader.getController();
+
+            // ✅ Truyền fee được chọn
+            controller.setBillingItemToEdit(billingItem);
+
+            // ✅ Truyền cả feeTableView (QUAN TRỌNG!)
+            controller.setBillingItemTable(billingItemTableView); // <-- bạn đang thiếu dòng này
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Cập nhật khoản phí");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -223,7 +242,7 @@ public class FeeManagementController {
 
     @FXML
     public void resetButton(ActionEvent actionEvent) {
-        dotthuComboBox.setValue("Tất cả");
+        dotthuComboBox.setValue(placeholder.getName());
         searchFeeTextField.clear();
         billingItemTableView.setItems(FXCollections.observableArrayList(billingItemDao.findAll()));
     }

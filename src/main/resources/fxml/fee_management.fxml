@@ -40,10 +40,10 @@
 
                         <HBox spacing="10.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#addFeeButton" prefHeight="38.0" styleClass="add-button" text="Thêm mới" />
+                                <Button mnemonicParsing="false" onAction="#addFeeButton" prefHeight="38.0" styleClass="add-button" text="Thêm khoản thu" />
                                 <Button mnemonicParsing="false" onAction="#updateFeeButton" prefHeight="38.0" styleClass="edit-button" text="Sửa" />
                                 <Button mnemonicParsing="false" onAction="#deleteFeeButton" prefHeight="38.0" styleClass="delete-button" text="Xóa" />
-                                <Button mnemonicParsing="false" onAction="#addCollectionBatchButton" prefHeight="38.0" styleClass="add-button" text="Thêm đợt thu" />
+                                <Button mnemonicParsing="false" onAction="#addCollectionBatchButton" prefHeight="38.0" styleClass="add-button1" text="Thêm đợt thu" />
                             </children>
                             <VBox.margin>
                                 <Insets bottom="25.0" />

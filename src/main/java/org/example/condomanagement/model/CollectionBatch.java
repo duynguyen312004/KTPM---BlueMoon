@@ -74,4 +74,9 @@ public class CollectionBatch extends BaseEntity {
         this.batchFees = batchFees;
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
 }

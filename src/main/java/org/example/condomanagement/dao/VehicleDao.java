@@ -51,4 +51,50 @@ public class VehicleDao {
             throw e;
         }
     }
+
+    public Long countMotorbikesByHouseholdId(int householdId) {
+        Transaction transaction = null;
+        Long count = 0L;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            count = session.createQuery(
+                            "SELECT COUNT(v) FROM Vehicle v WHERE v.household.id = :householdId AND v.type = 'MOTORBIKE'",
+                            Long.class
+                    ).setParameter("householdId", householdId)
+                    .uniqueResult();
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+    public Long countCarsByHouseholdId(int householdId) {
+        Transaction transaction = null;
+        Long count = 0L;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            count = session.createQuery(
+                            "SELECT COUNT(v) FROM Vehicle v WHERE v.household.id = :householdId AND v.type = 'CAR'",
+                            Long.class
+                    ).setParameter("householdId", householdId)
+                    .uniqueResult();
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+
+        return count;
+    }
+
+
 }

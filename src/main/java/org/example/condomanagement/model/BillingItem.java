@@ -56,6 +56,15 @@ public class BillingItem extends BaseEntity {
         this.transactions = transactions;
     }
 
+    public BillingItem(CollectionBatch batch,Fee fee,Household household,Double actualAmount,Double expectedAmount,Status status) {
+        this.expectedAmount = expectedAmount;
+        this.actualAmount = actualAmount;
+        this.household = household;
+        this.fee = fee;
+        this.batch = batch;
+        this.status = status;
+    }
+
     public Integer getBillingItemId() {
         return billingItemId;
     }
