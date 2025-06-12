@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- Màn hình xem và in biên lai -->
+<VBox alignment="TOP_CENTER" prefHeight="550.0" prefWidth="500.0" spacing="15.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.ReceiptViewerController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <!-- Vùng chứa nội dung biên lai để có thể in -->
+        <BorderPane fx:id="receiptPane" style="-fx-border-color: lightgray; -fx-background-color: white; -fx-padding: 20;">
+            <top>
+                <VBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label text="BIÊN LAI THU TIỀN">
+                            <font>
+                                <Font name="System Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="issueDateLabel" text="Ngày 26 tháng 10 năm 2023" />
+                        <Label fx:id="receiptNumberLabel" text="Số: BL001234" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets bottom="15.0" />
+                    </BorderPane.margin>
+                </VBox>
+            </top>
+            <center>
+                <GridPane hgap="10.0" vgap="8.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="Họ tên người nộp tiền:" />
+                        <Label fx:id="payerNameLabel" text="[Trần Văn B]" style="-fx-font-weight: bold;" GridPane.columnIndex="1" />
+                        <Label text="Mã căn hộ:" GridPane.rowIndex="1" />
+                        <Label fx:id="apartmentCodeReceiptLabel" text="[A-101]" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Nội dung thanh toán:" GridPane.rowIndex="2" />
+                        <Label fx:id="paymentDetailsLabel" text="[Thanh toán phí quản lý tháng 10/2023]" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Số tiền:" GridPane.rowIndex="3" />
+                        <Label fx:id="amountInFiguresLabel" text="[1,500,000 VNĐ]" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Bằng chữ:" GridPane.rowIndex="4" />
+                        <Label fx:id="amountInWordsLabel" text="[Một triệu năm trăm nghìn đồng chẵn]" style="-fx-font-style: italic;" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    </children>
+                </GridPane>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER" spacing="80.0" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets top="40.0" />
+                    </BorderPane.margin>
+                    <children>
+                        <VBox alignment="CENTER">
+                            <children>
+                                <Label text="Người nộp tiền">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label text="(Ký, ghi rõ họ tên)" />
+                            </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                            <children>
+                                <Label text="Người thu tiền">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <Label text="(Ký, ghi rõ họ tên)" />
+                                <Label fx:id="collectorNameReceiptLabel" text="[Nguyễn Văn A]" visible="false"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </bottom>
+        </BorderPane>
+        <Separator />
+        <!-- Vùng chứa các nút chức năng -->
+        <HBox alignment="CENTER" spacing="15.0">
+            <children>
+                <Button fx:id="printButton" mnemonicParsing="false" text="In biên lai" />
+                <Button fx:id="savePdfButton" mnemonicParsing="false" text="Lưu PDF" />
+                <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Đóng" />
+            </children>
+        </HBox>
+    </children>
+</VBox>
