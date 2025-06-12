@@ -94,12 +94,14 @@ public class CreateResidentDialogController {
         r.setNationalId(txtNationalId.getText().trim());
         r.setHousehold(cbHousehold.getValue());
         r.setPhoneNumber(txtPhoneNumber.getText().trim()); // <-- Lưu SĐT vào resident
+        Household household = cbHousehold.getValue();
 
-        // ✅ Kiểm tra: nếu chỉ có 1 resident và chọn "Thành viên" thì báo lỗi
-        Household household = r.getHousehold();
-        if ("Thành viên".equals(relationship) && household.getResidents().size() == 1) {
+        // ✅ Chỉ chặn nếu đang chỉnh sửa và resident là người duy nhất trong household và chuyển sang "Thành viên"
+        if ("Thành viên".equals(relationship)
+                && editingResident != null
+                && household.getResidents().size() == 1) {
             new Alert(Alert.AlertType.ERROR,
-                    "Hộ khẩu phải có ít nhất 1 Chủ hộ!").show();
+                    "Không thể chuyển thành 'Thành viên' vì hộ khẩu sẽ không còn Chủ hộ!").show();
             return;
         }
 
