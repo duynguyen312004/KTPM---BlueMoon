@@ -27,16 +27,12 @@ public class PaymentService {
         // (Implement DB logic here)
     }
 
-    public int createTransaction(int billingId, double amount, LocalDate date, String note, int userId) {
-        BillingItem billingItem = billingItemDao.findById(billingId);
-        User user = userDao.findById(userId);
-        Transaction transaction = new Transaction();
-        transaction.setBillingItem(billingItem);
-        transaction.setAmountPaid(amount);
-        transaction.setPaymentDate(date);
-        transaction.setCreatedBy(user);
-        transactionDao.save(transaction);
-        return transaction.getTransactionId();
+    public Transaction createTransaction(Transaction transaction) {
+        Transaction savedTransaction = transactionDao.save(transaction);
+        if (savedTransaction.getTransactionId() == null) {
+            throw new IllegalStateException("Transaction ID was not generated after save");
+        }
+        return savedTransaction;
     }
 
     public void updateBillingItemAfterPayment(int billingId, double amount) {
@@ -49,11 +45,14 @@ public class PaymentService {
         billingItemDao.save(item);
     }
 
-    public void createReceipt(int transactionId) {
+    public Receipt createReceipt(int transactionId) {
         Receipt receipt = new Receipt();
         Transaction transaction = transactionDao.findById(transactionId);
         receipt.setTransaction(transaction);
         receipt.setIssueDate(LocalDate.now());
+        // Sinh số biên lai nếu cần
+        receipt.setReceiptNumber("BL" + System.currentTimeMillis());
         receiptDao.save(receipt);
+        return receipt;
     }
 }

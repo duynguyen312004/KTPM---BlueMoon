@@ -5,11 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.condomanagement.model.FeeCollectionRow;
 import org.example.condomanagement.service.PaymentService;
 import org.example.condomanagement.model.User;
 import org.example.condomanagement.model.BillingItem;
+import org.example.condomanagement.model.Receipt;
+import org.example.condomanagement.model.Transaction;
+import org.example.condomanagement.dao.BillingItemDao;
+import java.net.URL;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -60,27 +65,32 @@ public class PaymentDialogController {
                 showAlert("Vui lòng chọn ngày thanh toán.");
                 return;
             }
-
-            PaymentService paymentService = new PaymentService();
-            for (FeeCollectionRow row : selectedRows) {
-                // 1. Tạo transaction
-                int transactionId = paymentService.createTransaction(
-                    row.getBillingItemId(), amount, date, noteArea.getText(), currentUser.getUserId()
-                );
-                // 2. Cập nhật billing_item
-                paymentService.updateBillingItemAfterPayment(row.getBillingItemId(), amount);
-
-                // 3. Tạo receipt
-                paymentService.createReceipt(transactionId);
+            if (selectedRows == null || selectedRows.isEmpty()) {
+                showAlert("Không có khoản phí nào được chọn.");
+                return;
             }
 
-            // 4. Đóng dialog
+            FeeCollectionRow row = selectedRows.get(0);
+            PaymentService paymentService = new PaymentService();
+
+            // Lấy BillingItem từ billingItemId
+            BillingItemDao billingItemDao = new BillingItemDao();
+            BillingItem billingItem = billingItemDao.findById(row.getBillingItemId());
+
+            Transaction tx = new Transaction();
+            tx.setBillingItem(billingItem);
+            tx.setAmountPaid(amount);
+            tx.setPaymentDate(date);
+            tx.setCreatedBy(currentUser);
+
+            Transaction transaction = paymentService.createTransaction(tx);
+
+            paymentService.updateBillingItemAfterPayment(row.getBillingItemId(), amount);
+
+            Receipt receipt = paymentService.createReceipt(transaction.getTransactionId());
+
             ((Stage) confirmButton.getScene().getWindow()).close();
-
-            // 5. Mở màn hình ReceiptViewer
-            openReceiptViewer();
-
-            // 6. Callback nếu cần
+            openReceiptViewer(receipt);
             if (onPaymentSuccess != null) onPaymentSuccess.run();
 
         } catch (NumberFormatException e) {
@@ -118,13 +128,14 @@ public class PaymentDialogController {
     }
 
     // Hàm mở màn hình ReceiptViewer
-    private void openReceiptViewer() {
+    private void openReceiptViewer(Receipt receipt) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ReceiptViewer.fxml"));
+            URL fxmlUrl = getClass().getResource("/fxml/ReceiptViewer.fxml");
+            System.out.println("FXML URL: " + fxmlUrl);
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
             Parent root = loader.load();
-            // Nếu cần truyền receipt, bạn có thể lấy controller và gọi setReceipt()
-            // ReceiptViewerController controller = loader.getController();
-            // controller.setReceipt(receipt);
+            ReceiptViewerController controller = loader.getController();
+            controller.setReceipt(receipt);
             Stage stage = new Stage();
             stage.setTitle("Biên lai thanh toán");
             stage.setScene(new Scene(root));

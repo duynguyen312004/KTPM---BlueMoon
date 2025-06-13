@@ -37,6 +37,8 @@ public class PaymentManagementController {
     private final FeeCollectionService feeService = new FeeCollectionService();
     private final HouseholdService householdService = new HouseholdService();
     private ObservableList<FeeCollectionRow> masterData;
+    private org.example.condomanagement.model.User loggedInUser;
+    private Runnable onSuccessCallback;
 
     @FXML
     public void initialize() {
@@ -53,7 +55,10 @@ public class PaymentManagementController {
         // Enable payButton only if selection contains Pending
         payButton.setDisable(true);
         billingItemsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        billingItemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> updatePayButtonState());
+        billingItemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            System.out.println("Selected: " + newSel);
+            updatePayButtonState();
+        });
         billingItemsTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<FeeCollectionRow>) c -> updatePayButtonState());
 
         payButton.setOnAction(e -> openPaymentDialog());
@@ -71,11 +76,15 @@ public class PaymentManagementController {
             Parent root = loader.load();
             PaymentDialogController controller = loader.getController();
 
+            // Lấy các dòng được chọn
             List<FeeCollectionRow> selectedRows = billingItemsTable.getSelectionModel().getSelectedItems();
-            Runnable onSuccessCallback = () -> {
-                // Refresh data hoặc các hành động sau thanh toán
-            };
+            System.out.println("Selected rows: " + selectedRows.size());
+            if (selectedRows == null || selectedRows.isEmpty()) {
+                showAlert("Bạn phải chọn ít nhất một khoản phí để thanh toán!");
+                return;
+            }
 
+            controller.setData(selectedRows, loggedInUser, onSuccessCallback);
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Xác nhận thanh toán");
@@ -87,6 +96,13 @@ public class PaymentManagementController {
         }
     }
 
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     private void handleHouseholdSelection() {
         Household selected = householdComboBox.getValue();
@@ -107,5 +123,13 @@ public class PaymentManagementController {
                 .filter(row -> selected.getApartmentCode().equals(row.getHouseholdCode()))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
         billingItemsTable.setItems(filtered);
+    }
+
+    public void setLoggedInUser(org.example.condomanagement.model.User user) {
+        this.loggedInUser = user;
+    }
+
+    public void setOnSuccessCallback(Runnable callback) {
+        this.onSuccessCallback = callback;
     }
 }

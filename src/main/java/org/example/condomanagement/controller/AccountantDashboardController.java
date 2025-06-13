@@ -39,6 +39,7 @@ public class AccountantDashboardController {
     @SuppressWarnings("unused")
     private final TransactionService txService = new TransactionService();
     private List<Button> navButtons;
+    private User currentUser;
 
     @FXML
     public void initialize() {
@@ -74,18 +75,32 @@ public class AccountantDashboardController {
             String addBtnText,
             boolean showAdd,
             String iconFile) {
-        // icon + text
         btn.setGraphic(makeIcon(iconFile));
         btn.setContentDisplay(ContentDisplay.LEFT);
 
-        // hành động khi click
         btn.setOnAction(e -> {
             lblHeader.setText(headerText);
             btnAdd.setVisible(showAdd);
             if (showAdd)
                 btnAdd.setText(addBtnText);
 
-            loadContent(fxmlPath);
+            if ("/fxml/PaymentManagement.fxml".equals(fxmlPath)) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                    Parent paymentRoot = loader.load();
+                    // Truyền user vào controller
+                    org.example.condomanagement.controller.PaymentManagementController paymentCtrl = loader.getController();
+                    if (paymentCtrl != null && currentUser != null) {
+                        paymentCtrl.setLoggedInUser(currentUser);
+                    }
+                    contentPane.getChildren().setAll(paymentRoot);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    showError("Không thể mở màn hình Thu phí.");
+                }
+            } else {
+                loadContent(fxmlPath);
+            }
             highlightActive(btn);
         });
     }
@@ -127,7 +142,8 @@ public class AccountantDashboardController {
 
     /** Được gọi từ LoginController */
     public void initData(User user) {
-        lblWelcome.setText(user.getFullName());
+        this.currentUser = user;
+        lblWelcome.setText("Xin chào, " + user.getFullName());
     }
 
     @FXML

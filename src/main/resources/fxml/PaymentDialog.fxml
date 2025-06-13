@@ -36,18 +36,21 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
+                <Label text="Khoản phí thanh toán:" />
+                <Label fx:id="feeDetailsLabel" wrapText="true" GridPane.columnIndex="1" />
                 <Label text="Số tiền thanh toán:" GridPane.rowIndex="1" />
                 <TextField fx:id="amountPaidField" promptText="Nhập số tiền" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <Label text="Ngày thanh toán:" GridPane.rowIndex="2" />
                 <DatePicker fx:id="paymentDatePicker" editable="false" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label text="Ghi chú:" GridPane.rowIndex="3" />
                 <TextArea fx:id="noteArea" prefHeight="200.0" prefWidth="200.0" promptText="Ghi chú thêm (nếu có)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                
             </children>
         </GridPane>
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
             <children>
-                <Button fx:id="cancelButton" mnemonicParsing="false" text="Hủy" />
-                <Button fx:id="confirmButton" defaultButton="true" mnemonicParsing="false" style="-fx-base: #2196F3;" text="Xác nhận và In biên lai" textFill="WHITE" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" text="Hủy" onAction="#handleCancel"/>
+                <Button fx:id="confirmButton" defaultButton="true" mnemonicParsing="false" style="-fx-base: #2196F3;" text="Xác nhận và In biên lai" textFill="WHITE" onAction="#handleConfirm"/>
             </children>
         </HBox>
     </children>

@@ -18,12 +18,18 @@ public class TransactionDao {
         }
     }
 
-    public void save(Transaction hh) {
+    public Transaction save(Transaction transaction) {
         org.hibernate.Transaction tx = null;
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
             tx = s.beginTransaction();
-            s.merge(hh);
+            if (transaction.getTransactionId() == null) {
+                s.persist(transaction);
+                s.flush();
+            } else {
+                transaction = s.merge(transaction);
+            }
             tx.commit();
+            return transaction;
         } catch (Exception e) {
             if (tx != null)
                 tx.rollback();
