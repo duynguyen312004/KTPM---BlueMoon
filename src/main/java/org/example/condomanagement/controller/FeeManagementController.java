@@ -28,7 +28,6 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class FeeManagementController {
-
     @FXML
     private TableView<BillingItem> billingItemTableView;
     @FXML
@@ -67,6 +66,10 @@ public class FeeManagementController {
         placeholder.setName("Chọn đợt thu"); // Tên hiển thị
         batches.add(0, placeholder);
         dotthuComboBox.setItems(FXCollections.observableArrayList(batchNames));
+        dotthuComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            searchFeeButton(null); // Gọi lại hàm lọc hiện có
+        });
+
 
         // Thiết lập bảng billing item
         billingItemIdColumn.setCellValueFactory(cellData ->
