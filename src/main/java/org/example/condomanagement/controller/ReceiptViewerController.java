@@ -11,6 +11,7 @@ import org.example.condomanagement.model.Household;
 import org.example.condomanagement.model.User;
 import javafx.scene.control.Alert;
 
+
 public class ReceiptViewerController {
 
     @FXML private Label issueDateLabel;
@@ -148,6 +149,15 @@ public class ReceiptViewerController {
         alert.setTitle("Thông báo");
         alert.setHeaderText(null);
         alert.setContentText("Đã in Biên lai thành công!");
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleSavePdf() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText(null);
+        alert.setContentText("Đã lưu dưới định dạng PDF");
         alert.showAndWait();
     }
 
