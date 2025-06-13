@@ -1,6 +1,7 @@
 package org.example.condomanagement.model;
 
 import java.util.*;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
@@ -41,6 +42,9 @@ public class BillingItem extends BaseEntity {
     @OneToMany(mappedBy = "billingItem",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public BillingItem() {
     }
 
@@ -56,13 +60,14 @@ public class BillingItem extends BaseEntity {
         this.transactions = transactions;
     }
 
-    public BillingItem(CollectionBatch batch,Fee fee,Household household,Double actualAmount,Double expectedAmount,Status status) {
+    public BillingItem(CollectionBatch batch, Fee fee, Household household, Double actualAmount, Double expectedAmount, Status status) {
         this.expectedAmount = expectedAmount;
         this.actualAmount = actualAmount;
         this.household = household;
         this.fee = fee;
         this.batch = batch;
         this.status = status;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Integer getBillingItemId() {
@@ -127,6 +132,14 @@ public class BillingItem extends BaseEntity {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }

@@ -100,6 +100,18 @@ public class Household extends BaseEntity {
     public void setHeadResidentId(Integer headResidentId) {
         this.headResidentId = headResidentId;
     }
+
+    /**
+     * Lấy tên của thành viên đầu tiên trong hộ gia đình
+     * @return Tên của thành viên đầu tiên, hoặc chuỗi rỗng nếu không có thành viên nào
+     */
+    public String getFirstResidentName() {
+        if (residents != null && !residents.isEmpty()) {
+            return residents.get(0).getName();
+        }
+        return "";
+    }
+
     @Override
     public String toString() {
         return apartmentCode;

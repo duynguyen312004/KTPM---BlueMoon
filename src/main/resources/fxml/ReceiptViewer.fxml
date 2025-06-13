@@ -78,6 +78,7 @@
                                     </font>
                                 </Label>
                                 <Label text="(Ký, ghi rõ họ tên)" />
+                                <Label fx:id="payerSignatureLabel" text="[Trần Văn B]" style="-fx-font-weight: bold;" />
                             </children>
                         </VBox>
                         <VBox alignment="CENTER">
@@ -99,9 +100,9 @@
         <!-- Vùng chứa các nút chức năng -->
         <HBox alignment="CENTER" spacing="15.0">
             <children>
-                <Button fx:id="printButton" mnemonicParsing="false" text="In biên lai" />
+                <Button fx:id="printButton" mnemonicParsing="false" text="In biên lai" onAction="#handlePrint"/>
                 <Button fx:id="savePdfButton" mnemonicParsing="false" text="Lưu PDF" />
-                <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Đóng" />
+                <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Đóng" onAction="#handleClose"/>
             </children>
         </HBox>
     </children>
