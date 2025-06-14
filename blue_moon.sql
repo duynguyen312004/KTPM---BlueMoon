@@ -314,3 +314,7 @@ UPDATE residents SET
                      name = 'Pham Thi Yen',
                      relationship = 'Vo'
 WHERE name = 'Pham Thi Yen' AND household_id = 3;
+
+ALTER TABLE vehicles ALTER COLUMN type TYPE VARCHAR USING type::text;
+
+ALTER TABLE billing_items ALTER COLUMN status TYPE VARCHAR USING status::text;

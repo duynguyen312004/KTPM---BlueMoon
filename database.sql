@@ -11,7 +11,9 @@ CREATE TABLE users (
   phone_number VARCHAR(15),
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
   last_login TIMESTAMP,
-  role role NOT NULL
+  role role NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE households (
@@ -19,7 +21,9 @@ CREATE TABLE households (
   apartment_code VARCHAR(20) UNIQUE NOT NULL,
   address VARCHAR(255) NOT NULL,
   area FLOAT NOT NULL,
-  head_resident_id INT
+  head_resident_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE residents (
@@ -29,14 +33,18 @@ CREATE TABLE residents (
   birthday DATE NOT NULL,
   relationship VARCHAR(50) NOT NULL,
   national_id VARCHAR(20) UNIQUE NOT NULL,
-  phone_number VARCHAR(15) NOT NULL
+  phone_number VARCHAR(15) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE vehicles (
   vehicle_id SERIAL PRIMARY KEY,
   household_id INT REFERENCES households(household_id),
-  type vehicle_type NOT NULL,
-  plate_number VARCHAR(20) NOT NULL
+  type VARCHAR NOT NULL,
+  plate_number VARCHAR(20) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE fees (
@@ -44,24 +52,30 @@ CREATE TABLE fees (
   fee_name VARCHAR(100) NOT NULL,
   fee_category fee_category NOT NULL,
   fee_amount FLOAT NOT NULL,
-  calculation_method calculation_method NOT NULL
+  calculation_method calculation_method NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE vehicle_fee_mapping (
-  vehicle_type vehicle_type PRIMARY KEY,
+  vehicle_type VARCHAR PRIMARY KEY,
   fee_id INT NOT NULL REFERENCES fees(fee_id)
 );
 
 CREATE TABLE collection_batches (
   batch_id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  period DATE NOT NULL
+  period DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE batch_fees (
   batch_fee_id SERIAL PRIMARY KEY,
   batch_id INT NOT NULL REFERENCES collection_batches(batch_id),
-  fee_id INT NOT NULL REFERENCES fees(fee_id)
+  fee_id INT NOT NULL REFERENCES fees(fee_id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE billing_items (
@@ -71,7 +85,9 @@ CREATE TABLE billing_items (
   batch_id INT NOT NULL REFERENCES collection_batches(batch_id),
   expected_amount FLOAT NOT NULL,
   actual_amount FLOAT NOT NULL,
-  status billing_status NOT NULL
+  status VARCHAR NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE transactions (
@@ -79,7 +95,9 @@ CREATE TABLE transactions (
   billing_item_id INT NOT NULL REFERENCES billing_items(billing_item_id),
   amount_paid FLOAT NOT NULL,
   payment_date DATE,
-  created_by INT NOT NULL REFERENCES users(user_id)
+  created_by INT NOT NULL REFERENCES users(user_id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE receipts (
@@ -87,8 +105,13 @@ CREATE TABLE receipts (
   transaction_id INT NOT NULL REFERENCES transactions(transaction_id),
   receipt_number VARCHAR(50) UNIQUE NOT NULL,
   issue_date DATE NOT NULL,
-  file_url VARCHAR(255)
+  file_url VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE vehicles ALTER COLUMN type TYPE VARCHAR USING type::text;
+
 -- Người dùng
 INSERT INTO users (username, password, full_name, phone_number, role) VALUES
 ('admin', 'admin123', 'Nguyễn Văn A', '0912345678', 'Admin'),
@@ -137,3 +160,5 @@ INSERT INTO transactions (billing_item_id, amount_paid, payment_date, created_by
 -- Biên lai
 INSERT INTO receipts (transaction_id, receipt_number, issue_date, file_url) VALUES
 (1, 'RCPT-001', '2025-06-05', 'receipts/rcpt001.pdf');
+
+ALTER TABLE billing_items ALTER COLUMN status TYPE VARCHAR USING status::text;

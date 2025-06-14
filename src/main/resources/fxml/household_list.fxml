@@ -39,6 +39,8 @@
             <TableColumn fx:id="colMemberCount" prefWidth="120" text="Số thành viên" />
             <TableColumn fx:id="colArea" prefWidth="120" text="Diện tích" />
             <TableColumn fx:id="colAddress" prefWidth="140" text="Địa chỉ" />
+            <TableColumn fx:id="colMotorbikeCount" prefWidth="120" text="Số xe máy" />
+            <TableColumn fx:id="colCarCount" prefWidth="120" text="Số ô tô" />
         </columns>
     </TableView>
 

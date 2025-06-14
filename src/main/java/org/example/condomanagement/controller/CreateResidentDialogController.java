@@ -178,7 +178,11 @@ public class CreateResidentDialogController {
 
     @FXML
     private void onCancel() {
-        dialogStage.close();
+        if (dialogStage != null) {
+            dialogStage.close();
+        } else {
+            ((Stage) btnCancel.getScene().getWindow()).close();
+        }
     }
 
     public boolean isSaved() {

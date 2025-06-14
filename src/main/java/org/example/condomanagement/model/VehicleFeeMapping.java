@@ -1,25 +1,26 @@
 package org.example.condomanagement.model;
 
 import jakarta.persistence.*;
+import org.example.condomanagement.model.VehicleType;
 
 @Entity
 @Table(name = "vehicle_fee_mapping")
 public class VehicleFeeMapping {
     @Id
     @Enumerated(EnumType.STRING)
-    @Column(name = "vehicle_type", nullable = false)
-    private Vehicle.VehicleType vehicleType;
+    @Column(name = "vehicle_type")
+    private VehicleType vehicleType;
 
-    @OneToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "fee_id")
     private Fee fee;
 
     // getters & setters
-    public Vehicle.VehicleType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(Vehicle.VehicleType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 
