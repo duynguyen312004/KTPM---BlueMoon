@@ -740,6 +740,20 @@
     -fx-text-fill: #dc3545; /* Red */
 }
 
+.chart-bar.series0 {
+    -fx-bar-fill: green;
+}
+.chart-bar.series1 {
+    -fx-bar-fill: red;
+}
+.chart-legend-item-symbol.chart-bar.series0 {
+    -fx-background-color: green;
+}
+.chart-legend-item-symbol.chart-bar.series1 {
+    -fx-background-color: red;
+}
+
+
 .chart-debtors-pane {
     /* Adjust height or min-height if needed for the chart area */
 }

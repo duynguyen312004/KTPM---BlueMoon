@@ -18,17 +18,12 @@
 
 <AnchorPane prefHeight="750.0" prefWidth="1000.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.ReportingController">
     <children>
-        <!-- ScrollPane bao bọc toàn bộ VBox chính -->
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
-                <!-- VBox chính chứa toàn bộ giao diện -->
                 <VBox spacing="0">
                     <children>
-                        <!-- Title Bar -->
                         <HBox alignment="CENTER_LEFT" styleClass="title-bar" />
 
-                        <!-- Content Wrapper -->
-                        <!-- Bỏ VBox.vgrow="ALWAYS" ở đây nếu bạn muốn ScrollPane quyết định chiều cao dựa trên nội dung -->
                         <VBox styleClass="content-wrapper">
                             <padding>
                                 <Insets bottom="20.0" left="25.0" right="25.0" top="25.0" />
@@ -37,7 +32,6 @@
                                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                             </VBox.margin>
                             <children>
-                                <!-- Filter Section -->
                                 <HBox alignment="BOTTOM_LEFT" spacing="15.0" styleClass="filter-pane">
                                     <children>
                                         <VBox spacing="5.0" HBox.hgrow="ALWAYS">
@@ -61,7 +55,6 @@
                                     </VBox.margin>
                                 </HBox>
 
-                                <!-- Summary Stats Section -->
                                 <HBox spacing="20.0" styleClass="summary-stats-pane">
                                     <children>
                                         <VBox styleClass="stat-block" HBox.hgrow="ALWAYS">
@@ -94,21 +87,28 @@
                                     </VBox.margin>
                                 </HBox>
 
-                                <!-- Chart and Top Debtors Section -->
-                                <HBox prefHeight="250.0" spacing="25.0" styleClass="chart-debtors-pane">
+                                <HBox prefHeight="300.0" spacing="25.0" styleClass="chart-debtors-pane">
                                     <VBox.margin>
                                         <Insets bottom="25.0" />
                                     </VBox.margin>
                                     <children>
                                         <StackPane fx:id="barChartContainer" styleClass="chart-placeholder" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <BarChart fx:id="householdBarChart" legendVisible="false" title="Mức đóng của các hộ">
+                                                <BarChart fx:id="householdBarChart" legendVisible="true" title="Mức đóng của các hộ">
                                                     <xAxis>
-                                                        <CategoryAxis label="Hộ gia đình" fx:id="xAxis" />
+                                                        <CategoryAxis fx:id="xAxis" tickLabelsVisible="false" />
                                                     </xAxis>
                                                     <yAxis>
                                                         <NumberAxis fx:id="yAxis" label="Số tiền đã đóng (VNĐ)" />
                                                     </yAxis>
+                                                    <style>
+                                                        .chart-legend-item-symbol.default-color0 {
+                                                        -fx-background-color: green;
+                                                        }
+                                                        .chart-legend-item-symbol.default-color1 {
+                                                        -fx-background-color: red;
+                                                        }
+                                                    </style>
                                                 </BarChart>
                                             </children>
                                         </StackPane>
@@ -138,11 +138,7 @@
                                     </children>
                                 </HBox>
 
-                                <!-- Detailed Table Section -->
-                                <!-- Để TableView phát triển theo nội dung của nó và ScrollPane xử lý cuộn tổng thể, -->
-                                <!-- bạn có thể bỏ VBox.vgrow="ALWAYS" ở đây và đặt prefHeight hoặc minHeight phù hợp -->
-                                <!-- Hoặc, giữ VBox.vgrow="ALWAYS" nếu bạn muốn TableView tự cuộn nội bộ trước khi ScrollPane chính cuộn -->
-                                <TableView fx:id="detailsTableView" minHeight="200" VBox.vgrow="ALWAYS"> <!-- Giữ VBox.vgrow hoặc đặt minHeight/prefHeight -->
+                                <TableView fx:id="detailsTableView" minHeight="200" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="householdIdColumn" prefWidth="120.0" text="Mã hộ khẩu" />
                                         <TableColumn fx:id="householdNameColumn" prefWidth="300.0" text="Tên hộ" />
@@ -157,7 +153,6 @@
                                     </placeholder>
                                 </TableView>
 
-                                <!-- Bottom Actions -->
                                 <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="bottom-actions">
                                     <VBox.margin>
                                         <Insets top="20.0" />

@@ -125,10 +125,17 @@ public class ReportingController {
         statTypeComboBox.setItems(FXCollections.observableArrayList("Tất cả", "Đã thu", "Chưa thu"));
         statTypeComboBox.getSelectionModel().selectFirst(); // chọn sẵn "Tất cả"
         List<String> apartmentCodes = billingItemList.stream()
-                .map(item -> item.getHouseholdId())
+                .map(BillingItemDao.BillingSummary::getHouseholdId)
+                .distinct()
                 .collect(Collectors.toList());
-        objectComboBox.setItems(FXCollections.observableArrayList(apartmentCodes));
+
+        List<String> comboItems = new ArrayList<>();
+        comboItems.add("Tất cả"); // ✅ thêm tùy chọn này
+        comboItems.addAll(apartmentCodes);
+
+        objectComboBox.setItems(FXCollections.observableArrayList(comboItems));
         objectComboBox.getSelectionModel().selectFirst();
+
 
         filterButton.setOnAction(event -> applyFilterAndUpdateChart(billingItemList));
     }
@@ -145,8 +152,9 @@ public class ReportingController {
                         default -> true;
                     };
 
-                    boolean matchesHousehold = selectedHousehold == null || selectedHousehold.isEmpty()
+                    boolean matchesHousehold = selectedHousehold.equals("Tất cả")
                             || b.getHouseholdId().equals(selectedHousehold);
+
 
                     return matchesType && matchesHousehold;
                 })
@@ -160,6 +168,7 @@ public class ReportingController {
         householdBarChart.getData().clear();
 
         String selectedType = statTypeComboBox.getValue();
+        String selectedHousehold = objectComboBox.getValue();
 
         XYChart.Series<String, Number> collectedSeries = new XYChart.Series<>();
         collectedSeries.setName("Đã thu");
@@ -167,50 +176,68 @@ public class ReportingController {
         XYChart.Series<String, Number> uncollectedSeries = new XYChart.Series<>();
         uncollectedSeries.setName("Chưa thu");
 
-        for (BillingItemDao.BillingSummary summary : data) {
-            String household = summary.getHouseholdId();
-            Double actual = summary.getTotalActualAmount();
-            Double expected = summary.getTotalExpectedAmount();
-            Double unpaid = expected - actual;
+        if ("Tất cả".equals(selectedHousehold)) {
+            // ✅ Gộp lại: chỉ 2 cột
+            double totalCollected = data.stream()
+                    .mapToDouble(BillingItemDao.BillingSummary::getTotalActualAmount)
+                    .sum();
+            double totalExpected = data.stream()
+                    .mapToDouble(BillingItemDao.BillingSummary::getTotalExpectedAmount)
+                    .sum();
+            double totalUnpaid = totalExpected - totalCollected;
 
-            switch (selectedType) {
-                case "Tất cả" -> {
-                    collectedSeries.getData().add(new XYChart.Data<>(household, actual.doubleValue()));
-                    uncollectedSeries.getData().add(new XYChart.Data<>(household, unpaid.doubleValue()));
-                }
-                case "Đã thu" -> {
-                    collectedSeries.getData().add(new XYChart.Data<>(household, actual.doubleValue()));
-                }
-                case "Chưa thu" -> {
-                    uncollectedSeries.getData().add(new XYChart.Data<>(household, unpaid.doubleValue()));
+            if (selectedType.equals("Tất cả") || selectedType.equals("Đã thu")) {
+                collectedSeries.getData().add(new XYChart.Data<>("Tổng đã thu", totalCollected));
+            }
+            if (selectedType.equals("Tất cả") || selectedType.equals("Chưa thu")) {
+                uncollectedSeries.getData().add(new XYChart.Data<>("Tổng chưa thu", totalUnpaid));
+            }
+
+
+        } else {
+            // ✅ Mặc định: hiển thị theo từng hộ
+            for (BillingItemDao.BillingSummary summary : data) {
+                String household = summary.getHouseholdId();
+                double actual = summary.getTotalActualAmount();
+                double expected = summary.getTotalExpectedAmount();
+                double unpaid = expected - actual;
+
+                switch (selectedType) {
+                    case "Tất cả" -> {
+                        collectedSeries.getData().add(new XYChart.Data<>(household, actual));
+                        uncollectedSeries.getData().add(new XYChart.Data<>(household, unpaid));
+                    }
+                    case "Đã thu" -> collectedSeries.getData().add(new XYChart.Data<>(household, actual));
+                    case "Chưa thu" -> uncollectedSeries.getData().add(new XYChart.Data<>(household, unpaid));
                 }
             }
         }
 
-        if (selectedType.equals("Tất cả") || selectedType.equals("Đã thu")) {
+        if (!collectedSeries.getData().isEmpty()) {
             householdBarChart.getData().add(collectedSeries);
         }
-
-        if (selectedType.equals("Tất cả") || selectedType.equals("Chưa thu")) {
+        if (!uncollectedSeries.getData().isEmpty()) {
             householdBarChart.getData().add(uncollectedSeries);
         }
 
+        // Coloring
         Platform.runLater(() -> {
             for (XYChart.Series<String, Number> series : householdBarChart.getData()) {
                 for (XYChart.Data<String, Number> dataPoint : series.getData()) {
                     Node node = dataPoint.getNode();
                     if (node != null) {
-                        String seriesName = series.getName();
-                        if (seriesName.equals("Đã thu")) {
-                            node.setStyle("-fx-bar-fill: green; -fx-padding: 0 2px;"); // padding nhỏ
-                        } else if (seriesName.equals("Chưa thu")) {
-                            node.setStyle("-fx-bar-fill: red; -fx-padding: 0 2px;");
+                        if (series.getName().equals("Đã thu")) {
+                            node.setStyle("-fx-bar-fill: green;");
+                        } else if (series.getName().equals("Chưa thu")) {
+                            node.setStyle("-fx-bar-fill: red;");
                         }
-                        node.setScaleX(0.5); // làm cột hẹp lại
                     }
                 }
             }
         });
+        householdBarChart.setCategoryGap(40);
+        householdBarChart.setBarGap(15);
+
     }
 
     void loadTopList(List<BillingItemDao.BillingSummary> billingItemList) {
