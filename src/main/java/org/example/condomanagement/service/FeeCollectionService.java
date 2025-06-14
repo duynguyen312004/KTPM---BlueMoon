@@ -13,7 +13,7 @@ public class FeeCollectionService {
         List<FeeCollectionRow> result = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT bi.billingItemId, bi.household.apartmentCode, bi.fee.feeName, bi.batch.name, " +
-                         "bi.expectedAmount, bi.actualAmount, bi.createdAt " +
+                         "bi.expectedAmount, bi.actualAmount, bi.createdAt, bi.status " +
                          "FROM BillingItem bi";
             Query<Object[]> query = session.createQuery(hql, Object[].class);
             for (Object[] row : query.list()) {
@@ -24,7 +24,9 @@ public class FeeCollectionService {
                 Double expectedAmount = (Double) row[4];
                 Double actualAmount = (Double) row[5];
                 String date = row[6] != null ? row[6].toString() : "";
-                result.add(new FeeCollectionRow(billingItemId, householdCode, feeName, batchName, expectedAmount, actualAmount, date));
+                String status = row[7] != null ? row[7].toString() : "Pending"; // Default to "Pending" if null
+
+                result.add(new FeeCollectionRow(billingItemId, householdCode, feeName, batchName, expectedAmount, actualAmount, date, status));
             }
         }
         return result;

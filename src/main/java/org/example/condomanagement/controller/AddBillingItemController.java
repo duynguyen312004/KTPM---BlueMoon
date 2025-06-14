@@ -11,6 +11,7 @@ import org.example.condomanagement.model.BillingItem;
 import org.example.condomanagement.model.CollectionBatch;
 import org.example.condomanagement.model.Fee;
 import org.example.condomanagement.model.Household;
+import java.time.LocalDateTime;
 
 public class AddBillingItemController {
 
@@ -73,8 +74,9 @@ public class AddBillingItemController {
                     expected_amount = selectedFee.getFeeAmount()*householdDao.getAreaByHouseholdId(selectedHousehold.getHouseholdId());
                 }
                 else expected_amount = selectedFee.getFeeAmount();
-                BillingItem billingItem = new BillingItem(selectedBatch,selectedFee,selectedHousehold,0.0,expected_amount,BillingItem.Status.Pending);
-                BillingItem saved=billingItemDao.save(billingItem);
+                BillingItem billingItem = new BillingItem(selectedBatch, selectedFee, selectedHousehold, 0.0, expected_amount, BillingItem.Status.Pending);
+                billingItem.setUpdatedAt(LocalDateTime.now());
+                BillingItem saved = billingItemDao.save(billingItem);
                 billingItemTable.getItems().add(saved);
             }
 
