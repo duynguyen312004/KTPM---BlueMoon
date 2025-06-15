@@ -6,22 +6,50 @@ import javafx.stage.Stage;
 import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.Household;
 import org.example.condomanagement.model.Resident;
+import org.example.condomanagement.model.Vehicle;
+import org.example.condomanagement.model.VehicleType;
+import org.example.condomanagement.service.VehicleService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class CreateHouseholdDialogController {
-    @FXML private TextField  txtApartmentCode;
-    @FXML private TextField  txtAddress;
-    @FXML private TextField  txtArea;
-    @FXML private TextField  txtHeadName;
-    @FXML private DatePicker dpHeadBirthday;
-    @FXML private TextField  txtHeadNationalId;
-    @FXML private TextField  txtHeadPhone;
-    @FXML private Button     btnSave, btnCancel;
+    @FXML
+    private TextField txtApartmentCode;
+    @FXML
+    private TextField txtAddress;
+    @FXML
+    private TextField txtArea;
+    @FXML
+    private TextField txtHeadName;
+    @FXML
+    private DatePicker dpHeadBirthday;
+    @FXML
+    private TextField txtHeadNationalId;
+    @FXML
+    private TextField txtHeadPhone;
+    @FXML
+    private TextField txtMotorbikeCount;
+    @FXML
+    private TextArea txtMotorbikePlates;
+    @FXML
+    private TextField txtCarCount;
+    @FXML
+    private TextArea txtCarPlates;
+    @FXML
+    private Button btnSave, btnCancel;
 
     private Household household; // nếu != null là edit
+    private VehicleService vehicleService = new VehicleService();
+    private Stage dialogStage;
+
+    public void setDialogStage(Stage stage) {
+        this.dialogStage = stage;
+    }
 
     /**
      * Được gọi để truyền vào đối tượng edit (null = thêm mới).
@@ -32,9 +60,9 @@ public class CreateHouseholdDialogController {
             txtApartmentCode.setText(hh.getApartmentCode());
             txtAddress.setText(hh.getAddress());
             txtArea.setText(hh.getArea().toString());
-            // load thông tin chủ hộ nếu có
+
+            // Load thông tin chủ hộ
             if (hh.getHeadResidentId() != null) {
-                // ta dùng một Session tạm để load head
                 try (Session s = HibernateUtil.getSessionFactory().openSession()) {
                     Resident head = s.get(Resident.class, hh.getHeadResidentId());
                     if (head != null) {
@@ -45,75 +73,112 @@ public class CreateHouseholdDialogController {
                     }
                 }
             }
+
+            // Load thông tin phương tiện
+            List<Vehicle> vehicles = vehicleService.findByHouseholdId(hh.getHouseholdId());
+            List<Vehicle> motorbikes = vehicles.stream()
+                    .filter(v -> VehicleType.MOTORBIKE.equals(v.getType()))
+                    .collect(Collectors.toList());
+            List<Vehicle> cars = vehicles.stream()
+                    .filter(v -> VehicleType.CAR.equals(v.getType()))
+                    .collect(Collectors.toList());
+
+            txtMotorbikeCount.setText(String.valueOf(motorbikes.size()));
+            txtMotorbikePlates.setText(motorbikes.stream()
+                    .map(Vehicle::getPlateNumber)
+                    .collect(Collectors.joining("\n")));
+
+            txtCarCount.setText(String.valueOf(cars.size()));
+            txtCarPlates.setText(cars.stream()
+                    .map(Vehicle::getPlateNumber)
+                    .collect(Collectors.joining("\n")));
         }
     }
 
+    @SuppressWarnings("deprecation")
     @FXML
     public void onSave() {
-        // 1) Validate input hộ khẩu
-        String code    = txtApartmentCode.getText().trim();
+        // Validate input hộ khẩu
+        String code = txtApartmentCode.getText().trim();
         String address = txtAddress.getText().trim();
         String areaStr = txtArea.getText().trim();
         if (code.isEmpty() || address.isEmpty() || areaStr.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "Vui lòng nhập đủ thông tin hộ khẩu!").show();
             return;
         }
-        double area;
+        if (dpHeadBirthday.getValue() == null) {
+            new Alert(Alert.AlertType.ERROR, "Vui lòng chọn ngày sinh cho chủ hộ!").show();
+            return;
+        }
+
+        // Validate số lượng và biển số xe
         try {
-            area = Double.parseDouble(areaStr);
+            int motorbikeCount = Integer.parseInt(txtMotorbikeCount.getText().trim());
+            int carCount = Integer.parseInt(txtCarCount.getText().trim());
+
+            if (motorbikeCount < 0 || carCount < 0) {
+                new Alert(Alert.AlertType.ERROR, "Số lượng xe không được âm!").show();
+                return;
+            }
+
+            String[] motorbikePlates = txtMotorbikePlates.getText().split("\\n");
+            long motorbikePlateCount = java.util.Arrays.stream(motorbikePlates)
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .count();
+
+            String[] carPlates = txtCarPlates.getText().split("\\n");
+            long carPlateCount = java.util.Arrays.stream(carPlates)
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .count();
+
+            if (motorbikePlateCount != motorbikeCount || carPlateCount != carCount) {
+                new Alert(Alert.AlertType.ERROR,
+                        "DEBUG: Số lượng xe máy: " + motorbikeCount + ", biển số xe máy: " + motorbikePlateCount +
+                                "\nSố lượng ô tô: " + carCount + ", biển số ô tô: " + carPlateCount +
+                                "\n\nSố lượng biển số xe không khớp với số lượng xe!")
+                        .show();
+                return;
+            }
         } catch (NumberFormatException e) {
-            new Alert(Alert.AlertType.ERROR, "Diện tích phải là số!").show();
-            return;
-        }
-        // Bổ sung kiểm tra không âm:
-        if (area < 0) {
-            new Alert(Alert.AlertType.ERROR, "Diện tích không được âm!").show();
+            new Alert(Alert.AlertType.ERROR, "Số lượng xe phải là số!").show();
             return;
         }
 
-        // 2) Validate input chủ hộ
-        String headName = txtHeadName.getText().trim();
-        LocalDate headBd= dpHeadBirthday.getValue();
-        String headCid  = txtHeadNationalId.getText().trim();
-        String headPhone= txtHeadPhone.getText().trim();
-        if (headName.isEmpty() || headBd == null || headCid.isEmpty() || headPhone.isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Vui lòng nhập đầy đủ thông tin chủ hộ!").show();
-            return;
-        }
-
-        // 3) Bắt đầu Transaction chung
+        // Bắt đầu Transaction
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
 
-            // a) Tạo hoặc cập nhật Household
+            // Cập nhật thông tin hộ khẩu
             boolean isNew = (household == null);
             if (isNew) {
                 household = new Household();
                 household.setApartmentCode(code);
                 household.setAddress(address);
-                household.setArea(area);
+                household.setArea(Double.parseDouble(areaStr));
                 session.persist(household);
-                session.flush(); // để có ID
+                session.flush();
             } else {
                 household.setApartmentCode(code);
                 household.setAddress(address);
-                household.setArea(area);
+                household.setArea(Double.parseDouble(areaStr));
                 household = session.merge(household);
             }
 
-            // b) Tạo hoặc cập nhật Resident làm chủ hộ
+            // Cập nhật thông tin chủ hộ
             Resident head;
             if (!isNew && household.getHeadResidentId() != null) {
                 head = session.get(Resident.class, household.getHeadResidentId());
-                // nếu head bị xóa hoặc không tồn tại thì tạo mới
-                if (head == null) head = new Resident();
+                if (head == null)
+                    head = new Resident();
             } else {
                 head = new Resident();
             }
-            head.setName(headName);
-            head.setBirthday(headBd);
-            head.setNationalId(headCid);
-            head.setPhoneNumber(headPhone);
+            head.setName(txtHeadName.getText().trim());
+            head.setBirthday(dpHeadBirthday.getValue());
+            head.setNationalId(txtHeadNationalId.getText().trim());
+            head.setPhoneNumber(txtHeadPhone.getText().trim());
             head.setRelationship("Chủ hộ");
             head.setHousehold(household);
 
@@ -124,25 +189,59 @@ public class CreateHouseholdDialogController {
                 head = session.merge(head);
             }
 
-            // c) Cập nhật lại head_resident_id trên Household
+            // Cập nhật head_resident_id
             household.setHeadResidentId(head.getResidentId());
             session.merge(household);
 
+            // Cập nhật thông tin phương tiện
+            // Xóa các phương tiện cũ
+            if (!isNew) {
+                session.createQuery("DELETE FROM Vehicle v WHERE v.household = :household")
+                        .setParameter("household", household)
+                        .executeUpdate();
+            }
+
+            // Thêm xe máy mới
+            String[] motorbikePlates = txtMotorbikePlates.getText().split("\\n");
+            for (String plate : motorbikePlates) {
+                if (!plate.trim().isEmpty()) {
+                    Vehicle vehicle = new Vehicle();
+                    vehicle.setHousehold(household);
+                    vehicle.setType(VehicleType.MOTORBIKE);
+                    vehicle.setPlateNumber(plate.trim());
+                    session.persist(vehicle);
+                }
+            }
+
+            // Thêm ô tô mới
+            String[] carPlates = txtCarPlates.getText().split("\\n");
+            for (String plate : carPlates) {
+                if (!plate.trim().isEmpty()) {
+                    Vehicle vehicle = new Vehicle();
+                    vehicle.setHousehold(household);
+                    vehicle.setType(VehicleType.CAR);
+                    vehicle.setPlateNumber(plate.trim());
+                    session.persist(vehicle);
+                }
+            }
+
             tx.commit();
-        } catch (Exception ex) {
-            showConstraintViolationAlert(ex);
-            return;
+            if (dialogStage != null) {
+                dialogStage.close();
+            } else {
+                ((Stage) btnSave.getScene().getWindow()).close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu: " + e.getMessage()).show();
         }
-
-
-        // 4) Đóng dialog
-        ((Stage) btnSave.getScene().getWindow()).close();
     }
 
     @FXML
     public void onCancel() {
         ((Stage) btnCancel.getScene().getWindow()).close();
     }
+
     private void showConstraintViolationAlert(Throwable ex) {
         Throwable root = ex;
         while (root.getCause() != null) {

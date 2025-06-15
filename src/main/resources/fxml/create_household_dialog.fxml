@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextArea?>
 
 <?import javafx.scene.control.DatePicker?>
 <GridPane xmlns="http://javafx.com/javafx/8"
@@ -39,8 +40,21 @@
     <Label text="Số điện thoại:"  GridPane.rowIndex="6" GridPane.columnIndex="0"/>
     <TextField fx:id="txtHeadPhone"     GridPane.rowIndex="6" GridPane.columnIndex="1"/>
 
+    <!-- Thông tin phương tiện -->
+    <Label text="Số lượng xe máy:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+    <TextField fx:id="txtMotorbikeCount" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+    <Label text="Biển số xe máy:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+    <TextArea fx:id="txtMotorbikePlates" GridPane.rowIndex="8" GridPane.columnIndex="1" prefRowCount="3"/>
+
+    <Label text="Số lượng ô tô:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+    <TextField fx:id="txtCarCount" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+    <Label text="Biển số ô tô:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+    <TextArea fx:id="txtCarPlates" GridPane.rowIndex="10" GridPane.columnIndex="1" prefRowCount="3"/>
+
     <!-- Buttons -->
-    <HBox spacing="10" GridPane.rowIndex="7" GridPane.columnIndex="1" style="-fx-alignment: center_right;">
+    <HBox spacing="10" GridPane.rowIndex="11" GridPane.columnIndex="1" style="-fx-alignment: center_right;">
         <Button fx:id="btnSave"   text="Lưu"   onAction="#onSave"
                 style="-fx-background-color:#0d6efd; -fx-text-fill:white;"/>
         <Button fx:id="btnCancel" text="Hủy"   onAction="#onCancel"

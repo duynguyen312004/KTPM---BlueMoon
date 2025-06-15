@@ -16,7 +16,7 @@ public class ChangePasswordDialogController {
     private UserService userService;
     private String username;
 
-    public void setUserService(@SuppressWarnings("exports") UserService service) {
+    public void setUserService(UserService service) {
         this.userService = service;
     }
 

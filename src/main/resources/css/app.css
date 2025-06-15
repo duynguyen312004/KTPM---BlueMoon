@@ -740,9 +740,20 @@
     -fx-text-fill: #dc3545; /* Red */
 }
 
-.chart-debtors-pane {
-    /* Adjust height or min-height if needed for the chart area */
+.chart-bar.series0 {
+    -fx-bar-fill: green;
 }
+.chart-bar.series1 {
+    -fx-bar-fill: red;
+}
+.chart-legend-item-symbol.chart-bar.series0 {
+    -fx-background-color: green;
+}
+.chart-legend-item-symbol.chart-bar.series1 {
+    -fx-background-color: red;
+}
+
+
 
 /* style.css */
 /* ... các style khác ... */
@@ -874,9 +885,6 @@
     -fx-alignment: CENTER_RIGHT;
 }
 
-.bottom-actions {
-    /* Padding already applied via VBox.margin in FXML */
-}
 
 
 

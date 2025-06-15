@@ -15,6 +15,11 @@ import org.example.condomanagement.model.Resident;
 import org.example.condomanagement.service.HouseholdService;
 import org.example.condomanagement.service.ResidentService;
 import org.example.condomanagement.controller.CreateHouseholdDialogController;
+import org.example.condomanagement.model.VehicleType;
+import java.util.stream.Collectors;
+import org.hibernate.Session;
+import org.example.condomanagement.util.HibernateUtil;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class HouseholdListController {
@@ -36,6 +41,10 @@ public class HouseholdListController {
     private TableColumn<Household, Double> colArea;
     @FXML
     private TableColumn<Household, String> colAddress;
+    @FXML
+    private TableColumn<Household, Integer> colMotorbikeCount;
+    @FXML
+    private TableColumn<Household, Integer> colCarCount;
 
     private final HouseholdService service = new HouseholdService();
     private final ResidentService residentSvc = new ResidentService();
@@ -67,6 +76,26 @@ public class HouseholdListController {
         colArea.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue().getArea()));
 
         colAddress.setCellValueFactory(c -> new ReadOnlyStringWrapper(c.getValue().getAddress()));
+
+        // Thêm binding cho số lượng phương tiện
+        colMotorbikeCount.setCellValueFactory(c -> {
+            Household h = c.getValue();
+            int count = h.getVehicles().stream()
+                    .filter(v -> VehicleType.MOTORBIKE.equals(v.getType()))
+                    .collect(Collectors.toList())
+                    .size();
+            return new ReadOnlyObjectWrapper<>(count);
+        });
+
+        colCarCount.setCellValueFactory(c -> {
+            Household h = c.getValue();
+            int count = h.getVehicles().stream()
+                    .filter(v -> VehicleType.CAR.equals(v.getType()))
+                    .collect(Collectors.toList())
+                    .size();
+            return new ReadOnlyObjectWrapper<>(count);
+        });
+
         tableHouseholds.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         // 3) Enable/Disable nút Sửa & Xóa
         BooleanBinding noSelection = tableHouseholds.getSelectionModel().selectedItemProperty().isNull();
@@ -74,9 +103,7 @@ public class HouseholdListController {
         btnDelete.disableProperty().bind(noSelection);
 
         // 4) Load dữ liệu
-        masterData.setAll(service.findAll());
-        System.out.println(">>> Loaded households: " + masterData.size());
-        tableHouseholds.setItems(masterData);
+        loadHouseholds();
     }
 
     @FXML
@@ -109,7 +136,7 @@ public class HouseholdListController {
             stage.setTitle("Thêm hộ khẩu");
             stage.showAndWait();
             // Sau khi đóng form, reload
-            masterData.setAll(service.findAll());
+            loadHouseholds();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +156,7 @@ public class HouseholdListController {
             stage.setScene(new Scene(root));
             stage.setTitle("Sửa hộ khẩu");
             stage.showAndWait();
-            masterData.setAll(service.findAll());
+            loadHouseholds();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,5 +179,34 @@ public class HouseholdListController {
                         new Alert(Alert.AlertType.ERROR, "Xóa thất bại!").show();
                     }
                 });
+    }
+
+    private void loadHouseholds() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            
+            // Chỉ fetch join residents
+            String hql = "SELECT DISTINCT h FROM Household h LEFT JOIN FETCH h.residents";
+            List<Household> households = session.createQuery(hql, Household.class).getResultList();
+
+            // Nạp vehicles cho từng household khi session còn mở
+            for (Household h : households) {
+                h.getVehicles().size();
+            }
+
+            masterData.setAll(FXCollections.observableArrayList(households));
+            tableHouseholds.setItems(masterData);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Lỗi", "Không thể tải danh sách hộ khẩu: " + e.getMessage());
+        }
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

@@ -4,36 +4,22 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "vehicles")
-public class Vehicle extends BaseEntity {
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_id")
     private Integer vehicleId;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "household_id")
     private Household household;
 
-    public enum VehicleType {
-        MOTORBIKE, CAR
-    }
-
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = VehicleTypeConverter.class)
     @Column(name = "type", nullable = false)
     private VehicleType type;
 
     @Column(name = "plate_number", nullable = false)
     private String plateNumber;
-
-    public Vehicle() {
-    }
-
-    public Vehicle(Integer vehicleId, Household household, VehicleType type, String plateNumber) {
-        this.vehicleId = vehicleId;
-        this.household = household;
-        this.type = type;
-        this.plateNumber = plateNumber;
-    }
 
     public Integer getVehicleId() {
         return vehicleId;
@@ -66,5 +52,4 @@ public class Vehicle extends BaseEntity {
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
     }
-
 }

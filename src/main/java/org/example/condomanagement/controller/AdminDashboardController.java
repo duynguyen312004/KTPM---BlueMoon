@@ -254,6 +254,23 @@ public class AdminDashboardController {
     }
 
     @FXML
+    private void onOpenFeeManagement() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/fee_list.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = new Stage();
+            stage.setTitle("Quản lý loại phí");
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Không thể mở giao diện quản lý loại phí.");
+        }
+    }
+
+    @FXML
     private void onLogout() {
         boolean confirmed = showConfirm("Đăng xuất", "Bạn có chắc muốn đăng xuất?");
         if (confirmed) {

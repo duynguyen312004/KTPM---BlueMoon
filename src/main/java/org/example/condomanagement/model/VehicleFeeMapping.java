@@ -1,7 +1,9 @@
 package org.example.condomanagement.model;
 
 import jakarta.persistence.*;
+import org.example.condomanagement.model.VehicleType;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "vehicle_fee_mapping")
 public class VehicleFeeMapping {
@@ -10,19 +12,19 @@ public class VehicleFeeMapping {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "vehicle_type", nullable = false, unique = true)
-    private Vehicle.VehicleType vehicleType;
+    @Column(name = "vehicle_type")
+    private VehicleType vehicleType;
 
-    @OneToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "fee_id")
     private Fee fee;
 
     // getters & setters
-    public Vehicle.VehicleType getVehicleType() {
+    public VehicleType getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(Vehicle.VehicleType vehicleType) {
+    public void setVehicleType(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
     }
 

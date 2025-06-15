@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.condomanagement.controller.FeeListController"
+            prefWidth="820" prefHeight="600"
+            styleClass="root-pane">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="title-bar">
+            <Label text="Danh sách loại phí đang áp dụng" styleClass="title-label"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="Thêm loại phí" onAction="#onAddFee" styleClass="success-button"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tblFees" styleClass="table-view2">
+            <columns>
+                <TableColumn fx:id="colName" text="Tên phí"/>
+                <TableColumn fx:id="colCategory" text="Danh mục"/>
+                <TableColumn fx:id="colMethod" text="Cách tính"/>
+                <TableColumn fx:id="colAmount" text="Mức phí (VNĐ)" styleClass="currency-column"/>
+                <TableColumn fx:id="colActions" text="Thao tác" styleClass="centered-text-column"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

@@ -14,23 +14,25 @@
             <HBox styleClass="header-bar">
                 <Label fx:id="lblWelcome" styleClass="header"/>
                 <Pane HBox.hgrow="ALWAYS"/>
-                 <Button fx:id="btnLogout"
-              text="Đăng xuất"
-              styleClass="dashboard-logout-button"
-              onAction="#onLogout"/>
+                <Button fx:id="btnLogout"
+                        text="Đăng xuất"
+                        styleClass="dashboard-logout-button"
+                        onAction="#onLogout"/>
             </HBox>
 
-            <HBox styleClass="title-bar">
+            <HBox styleClass="title-bar" spacing="10" alignment="CENTER_LEFT">
                 <Label text="Quản lý tài khoản" styleClass="page-title"/>
                 <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Xem loại phí"
+                        onAction="#onOpenFeeManagement"
+                        styleClass="secondary-button"/>
                 <Button text="Cập nhật danh sách"
                         onAction="#onReloadAccountants"
                         styleClass="secondary-button"/>
                 <Button fx:id="btnOpenCreatePopup"
-        text="Tạo tài khoản kế toán mới"
-        onAction="#onOpenCreatePopup"
-        styleClass="primary-button"/>
-
+                        text="Tạo tài khoản kế toán mới"
+                        onAction="#onOpenCreatePopup"
+                        styleClass="primary-button"/>
             </HBox>
         </VBox>
     </top>
@@ -39,20 +41,20 @@
     <center>
         <StackPane styleClass="center-container">
             <VBox fx:id="dashboardContent" styleClass="card" VBox.vgrow="ALWAYS">
-               <TableView fx:id="tblAccountants"
-           styleClass="table-view"
-           VBox.vgrow="ALWAYS">
-    <columns>
-        <TableColumn fx:id="colUsername" text="Username" />
-        <TableColumn fx:id="colPassword" text="Password" />
-        <TableColumn fx:id="colFullName" text="Họ tên" />
-        <TableColumn fx:id="colPhone" text="SĐT" />
-        <TableColumn fx:id="colRole" text="Vai trò" />
-        <TableColumn fx:id="colActive" text="Trạng thái" />
-        <TableColumn fx:id="colCreatedAt" text="Ngày lập" />
-        <TableColumn fx:id="colActions" text="Hành động" />
-    </columns>
-</TableView>
+                <TableView fx:id="tblAccountants"
+                           styleClass="table-view"
+                           VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colUsername" text="Username" />
+                        <TableColumn fx:id="colPassword" text="Password" />
+                        <TableColumn fx:id="colFullName" text="Họ tên" />
+                        <TableColumn fx:id="colPhone" text="SĐT" />
+                        <TableColumn fx:id="colRole" text="Vai trò" />
+                        <TableColumn fx:id="colActive" text="Trạng thái" />
+                        <TableColumn fx:id="colCreatedAt" text="Ngày lập" />
+                        <TableColumn fx:id="colActions" text="Hành động" />
+                    </columns>
+                </TableView>
             </VBox>
         </StackPane>
     </center>
