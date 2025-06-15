@@ -88,7 +88,7 @@ public class LoginController implements Initializable {
         Task<User> task = new Task<>() {
             @Override
             protected User call() throws Exception {
-                Thread.sleep(200);
+                Thread.sleep(100); // giả lập loading
                 return userService.authenticate(username, password);
             }
 
@@ -104,15 +104,13 @@ public class LoginController implements Initializable {
                         Parent root;
                         Stage stage = (Stage) btnLogin.getScene().getWindow();
 
-                        // Tạo scene mới theo role
                         switch (user.getRole()) {
                             case Admin -> {
                                 loader = new FXMLLoader(getClass().getResource("/fxml/admin_dashboard.fxml"));
                                 root = loader.load();
                                 AdminDashboardController ctrl = loader.getController();
                                 ctrl.initData(user);
-                                Scene newScene = new Scene(root);
-                                stage.setScene(newScene);
+                                stage.setScene(new Scene(root));
                                 stage.centerOnScreen();
                                 stage.setMaximized(true);
                             }
@@ -121,8 +119,7 @@ public class LoginController implements Initializable {
                                 root = loader.load();
                                 AccountantDashboardController ctrl = loader.getController();
                                 ctrl.initData(user);
-                                Scene newScene = new Scene(root, 1300, 800);
-                                stage.setScene(newScene);
+                                stage.setScene(new Scene(root, 1300, 800));
                                 stage.centerOnScreen();
                                 stage.setResizable(true);
                             }
@@ -134,8 +131,15 @@ public class LoginController implements Initializable {
                         showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Không thể mở dashboard.");
                     }
                 } else {
-                    showAlert(Alert.AlertType.ERROR, "Đăng nhập thất bại", null,
-                            "Tên đăng nhập hoặc mật khẩu không đúng.");
+                    // Kiểm tra lý do thất bại
+                    User rawUser = userService.findByUsername(username);
+                    if (rawUser != null && !rawUser.getIsActive()) {
+                        showAlert(Alert.AlertType.WARNING, "Tài khoản bị khóa", null,
+                                "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Đăng nhập thất bại", null,
+                                "Tên đăng nhập hoặc mật khẩu không đúng.");
+                    }
                 }
             }
 

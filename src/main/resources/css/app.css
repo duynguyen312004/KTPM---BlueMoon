@@ -754,9 +754,6 @@
 }
 
 
-.chart-debtors-pane {
-    /* Adjust height or min-height if needed for the chart area */
-}
 
 /* style.css */
 /* ... các style khác ... */
@@ -888,9 +885,6 @@
     -fx-alignment: CENTER_RIGHT;
 }
 
-.bottom-actions {
-    /* Padding already applied via VBox.margin in FXML */
-}
 
 
 

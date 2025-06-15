@@ -17,6 +17,7 @@ public class PaymentService {
     private final TransactionDao transactionDao = new TransactionDao();
     private final BillingItemDao billingItemDao = new BillingItemDao();
     private final ReceiptDao receiptDao = new ReceiptDao();
+    @SuppressWarnings("unused")
     private final UserDao userDao = new UserDao();
 
     public void processPayment(List<FeeCollectionRow> rows, double amount, LocalDate date, String note, User user) {

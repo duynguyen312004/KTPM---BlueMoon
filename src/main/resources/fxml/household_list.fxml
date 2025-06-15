@@ -35,7 +35,6 @@
         <columns>
             <TableColumn fx:id="colCode" prefWidth="140" text="Mã hộ khẩu" />
             <TableColumn fx:id="colHead" prefWidth="160" text="Chủ hộ" />
-            <TableColumn fx:id="colRoomCount" prefWidth="100" text="Số phòng" />
             <TableColumn fx:id="colMemberCount" prefWidth="120" text="Số thành viên" />
             <TableColumn fx:id="colArea" prefWidth="120" text="Diện tích" />
             <TableColumn fx:id="colAddress" prefWidth="140" text="Địa chỉ" />

@@ -16,19 +16,32 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class CreateHouseholdDialogController {
-    @FXML private TextField  txtApartmentCode;
-    @FXML private TextField  txtAddress;
-    @FXML private TextField  txtArea;
-    @FXML private TextField  txtHeadName;
-    @FXML private DatePicker dpHeadBirthday;
-    @FXML private TextField  txtHeadNationalId;
-    @FXML private TextField  txtHeadPhone;
-    @FXML private TextField txtMotorbikeCount;
-    @FXML private TextArea txtMotorbikePlates;
-    @FXML private TextField txtCarCount;
-    @FXML private TextArea txtCarPlates;
-    @FXML private Button     btnSave, btnCancel;
+    @FXML
+    private TextField txtApartmentCode;
+    @FXML
+    private TextField txtAddress;
+    @FXML
+    private TextField txtArea;
+    @FXML
+    private TextField txtHeadName;
+    @FXML
+    private DatePicker dpHeadBirthday;
+    @FXML
+    private TextField txtHeadNationalId;
+    @FXML
+    private TextField txtHeadPhone;
+    @FXML
+    private TextField txtMotorbikeCount;
+    @FXML
+    private TextArea txtMotorbikePlates;
+    @FXML
+    private TextField txtCarCount;
+    @FXML
+    private TextArea txtCarPlates;
+    @FXML
+    private Button btnSave, btnCancel;
 
     private Household household; // nếu != null là edit
     private VehicleService vehicleService = new VehicleService();
@@ -47,7 +60,7 @@ public class CreateHouseholdDialogController {
             txtApartmentCode.setText(hh.getApartmentCode());
             txtAddress.setText(hh.getAddress());
             txtArea.setText(hh.getArea().toString());
-            
+
             // Load thông tin chủ hộ
             if (hh.getHeadResidentId() != null) {
                 try (Session s = HibernateUtil.getSessionFactory().openSession()) {
@@ -82,6 +95,7 @@ public class CreateHouseholdDialogController {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @FXML
     public void onSave() {
         // Validate input hộ khẩu
@@ -101,7 +115,7 @@ public class CreateHouseholdDialogController {
         try {
             int motorbikeCount = Integer.parseInt(txtMotorbikeCount.getText().trim());
             int carCount = Integer.parseInt(txtCarCount.getText().trim());
-            
+
             if (motorbikeCount < 0 || carCount < 0) {
                 new Alert(Alert.AlertType.ERROR, "Số lượng xe không được âm!").show();
                 return;
@@ -109,20 +123,22 @@ public class CreateHouseholdDialogController {
 
             String[] motorbikePlates = txtMotorbikePlates.getText().split("\\n");
             long motorbikePlateCount = java.util.Arrays.stream(motorbikePlates)
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .count();
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .count();
 
             String[] carPlates = txtCarPlates.getText().split("\\n");
             long carPlateCount = java.util.Arrays.stream(carPlates)
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .count();
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .count();
 
             if (motorbikePlateCount != motorbikeCount || carPlateCount != carCount) {
-                new Alert(Alert.AlertType.ERROR, "DEBUG: Số lượng xe máy: " + motorbikeCount + ", biển số xe máy: " + motorbikePlateCount +
-                        "\nSố lượng ô tô: " + carCount + ", biển số ô tô: " + carPlateCount +
-                        "\n\nSố lượng biển số xe không khớp với số lượng xe!").show();
+                new Alert(Alert.AlertType.ERROR,
+                        "DEBUG: Số lượng xe máy: " + motorbikeCount + ", biển số xe máy: " + motorbikePlateCount +
+                                "\nSố lượng ô tô: " + carCount + ", biển số ô tô: " + carPlateCount +
+                                "\n\nSố lượng biển số xe không khớp với số lượng xe!")
+                        .show();
                 return;
             }
         } catch (NumberFormatException e) {
@@ -154,7 +170,8 @@ public class CreateHouseholdDialogController {
             Resident head;
             if (!isNew && household.getHeadResidentId() != null) {
                 head = session.get(Resident.class, household.getHeadResidentId());
-                if (head == null) head = new Resident();
+                if (head == null)
+                    head = new Resident();
             } else {
                 head = new Resident();
             }
@@ -224,6 +241,7 @@ public class CreateHouseholdDialogController {
     public void onCancel() {
         ((Stage) btnCancel.getScene().getWindow()).close();
     }
+
     private void showConstraintViolationAlert(Throwable ex) {
         Throwable root = ex;
         while (root.getCause() != null) {

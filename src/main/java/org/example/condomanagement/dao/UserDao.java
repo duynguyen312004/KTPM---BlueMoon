@@ -4,8 +4,6 @@ import org.example.condomanagement.config.HibernateUtil;
 import org.example.condomanagement.model.User;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
 import java.util.List;
 
 public class UserDao {
@@ -33,10 +31,10 @@ public class UserDao {
      */
     public List<User> findByRole(User.Role role) {
         try (Session s = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "FROM User u WHERE CAST(u.role AS string) = :role";
-            Query<User> query = s.createQuery(hql, User.class);
-            query.setParameter("role", role.name());
-            return query.getResultList();
+            // ✅ SỬA: bỏ CAST, dùng HQL chuẩn
+            return s.createQuery("FROM User u WHERE u.role = :role", User.class)
+                    .setParameter("role", role)
+                    .getResultList();
         }
     }
 
@@ -62,7 +60,7 @@ public class UserDao {
     public void updateUser(User user) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
-            session.merge(user); // cập nhật trạng thái isActive
+            session.merge(user);
             tx.commit();
         }
     }
@@ -79,7 +77,7 @@ public class UserDao {
 
             if (user != null) {
                 user.setPassword(newPassword);
-                session.merge(user); // đảm bảo cập nhật
+                session.merge(user);
             }
 
             tx.commit();

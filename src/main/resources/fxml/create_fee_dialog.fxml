@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.condomanagement.controller.CreateFeeDialogController"
+            styleClass="dialog-pane">
+
+    <content>
+        <VBox spacing="12" styleClass="form-grid">
+            <Label text="Tên loại phí:" styleClass="label-field"/>
+            <TextField fx:id="txtFeeName" promptText="Nhập tên loại phí"/>
+
+            <Label text="Danh mục phí:" styleClass="label-field"/>
+            <ComboBox fx:id="cmbCategory" promptText="Chọn danh mục"/>
+
+            <Label text="Cách tính:" styleClass="label-field"/>
+            <ComboBox fx:id="cmbMethod" promptText="Chọn cách tính"/>
+
+            <Label text="Mức phí (VNĐ):" styleClass="label-field"/>
+            <TextField fx:id="txtAmount" promptText="Nhập số tiền"/>
+        </VBox>
+    </content>
+
+  <buttonTypes>
+    <ButtonType fx:id="btnSave" text="Lưu" buttonData="OK_DONE"/>
+    <ButtonType text="Hủy" buttonData="CANCEL_CLOSE"/>
+</buttonTypes>
+
+</DialogPane>

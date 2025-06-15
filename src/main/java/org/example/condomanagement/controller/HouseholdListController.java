@@ -36,7 +36,7 @@ public class HouseholdListController {
     @FXML
     private TableColumn<Household, String> colCode, colHead;
     @FXML
-    private TableColumn<Household, Integer> colRoomCount, colMemberCount;
+    private TableColumn<Household, Integer> colMemberCount;
     @FXML
     private TableColumn<Household, Double> colArea;
     @FXML
@@ -68,13 +68,6 @@ public class HouseholdListController {
                     return new ReadOnlyStringWrapper(r.getName());
             }
             return new ReadOnlyStringWrapper("");
-        });
-
-        // Tính tổng số phòng đã có chủ (COUNT(*) WHERE head_resident_id IS NOT NULL)
-        colRoomCount.setCellValueFactory(cell -> {
-            Household h = cell.getValue();
-            int index = masterData.indexOf(h) + 1; // masterData là ObservableList<Household>
-            return new ReadOnlyObjectWrapper<>(index);
         });
 
         // Số thành viên = size của collection residents (JOIN-FETCH trong DAO)

@@ -20,13 +20,20 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class PaymentDialogController {
-    @FXML private TextField amountPaidField;
-    @FXML private DatePicker paymentDatePicker;
-    @FXML private TextArea noteArea;
-    @FXML private Button confirmButton;
-    @FXML private Button cancelButton;
-    @FXML private Label feeDetailsLabel;
+    @FXML
+    private TextField amountPaidField;
+    @FXML
+    private DatePicker paymentDatePicker;
+    @FXML
+    private TextArea noteArea;
+    @FXML
+    private Button confirmButton;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Label feeDetailsLabel;
 
     private List<FeeCollectionRow> selectedRows;
     private User currentUser;
@@ -148,7 +155,8 @@ public class PaymentDialogController {
 
             ((Stage) confirmButton.getScene().getWindow()).close();
             openReceiptViewer(receipt);
-            if (onPaymentSuccess != null) onPaymentSuccess.run();
+            if (onPaymentSuccess != null)
+                onPaymentSuccess.run();
 
         } catch (NumberFormatException e) {
             showAlert("Số tiền không hợp lệ.");

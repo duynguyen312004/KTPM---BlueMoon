@@ -59,9 +59,12 @@ public class PaymentManagementController {
             System.out.println("Selected: " + newSel);
             updatePayButtonState();
         });
-        billingItemsTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<FeeCollectionRow>) c -> updatePayButtonState());
+        billingItemsTable.getSelectionModel().getSelectedItems()
+                .addListener((ListChangeListener<FeeCollectionRow>) c -> updatePayButtonState());
 
         payButton.setOnAction(e -> openPaymentDialog());
+        historyButton.setOnAction(e -> openTransactionHistory());
+
     }
 
     private void updatePayButtonState() {
@@ -147,4 +150,21 @@ public class PaymentManagementController {
     public void setOnSuccessCallback(Runnable callback) {
         this.onSuccessCallback = callback;
     }
+
+    private void openTransactionHistory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TransactionHistory.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Lịch sử Giao dịch");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Không thể mở màn hình lịch sử giao dịch.");
+        }
+    }
+
 }
