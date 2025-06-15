@@ -41,14 +41,34 @@ public class PaymentDialogController {
         this.onPaymentSuccess = onSuccess;
         this.onReceiptPrinted = onReceiptPrinted;
 
-        // Hiển thị tên khoản phí
+        // Kiểm tra và hiển thị thông tin chi tiết
         if (rows.size() == 1) {
-            feeDetailsLabel.setText(rows.get(0).getFeeName());
-            amountPaidField.setText(String.valueOf(rows.get(0).getRemainingAmount()));
+            FeeCollectionRow row = rows.get(0);
+            double remainingAmount = row.getRemainingAmount();
+            feeDetailsLabel.setText(String.format("%s (Còn lại: %,.0f VNĐ)", 
+                row.getFeeName(), 
+                remainingAmount));
+            amountPaidField.setText(String.valueOf(remainingAmount));
+            
+            // Vô hiệu hóa nút xác nhận nếu đã thanh toán đủ
+            if ("Paid".equalsIgnoreCase(row.getStatus())) {
+                confirmButton.setDisable(true);
+                showAlert("Khoản phí này đã được thanh toán đủ.");
+            }
         } else {
             double total = rows.stream().mapToDouble(FeeCollectionRow::getRemainingAmount).sum();
-            feeDetailsLabel.setText("Nhiều khoản phí (" + rows.size() + " khoản)");
+            feeDetailsLabel.setText(String.format("Nhiều khoản phí (%d khoản) - Tổng còn lại: %,.0f VNĐ", 
+                rows.size(), 
+                total));
             amountPaidField.setText(String.valueOf(total));
+            
+            // Kiểm tra nếu có khoản phí nào đã thanh toán đủ
+            boolean hasPaidItems = rows.stream()
+                .anyMatch(row -> "Paid".equalsIgnoreCase(row.getStatus()));
+            if (hasPaidItems) {
+                confirmButton.setDisable(true);
+                showAlert("Một số khoản phí đã được thanh toán đủ. Vui lòng chọn lại.");
+            }
         }
 
         paymentDatePicker.setValue(LocalDate.now());
@@ -58,26 +78,55 @@ public class PaymentDialogController {
     private void handleConfirm() {
         try {
             double amount = Double.parseDouble(amountPaidField.getText().replace(",", ""));
+            
+            // Kiểm tra số tiền thanh toán
             if (amount <= 0) {
                 showAlert("Số tiền phải lớn hơn 0.");
                 return;
             }
+
+            // Kiểm tra số tiền thanh toán không vượt quá số tiền còn lại
+            for (FeeCollectionRow row : selectedRows) {
+                double remainingAmount = row.getRemainingAmount();
+                
+                // Kiểm tra trạng thái
+                if ("Paid".equalsIgnoreCase(row.getStatus())) {
+                    showAlert("Khoản phí " + row.getFeeName() + " đã được thanh toán đủ.");
+                    return;
+                }
+                
+                // Kiểm tra số tiền thanh toán
+                if (amount > remainingAmount) {
+                    showAlert(String.format("Số tiền thanh toán không được vượt quá số tiền còn lại của khoản phí %s (%,.0f VNĐ)", 
+                        row.getFeeName(), 
+                        remainingAmount));
+                    return;
+                }
+            }
+
             LocalDate date = paymentDatePicker.getValue();
             if (date == null) {
                 showAlert("Vui lòng chọn ngày thanh toán.");
                 return;
             }
+
             if (selectedRows == null || selectedRows.isEmpty()) {
                 showAlert("Không có khoản phí nào được chọn.");
                 return;
             }
 
+            // Xử lý thanh toán
             FeeCollectionRow row = selectedRows.get(0);
             PaymentService paymentService = new PaymentService();
 
-            // Lấy BillingItem từ billingItemId
             BillingItemDao billingItemDao = new BillingItemDao();
             BillingItem billingItem = billingItemDao.findById(row.getBillingItemId());
+
+            // Kiểm tra lại trạng thái trước khi thanh toán
+            if ("Paid".equalsIgnoreCase(billingItem.getStatus().toString())) {
+                showAlert("Khoản phí này đã được thanh toán đủ.");
+                return;
+            }
 
             Transaction tx = new Transaction();
             tx.setBillingItem(billingItem);
@@ -85,10 +134,16 @@ public class PaymentDialogController {
             tx.setPaymentDate(date);
             tx.setCreatedBy(currentUser);
 
+            // Kiểm tra số tiền thanh toán không vượt quá số tiền còn lại
+            double remainingAmount = billingItem.getExpectedAmount() - billingItem.getActualAmount();
+            if (amount > remainingAmount) {
+                showAlert(String.format("Số tiền thanh toán không được vượt quá số tiền còn lại (%,.0f VNĐ)", 
+                    remainingAmount));
+                return;
+            }
+
             Transaction transaction = paymentService.createTransaction(tx);
-
             paymentService.updateBillingItemAfterPayment(row.getBillingItemId(), amount);
-
             Receipt receipt = paymentService.createReceipt(transaction.getTransactionId());
 
             ((Stage) confirmButton.getScene().getWindow()).close();
