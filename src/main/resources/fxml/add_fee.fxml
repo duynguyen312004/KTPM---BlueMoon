@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <AnchorPane prefHeight="300.0" prefWidth="480.0" styleClass="dialog-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.condomanagement.controller.AddBillingItemController">
     <children>
         <VBox alignment="TOP_LEFT" spacing="20.0" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
@@ -32,6 +33,9 @@
 
                         <Label text="Hộ khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <ComboBox fx:id="householdComboBox" promptText="Chọn mã hộ khẩu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label text="Khoản tiền:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="amountTextField" promptText="Nhập số tiền" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                     </children>
 
                     <rowConstraints>

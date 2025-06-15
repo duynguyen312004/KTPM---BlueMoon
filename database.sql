@@ -148,7 +148,7 @@ INSERT INTO vehicles (household_id, type, plate_number) VALUES
 
 -- FEES
 INSERT INTO fees (fee_name, fee_category, fee_amount, calculation_method) VALUES
-('Phí quản lý tòa nhà', 'Management', 500000, 'Fixed'),
+('Phí quản lý tòa nhà', 'Management', 120000, 'PerSqM'),
 ('Phí gửi xe máy', 'Parking', 70000, 'PerVehicle'),
 ('Phí gửi ô tô', 'Parking', 1200000, 'PerVehicle'),
 ('Phí điện, nước, internet', 'Utility', 0, 'Fixed'),
