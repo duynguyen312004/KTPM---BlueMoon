@@ -106,6 +106,18 @@ public class CreateHouseholdDialogController {
             new Alert(Alert.AlertType.WARNING, "Vui lòng nhập đủ thông tin hộ khẩu!").show();
             return;
         }
+        double area;
+        try {
+            area = Double.parseDouble(areaStr);
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Diện tích phải là số!").show();
+            return;
+        }
+        // Bổ sung kiểm tra không âm:
+        if (area < 0) {
+            new Alert(Alert.AlertType.ERROR, "Diện tích không được âm!").show();
+            return;
+        }
         if (dpHeadBirthday.getValue() == null) {
             new Alert(Alert.AlertType.ERROR, "Vui lòng chọn ngày sinh cho chủ hộ!").show();
             return;
@@ -232,8 +244,7 @@ public class CreateHouseholdDialogController {
                 ((Stage) btnSave.getScene().getWindow()).close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu: " + e.getMessage()).show();
+            showConstraintViolationAlert(e);
         }
     }
 
@@ -256,7 +267,7 @@ public class CreateHouseholdDialogController {
         } else if (msg.contains("check_national_id_length")) {
             showAlert(Alert.AlertType.ERROR, "CCCD/CMND phải có đúng 12 chữ số!");
         } else if (msg.contains("check_phone_number_format")) {
-            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!");
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!nhập đủ 10 số ");
         } else if (msg.contains("check_birthday")) {
             showAlert(Alert.AlertType.ERROR, "Ngày sinh không hợp lệ (phải trước hoặc bằng ngày hôm nay)!");
         } else {
