@@ -100,12 +100,25 @@ public class CreateHouseholdDialogController {
     public void onSave() {
         // Validate input hộ khẩu
         String code = txtApartmentCode.getText().trim();
+        // 🔥 THÊM MỚI: kiểm tra mã hộ khẩu đã tồn tại
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Household existing = session.createQuery(
+                            "FROM Household h WHERE h.apartmentCode = :code", Household.class)
+                    .setParameter("code", code)
+                    .uniqueResult();
+
+            if (existing != null && (household == null || !existing.getHouseholdId().equals(household.getHouseholdId()))) {
+                new Alert(Alert.AlertType.ERROR, "Mã hộ khẩu đã tồn tại. Vui lòng nhập mã khác!").show();
+                return;
+            }
+        }
         String address = txtAddress.getText().trim();
         String areaStr = txtArea.getText().trim();
         if (code.isEmpty() || address.isEmpty() || areaStr.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "Vui lòng nhập đủ thông tin hộ khẩu!").show();
             return;
         }
+
         double area;
         try {
             area = Double.parseDouble(areaStr);
