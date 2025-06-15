@@ -30,14 +30,16 @@ public class PaymentDialogController {
 
     private List<FeeCollectionRow> selectedRows;
     private User currentUser;
-    private Runnable onPaymentSuccess; // Callback to open receipt viewer
+    private Runnable onPaymentSuccess; // Callback to refresh data
+    private Runnable onReceiptPrinted; // Callback after receipt is printed
     private BillingItem billingItem;
 
     // In PaymentDialogController.java, update setData:
-    public void setData(List<FeeCollectionRow> rows, User user, Runnable onSuccess) {
+    public void setData(List<FeeCollectionRow> rows, User user, Runnable onSuccess, Runnable onReceiptPrinted) {
         this.selectedRows = rows;
         this.currentUser = user;
         this.onPaymentSuccess = onSuccess;
+        this.onReceiptPrinted = onReceiptPrinted;
 
         // Hiển thị tên khoản phí
         if (rows.size() == 1) {
@@ -136,6 +138,11 @@ public class PaymentDialogController {
             Parent root = loader.load();
             ReceiptViewerController controller = loader.getController();
             controller.setReceipt(receipt);
+            controller.setOnReceiptClosed(() -> {
+                if (onReceiptPrinted != null) {
+                    onReceiptPrinted.run();
+                }
+            });
             Stage stage = new Stage();
             stage.setTitle("Biên lai thanh toán");
             stage.setScene(new Scene(root));

@@ -26,10 +26,15 @@ public class ReceiptViewerController {
     @FXML private Label payerSignatureLabel;
 
     private Receipt receipt;
+    private Runnable onReceiptClosed;
 
     public void setReceipt(Receipt receipt) {
         this.receipt = receipt;
         updateUI();
+    }
+
+    public void setOnReceiptClosed(Runnable callback) {
+        this.onReceiptClosed = callback;
     }
 
     private void updateUI() {
@@ -139,8 +144,10 @@ public class ReceiptViewerController {
 
     @FXML
     private void handleClose() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+        if (onReceiptClosed != null) {
+            onReceiptClosed.run();
+        }
+        ((Stage) closeButton.getScene().getWindow()).close();
     }
 
     @FXML

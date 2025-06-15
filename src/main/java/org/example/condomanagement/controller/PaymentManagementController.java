@@ -70,21 +70,36 @@ public class PaymentManagementController {
         payButton.setDisable(!hasPending);
     }
 
+    private void refreshData() {
+        // Refresh all fee collection data
+        List<FeeCollectionRow> newData = feeService.getAllFeeCollections();
+        masterData.clear();
+        masterData.addAll(newData);
+        
+        // If a household is selected, reapply the filter
+        Household selected = householdComboBox.getValue();
+        if (selected != null) {
+            handleHouseholdSelection();
+        }
+    }
+
     private void openPaymentDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PaymentDialog.fxml"));
             Parent root = loader.load();
             PaymentDialogController controller = loader.getController();
 
-            // Lấy các dòng được chọn
             List<FeeCollectionRow> selectedRows = billingItemsTable.getSelectionModel().getSelectedItems();
-            System.out.println("Selected rows: " + selectedRows.size());
             if (selectedRows == null || selectedRows.isEmpty()) {
                 showAlert("Bạn phải chọn ít nhất một khoản phí để thanh toán!");
                 return;
             }
 
-            controller.setData(selectedRows, loggedInUser, onSuccessCallback);
+            // Pass both callbacks
+            controller.setData(selectedRows, loggedInUser, 
+                this::refreshData,  // Callback after payment
+                this::refreshData   // Callback after receipt is printed
+            );
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Xác nhận thanh toán");
