@@ -19,6 +19,7 @@ public class CollectionBatchDao {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void save(CollectionBatch collectionBatch) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -26,11 +27,11 @@ public class CollectionBatchDao {
             session.save(collectionBatch);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            if (transaction != null)
+                transaction.rollback();
             throw e;
         }
     }
-
 
     public void delete(CollectionBatch hh) {
         Transaction tx = null;
@@ -48,7 +49,7 @@ public class CollectionBatchDao {
     public boolean existsByName(String name) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Long count = session.createQuery(
-                            "SELECT COUNT(cb.id) FROM CollectionBatch cb WHERE cb.name = :name", Long.class)
+                    "SELECT COUNT(cb.id) FROM CollectionBatch cb WHERE cb.name = :name", Long.class)
                     .setParameter("name", name)
                     .uniqueResult();
             return count != null && count > 0;

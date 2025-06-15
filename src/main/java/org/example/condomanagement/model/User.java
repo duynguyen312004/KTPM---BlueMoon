@@ -9,6 +9,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity {
+    public enum Role {
+        Admin, Accountant, Resident
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -32,12 +36,8 @@ public class User extends BaseEntity {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    public enum Role {
-        Admin, Accountant, Resident
-    }
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition = "user_role", nullable = false)
+    @Column(name = "role", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "createdBy")

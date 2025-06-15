@@ -35,11 +35,12 @@ public class BillingItem extends BaseEntity {
         Pending, Paid
     }
 
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+
     private Status status;
 
-    @OneToMany(mappedBy = "billingItem",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "billingItem", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
     @Column(name = "updated_at")
@@ -60,7 +61,8 @@ public class BillingItem extends BaseEntity {
         this.transactions = transactions;
     }
 
-    public BillingItem(CollectionBatch batch, Fee fee, Household household, Double actualAmount, Double expectedAmount, Status status) {
+    public BillingItem(CollectionBatch batch, Fee fee, Household household, Double actualAmount, Double expectedAmount,
+            Status status) {
         this.expectedAmount = expectedAmount;
         this.actualAmount = actualAmount;
         this.household = household;

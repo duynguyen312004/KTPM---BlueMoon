@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -12,10 +13,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import org.example.condomanagement.model.User;
 import org.example.condomanagement.service.UserService;
-import org.example.condomanagement.util.SceneUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -256,7 +257,18 @@ public class AdminDashboardController {
     private void onLogout() {
         boolean confirmed = showConfirm("Đăng xuất", "Bạn có chắc muốn đăng xuất?");
         if (confirmed) {
-            SceneUtil.switchScene("/fxml/login.fxml");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+                Scene scene = new Scene(loader.load());
+
+                Stage stage = (Stage) btnLogout.getScene().getWindow();
+                stage.setScene(scene);
+                stage.centerOnScreen(); // 👈 căn giữa màn hình
+                stage.setResizable(false); // nếu muốn không cho resize
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Lỗi", null, "Không thể chuyển về màn hình đăng nhập.");
+            }
         }
     }
 

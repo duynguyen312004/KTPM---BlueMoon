@@ -24,9 +24,15 @@ public class UserService {
      */
     public User authenticate(String username, String password) {
         User user = userDao.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)
-                && (user.getRole() == User.Role.Admin || user.getRole() == User.Role.Accountant)) {
-            return user;
+        if (user != null) {
+            if (!user.getIsActive()) {
+                // Trả null để LoginController hiển thị thông báo vô hiệu hóa
+                return null;
+            }
+            if (user.getPassword().equals(password)
+                    && (user.getRole() == User.Role.Admin || user.getRole() == User.Role.Accountant)) {
+                return user;
+            }
         }
         return null;
     }
@@ -39,6 +45,10 @@ public class UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
     }
 
     /**

@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 @Table(name = "vehicle_fee_mapping")
 public class VehicleFeeMapping {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "vehicle_type", nullable = false)
+    @Column(name = "vehicle_type", nullable = false, unique = true)
     private Vehicle.VehicleType vehicleType;
 
     @OneToOne(optional = false)
