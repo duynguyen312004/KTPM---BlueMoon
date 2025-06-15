@@ -100,10 +100,35 @@ public class CreateHouseholdDialogController {
     public void onSave() {
         // Validate input hộ khẩu
         String code = txtApartmentCode.getText().trim();
+        // 🔥 THÊM MỚI: kiểm tra mã hộ khẩu đã tồn tại
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Household existing = session.createQuery(
+                            "FROM Household h WHERE h.apartmentCode = :code", Household.class)
+                    .setParameter("code", code)
+                    .uniqueResult();
+
+            if (existing != null && (household == null || !existing.getHouseholdId().equals(household.getHouseholdId()))) {
+                new Alert(Alert.AlertType.ERROR, "Mã hộ khẩu đã tồn tại. Vui lòng nhập mã khác!").show();
+                return;
+            }
+        }
         String address = txtAddress.getText().trim();
         String areaStr = txtArea.getText().trim();
         if (code.isEmpty() || address.isEmpty() || areaStr.isEmpty()) {
             new Alert(Alert.AlertType.WARNING, "Vui lòng nhập đủ thông tin hộ khẩu!").show();
+            return;
+        }
+
+        double area;
+        try {
+            area = Double.parseDouble(areaStr);
+        } catch (NumberFormatException e) {
+            new Alert(Alert.AlertType.ERROR, "Diện tích phải là số!").show();
+            return;
+        }
+        // Bổ sung kiểm tra không âm:
+        if (area < 0) {
+            new Alert(Alert.AlertType.ERROR, "Diện tích không được âm!").show();
             return;
         }
         if (dpHeadBirthday.getValue() == null) {
@@ -232,8 +257,7 @@ public class CreateHouseholdDialogController {
                 ((Stage) btnSave.getScene().getWindow()).close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Lỗi khi lưu: " + e.getMessage()).show();
+            showConstraintViolationAlert(e);
         }
     }
 
@@ -256,7 +280,7 @@ public class CreateHouseholdDialogController {
         } else if (msg.contains("check_national_id_length")) {
             showAlert(Alert.AlertType.ERROR, "CCCD/CMND phải có đúng 12 chữ số!");
         } else if (msg.contains("check_phone_number_format")) {
-            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!");
+            showAlert(Alert.AlertType.ERROR, "Số điện thoại không hợp lệ!nhập đủ 10 số ");
         } else if (msg.contains("check_birthday")) {
             showAlert(Alert.AlertType.ERROR, "Ngày sinh không hợp lệ (phải trước hoặc bằng ngày hôm nay)!");
         } else {
