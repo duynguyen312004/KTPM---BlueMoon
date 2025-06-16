@@ -96,7 +96,7 @@
                                             <children>
                                                 <BarChart fx:id="householdBarChart" legendVisible="true" title="Mức đóng của các hộ">
                                                     <xAxis>
-                                                        <CategoryAxis fx:id="xAxis" tickLabelsVisible="false" />
+                                                        <CategoryAxis tickLabelsVisible="false" fx:id="xAxis" />
                                                     </xAxis>
                                                     <yAxis>
                                                         <NumberAxis fx:id="yAxis" label="Số tiền đã đóng (VNĐ)" />
@@ -118,19 +118,19 @@
                                                 <VBox styleClass="debtor-item">
                                                     <children>
                                                         <Label fx:id="topDebtor1CodeLabel" styleClass="debtor-name" text="Hộ A" />
-                                                        <Label fx:id="topDebtor1AmountLabel" styleClass="debtor-amount" text="2,000,000đ" />
+                                                        <Label fx:id="topDebtor1AmountLabel" styleClass="debtor-amount" text="0" />
                                                     </children>
                                                 </VBox>
                                                 <VBox styleClass="debtor-item">
                                                     <children>
                                                         <Label fx:id="topDebtor2CodeLabel" styleClass="debtor-name" text="Hộ B" />
-                                                        <Label fx:id="topDebtor2AmountLabel" styleClass="debtor-amount" text="1,500,000đ" />
+                                                        <Label fx:id="topDebtor2AmountLabel" styleClass="debtor-amount" text="0" />
                                                     </children>
                                                 </VBox>
                                                 <VBox styleClass="debtor-item">
                                                     <children>
                                                         <Label fx:id="topDebtor3CodeLabel" styleClass="debtor-name" text="Hộ C" />
-                                                        <Label fx:id="topDebtor3AmountLabel" styleClass="debtor-amount" text="1,000,000đ" />
+                                                        <Label fx:id="topDebtor3AmountLabel" styleClass="debtor-amount" text="0" />
                                                     </children>
                                                 </VBox>
                                             </children>

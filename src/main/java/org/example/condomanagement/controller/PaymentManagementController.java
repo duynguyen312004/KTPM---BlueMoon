@@ -1,4 +1,3 @@
-// src/main/java/org/example/condomanagement/controller/PaymentManagementController.java
 package org.example.condomanagement.controller;
 
 import javafx.collections.FXCollections;
@@ -50,13 +49,14 @@ public class PaymentManagementController {
         // Load all fee collection data
         List<FeeCollectionRow> data = feeService.getAllFeeCollections();
         masterData = FXCollections.observableArrayList(data);
-        billingItemsTable.setItems(masterData);
+
+        // ⚠️ KHÔNG hiển thị gì trước khi chọn hộ khẩu
+        billingItemsTable.setItems(FXCollections.observableArrayList());
 
         // Enable payButton only if selection contains Pending
         payButton.setDisable(true);
         billingItemsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         billingItemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            System.out.println("Selected: " + newSel);
             updatePayButtonState();
         });
         billingItemsTable.getSelectionModel().getSelectedItems()
@@ -64,7 +64,6 @@ public class PaymentManagementController {
 
         payButton.setOnAction(e -> openPaymentDialog());
         historyButton.setOnAction(e -> openTransactionHistory());
-
     }
 
     private void updatePayButtonState() {
@@ -74,15 +73,15 @@ public class PaymentManagementController {
     }
 
     private void refreshData() {
-        // Refresh all fee collection data
         List<FeeCollectionRow> newData = feeService.getAllFeeCollections();
         masterData.clear();
         masterData.addAll(newData);
-        
-        // If a household is selected, reapply the filter
+
         Household selected = householdComboBox.getValue();
         if (selected != null) {
             handleHouseholdSelection();
+        } else {
+            billingItemsTable.setItems(FXCollections.observableArrayList());
         }
     }
 
@@ -91,18 +90,14 @@ public class PaymentManagementController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PaymentDialog.fxml"));
             Parent root = loader.load();
             PaymentDialogController controller = loader.getController();
-
             List<FeeCollectionRow> selectedRows = billingItemsTable.getSelectionModel().getSelectedItems();
+
             if (selectedRows == null || selectedRows.isEmpty()) {
                 showAlert("Bạn phải chọn ít nhất một khoản phí để thanh toán!");
                 return;
             }
 
-            // Pass both callbacks
-            controller.setData(selectedRows, loggedInUser, 
-                this::refreshData,  // Callback after payment
-                this::refreshData   // Callback after receipt is printed
-            );
+            controller.setData(selectedRows, loggedInUser, this::refreshData, this::refreshData);
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Xác nhận thanh toán");
@@ -116,7 +111,7 @@ public class PaymentManagementController {
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+        alert.setTitle("Lỗi");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
@@ -127,9 +122,12 @@ public class PaymentManagementController {
         if (selected == null) {
             apartmentCodeLabel.setText("[...]");
             ownerNameLabel.setText("[...]");
-            billingItemsTable.setItems(masterData);
+
+            // ✅ bảng trống nếu chưa chọn hộ
+            billingItemsTable.setItems(FXCollections.observableArrayList());
             return;
         }
+
         apartmentCodeLabel.setText(selected.getApartmentCode());
         String ownerName = selected.getResidents().stream()
                 .filter(r -> r.getResidentId().equals(selected.getHeadResidentId()))
@@ -155,7 +153,6 @@ public class PaymentManagementController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TransactionHistory.fxml"));
             Parent root = loader.load();
-
             Stage stage = new Stage();
             stage.setTitle("Lịch sử Giao dịch");
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -166,5 +163,4 @@ public class PaymentManagementController {
             showAlert("Không thể mở màn hình lịch sử giao dịch.");
         }
     }
-
 }

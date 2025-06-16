@@ -13,8 +13,8 @@ public class FeeCollectionService {
         List<FeeCollectionRow> result = new ArrayList<>();
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             String hql = "SELECT bi.billingItemId, bi.household.apartmentCode, bi.fee.feeName, bi.batch.name, " +
-                         "bi.expectedAmount, bi.actualAmount, bi.createdAt, bi.status " +
-                         "FROM BillingItem bi";
+                    "bi.expectedAmount, bi.actualAmount, bi.createdAt, bi.status " +
+                    "FROM BillingItem bi WHERE bi.status = 'Pending'";
             Query<Object[]> query = session.createQuery(hql, Object[].class);
             for (Object[] row : query.list()) {
                 Integer billingItemId = (Integer) row[0];
